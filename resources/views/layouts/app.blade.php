@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="ThemeStarz">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/font-awesome/css/fontawesome-all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery.scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/leaflet.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <title>@yield('title', 'MyHouse')</title>
+</head>
+<body>
+
+<div class="ts-page-wrapper ts-homepage" id="page-top">
+
+    {{-- Header --}}
+    @include('partials.header')
+
+    {{-- Content --}}
+    <main>
+        @yield('content')
+    </main>
+
+    {{-- Footer --}}
+    @include('partials.footer')
+
+</div>
+
+<!-- JS -->
+<script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
+<script src="{{ asset('assets/js/popper.min.js') }}"></script>
+<script src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('assets/js/sly.min.js') }}"></script>
+<script src="{{ asset('assets/js/dragscroll.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.scrollbar.min.js') }}"></script>
+<script src="{{ asset('assets/js/leaflet.js') }}"></script>
+<script src="{{ asset('assets/js/leaflet.markercluster.js') }}"></script>
+<script src="{{ asset('assets/js/custom.js') }}"></script>
+<script src="{{ asset('assets/js/map-leaflet.js') }}"></script>
+</body>
+</html>
