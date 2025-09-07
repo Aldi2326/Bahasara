@@ -1,4 +1,4 @@
-<footer id="ts-footer">
+<footer class="py-5 bg-white" style="box-shadow: 0 -4px 6px rgba(0,0,0,0.15);">
     <section id="ts-footer-main">
         <div class="container">
             <div class="row">
@@ -41,7 +41,7 @@
         </div>
     </section>
 
-    <section id="ts-footer-secondary">
+    <!-- <section id="ts-footer-secondary">
         <div class="container d-flex justify-content-between">
             <div class="ts-copyright">
                 (C) 2018 ThemeStarz, All rights reserved
@@ -55,5 +55,5 @@
                 </nav>
             </div>
         </div>
-    </section>
+    </section> -->
 </footer>
