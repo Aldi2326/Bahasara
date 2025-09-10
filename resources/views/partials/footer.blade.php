@@ -19,7 +19,7 @@
                 <div class="col-md-2">
                     <h4>Navigasi</h4>
                     <nav class="nav flex-row flex-md-column mb-4">
-                        <a href="{{ url('peta') }}" class="nav-link">Peta</a>
+                        <a href="{{ url('/') }}" class="nav-link">Peta</a>
                         <a href="{{ url('tentang-kami') }}" class="nav-link">Tentang Kami</a>
                         <a href="{{ url('kontak') }}" class="nav-link">Kontak</a>
                     </nav>
