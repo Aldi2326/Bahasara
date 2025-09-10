@@ -14,7 +14,7 @@ class KontakController extends Controller
     public function index()
     {
         $kontaks = Kontak::all();
-        return view('pages.kontak', compact('kontaks'));
+        return view('pages.admin.pesan.index', compact('kontaks'));
     }
 
     /**
@@ -38,7 +38,7 @@ class KontakController extends Controller
         ]);
 
         Kontak::create($request->all());
-        return redirect()->route('kontak.index')->with('success', 'Pesan berhasil dikirim!');
+        return redirect('/kontak')->with('success', 'Pesan berhasil dikirim!');
     }
 
     /**
@@ -68,8 +68,12 @@ class KontakController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $kontak = Kontak::findOrFail($id);
+        $kontak->delete();
+
+        return redirect()->route('kontak.index')->with('success', 'Pesan berhasil dihapus!');
     }
+
 }

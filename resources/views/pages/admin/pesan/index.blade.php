@@ -21,31 +21,40 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="odd:bg-white even:bg-default-100">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">1</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">Lindsay Walton</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">lindsay.walton@example.com</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">Pertanyaan Website</td>
-                  <td class="px-6 py-4 text-sm text-default-800" style="white-space: normal; word-wrap: break-word;">
-                    Halo admin, saya ingin menanyakan terkait fitur terbaru. Pesan ini agak panjang supaya kelihatan efek wrap text-nya.
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                    <a class="text-primary hover:text-primary-700" href="#">Delete</a>
-                  </td>
-                </tr>
+                @foreach ($kontaks as $index => $kontak)
+                  <tr class="odd:bg-white even:bg-default-100">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">
+                      {{ $index + 1 }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                      {{ $kontak->nama }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                      {{ $kontak->email }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">
+                      {{ $kontak->subjek }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-default-800" style="white-space: normal; word-wrap: break-word;">
+                      {{ $kontak->pesan }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                      <form action="{{ route('kontak.destroy', $kontak->id) }}" method="POST" onsubmit="return confirm('Yakin mau hapus pesan ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-600 hover:text-red-800">Delete</button>
+                      </form>
+                    </td>
+                  </tr>
+                @endforeach
 
-                <tr class="odd:bg-white even:bg-default-100">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-default-800">2</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">Courtney Henry</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">courtneyhenry@example.com</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">Saran Fitur</td>
-                  <td class="px-6 py-4 text-sm text-default-800" style="white-space: normal; word-wrap: break-word;">
-                    Menurut saya, aplikasi ini akan lebih bagus jika ditambah fitur dark mode agar nyaman digunakan di malam hari.
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                    <a class="text-primary hover:text-primary-700" href="#">Delete</a>
-                  </td>
-                </tr>
+                @if ($kontaks->isEmpty())
+                  <tr>
+                    <td colspan="6" class="px-6 py-4 text-center text-sm text-default-500">
+                      Belum ada pesan.
+                    </td>
+                  </tr>
+                @endif
               </tbody>
             </table>
           </div>
