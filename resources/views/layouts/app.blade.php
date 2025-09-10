@@ -12,6 +12,29 @@
     <link rel="stylesheet" href="{{ asset('assets/css/leaflet.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
+    <!-- AOS CSS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    AOS.init({
+      duration: 1000,   // durasi animasi (ms)
+      once: true        // animasi hanya sekali saat muncul
+    });
+  });
+</script>
+
+<style>
+    /* Custom tombol layer kanan atas */
+.leaflet-touch .leaflet-control-layers-toggle {
+    width: 44px;
+    height: 44px;
+    background-image: url("{{ asset('assets/image-peta/layers.png') }}");
+}
+
+</style>
     <title>@yield('title', 'MyHouse')</title>
 </head>
 <body>
