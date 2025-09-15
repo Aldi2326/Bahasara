@@ -39,7 +39,7 @@ Route::get('/admin/peta/bahasa', function () {
 });
 Route::get('/admin/peta/bahasa/tambah', function () {
     return view('pages.admin.peta.bahasa.create');
-});
+})->name('bahasa.create');
 
 Route::get('/admin/peta/sastra', function () {
     return view('pages.admin.peta.sastra.index');
@@ -55,5 +55,5 @@ Route::get('/admin/peta/aksara', function () {
 
 Route::get('/admin/peta/aksara/tambah', function () {
     return view('pages.admin.peta.aksara.create');
-});
+})->name('aksara.create');
 
