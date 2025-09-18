@@ -30,11 +30,10 @@
 
 <!-- Custom CSS -->
 <style>
-    /* Ambil padding container bootstrap untuk margin kiri/kanan */
     .search-control {
         position: absolute;
         top: 15px;
-        left: calc(var(--bs-gutter-x, 1.5rem)); /* gutter container */
+        left: calc(var(--bs-gutter-x, 1.5rem));
         z-index: 1000;
         background: white;
         padding: 10px;
@@ -44,73 +43,96 @@
     }
 
     .leaflet-top.leaflet-right {
-        right: calc(var(--bs-gutter-x, 1.5rem)); /* tombol layer kanan atas */
+        right: calc(var(--bs-gutter-x, 1.5rem));
         top: 15px;
     }
     .leaflet-bottom.leaflet-right {
-        right: calc(var(--bs-gutter-x, 1.5rem)); /* tombol zoom kanan bawah */
+        right: calc(var(--bs-gutter-x, 1.5rem));
         bottom: 15px;
     }
 </style>
 
 <!-- Script Leaflet -->
+<!-- Script Leaflet -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Ambil data bahasa dari controller
+        var bahasaData = @json($bahasa);
+
+        // Definisi bounding box untuk Jambi
+        var jambiBounds = L.latLngBounds(
+            L.latLng(-2.8, 101.1), // Southwest
+            L.latLng(0.5, 104.8)   // Northeast
+        );
+
         var map = L.map('map', {
             center: [-1.6101, 103.6158],
             zoom: 8,
-            zoomControl: false
+            zoomControl: false,
+            maxBounds: jambiBounds,
+            maxBoundsViscosity: 1.0
         });
 
+        // Base map
         var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        var petaBahasa = L.layerGroup();
-        var petaSastra = L.layerGroup();
-        var petaAksara = L.layerGroup();
-
-        L.marker([-1.6122, 103.6158]).bindPopup("Bahasa - Kota Jambi").addTo(petaBahasa);
-        L.marker([-2.1342, 102.9502]).bindPopup("Sastra - Kabupaten Bungo").addTo(petaSastra);
-        L.marker([-1.4852, 102.4381]).bindPopup("Aksara - Kabupaten Kerinci").addTo(petaAksara);
-
-        var overlayMaps = {
-            "Peta Bahasa": petaBahasa,
-            "Peta Sastra": petaSastra,
-            "Peta Aksara": petaAksara
-        };
+        // Layer kontrol
+        var overlayMaps = {};
         L.control.layers(null, overlayMaps, { position: 'topright', collapsed: true }).addTo(map);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-        var locations = {
-            "Kota Jambi": [-1.6122, 103.6158],
-            "Kabupaten Kerinci": [-1.4852, 102.4381],
-            "Kabupaten Bungo": [-2.1342, 102.9502],
-            "Kabupaten Merangin": [-2.0486, 102.2835],
-        };
+        // Loop data bahasa untuk load geojson masing-masing
+        bahasaData.forEach(function (item) {
+            if (item.geojson) {
+                fetch('/wilayah/' + item.geojson)
+                    .then(response => response.json())
+                    .then(data => {
+                        var geojsonLayer = L.geoJSON(data, {
+                            style: {
+                                color: "blue",
+                                weight: 2,
+                                fillOpacity: 0
+                            },
+                            onEachFeature: function (feature, layer) {
+                                var popupContent = `
+                                    <b>${item.nama_bahasa}</b><br>
+                                    Status: ${item.status}<br>
+                                    Jumlah Penutur: ${item.jumlah_penutur}<br>
+                                    <small>${item.deskripsi}</small>
+                                `;
+                                layer.bindPopup(popupContent);
+                            }
+                        }).addTo(map);
 
-        for (var name in locations) {
-            L.marker(locations[name]).addTo(map).bindPopup("<b>" + name + "</b>");
-        }
-
-        document.getElementById('languageSelect').addEventListener('change', function () {
-            var selected = this.value;
-            if (selected) {
-                alert("Filter peta berdasarkan: " + selected);
+                        overlayMaps[item.nama_bahasa] = geojsonLayer;
+                    })
+                    .catch(error => console.error("Error loading GeoJSON:", error));
             }
         });
 
+        // Event dropdown
+        document.getElementById('languageSelect').addEventListener('change', function () {
+            var selected = this.value.toLowerCase();
+            if (selected) {
+                var found = bahasaData.find(b => b.nama_bahasa.toLowerCase().includes(selected));
+                if (found) {
+                    alert("Filter peta berdasarkan: " + found.nama_bahasa);
+                }
+            }
+        });
+
+        // Event search
         document.getElementById('searchInput').addEventListener('keyup', function (e) {
             var query = e.target.value.toLowerCase();
-            for (var name in locations) {
-                if (name.toLowerCase().includes(query)) {
-                    var coords = locations[name];
-                    map.setView(coords, 10);
-                    break;
-                }
+            var found = bahasaData.find(b => b.nama_bahasa.toLowerCase().includes(query));
+            if (found) {
+                console.log("Ditemukan:", found.nama_bahasa);
             }
         });
     });
 </script>
+
 @endsection

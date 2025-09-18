@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KontakController;
+use App\Http\Controllers\PetaController;
 
 // Route::resource('kontak', KontakController::class);
 
@@ -9,9 +10,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/', function () {
-    return view('pages.peta');
-});
+// Route::get('/', function () {
+//     return view('pages.peta');
+// });
+
+Route::get('/', [PetaController::class, 'index']);
 
 Route::get('/tentang-kami', function () {
     return view('pages.tentang-kami');
