@@ -21,8 +21,15 @@
                                 Dashboard
                             </a>
                         </li>
+                        <li class="menu-item">
+                            <a class="group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5"
+                                href="/admin/wilayah">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8.593c0-1.527 0-2.29.393-2.735c.139-.159.308-.285.497-.372c1.416-.653 3.272 1.066 4.77 1.013q.297-.011.587-.082c2.184-.535 3.552-3.08 5.798-3.39c1.287-.18 2.7.598 3.904 1.014c.99.342 1.485.513 1.768.92S21 5.91 21 6.99v8.422c0 1.526 0 2.29-.393 2.735a1.5 1.5 0 0 1-.497.371c-1.416.653-3.272-1.065-4.77-1.012a3 3 0 0 0-.587.081c-2.184.535-3.552 3.08-5.798 3.391c-1.281.178-4.847-.75-5.672-1.935C3 18.636 3 18.096 3 17.014zm6-2.052v14.255m6-17.615v14.255"/></svg>
+                                Wilayah
+                            </a>
+                        </li>
 
-                        <li class="menu-item hs-accordion">
+                        <!-- <li class="menu-item hs-accordion">
                             <a href="javascript:void(0)"
                                 class="hs-accordion-toggle group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5 hs-accordion-active:bg-default-100/5 hs-accordion-active:text-default-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8.593c0-1.527 0-2.29.393-2.735c.139-.159.308-.285.497-.372c1.416-.653 3.272 1.066 4.77 1.013q.297-.011.587-.082c2.184-.535 3.552-3.08 5.798-3.39c1.287-.18 2.7.598 3.904 1.014c.99.342 1.485.513 1.768.92S21 5.91 21 6.99v8.422c0 1.526 0 2.29-.393 2.735a1.5 1.5 0 0 1-.497.371c-1.416.653-3.272-1.065-4.77-1.012a3 3 0 0 0-.587.081c-2.184.535-3.552 3.08-5.798 3.391c-1.281.178-4.847-.75-5.672-1.935C3 18.636 3 18.096 3 17.014zm6-2.052v14.255m6-17.615v14.255"/></svg>
@@ -60,7 +67,7 @@
                             </div>
 
                             
-                        </li>
+                        </li> -->
                         <li class="menu-item">
                             <a class="group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5"
                                 href="/admin/pesan">

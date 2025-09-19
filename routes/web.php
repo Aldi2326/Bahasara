@@ -15,6 +15,8 @@ Route::get('/', function () {
 // });
 
 Route::get('/', [PetaController::class, 'index']);
+Route::get('/peta/{id}', [PetaController::class, 'show'])->name('peta.show');
+
 
 Route::get('/tentang-kami', function () {
     return view('pages.tentang-kami');
@@ -32,6 +34,10 @@ Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store')
 
 Route::get('/admin/dashboard', function () {
     return view('pages.admin.dashboard.index');
+});
+
+Route::get('/admin/wilayah', function () {
+    return view('pages.admin.wilayah.index');
 });
 
 Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
