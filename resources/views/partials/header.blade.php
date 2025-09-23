@@ -16,7 +16,46 @@
             <!-- Navigation -->
             <div class="collapse navbar-collapse" id="navbarPrimary">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Peta</a></li>
+                    <li class="nav-item ts-has-child">
+
+                            <!--Main level link-->
+                            <a class="nav-link active" href="/">
+                                Peta
+                                <span class="sr-only">(current)</span>
+                            </a>
+
+                            <!-- List (1st level) -->
+                            <ul class="ts-child">
+
+                                <!-- MAP (1st level)
+                                =====================================================================================-->
+                                <li class="nav-item ">
+
+                                    <a href="/" class="nav-link">Bahasa</a>
+
+                                </li>
+                                <!--end MAP (1st level)-->
+
+                                <!-- SLIDER (1st level)
+                                =====================================================================================-->
+                                <li class="nav-item ">
+
+                                    <a href="/sastra" class="nav-link">Sastra</a>
+                                </li>
+                                <!--end SLIDER (1st level)-->
+
+                                <!-- IMAGE (1st level)
+                                =====================================================================================-->
+                                <li class="nav-item ">
+
+                                    <a href="/aksara" class="nav-link">Aksara</a>
+                                </li>
+                                <!--end SLIDER (1st level)-->
+
+                            </ul>
+                            <!--end List (1st level) -->
+
+                        </li>
                     <li class="nav-item"><a class="nav-link" href="{{ url('tentang-kami') }}">Tentang Kami</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url('kontak') }}">Kontak</a></li>
                 </ul>

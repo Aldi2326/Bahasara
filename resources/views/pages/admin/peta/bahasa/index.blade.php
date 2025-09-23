@@ -39,7 +39,7 @@
                     <a href="#" class="text-primary hover:underline">Download File</a>
                   </td>
                   <td class="px-6 py-4 text-sm text-end font-medium space-x-3">
-                    <a href="#" class="text-blue-600 hover:underline">Edit</a>
+                    <a href="/admin/peta/bahasa/edit" class="text-blue-600 hover:underline">Edit</a>
                     <a href="#" class="text-red-600 hover:underline">Delete</a>
                   </td>
                 </tr>

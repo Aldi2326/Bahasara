@@ -4,7 +4,7 @@
   <div class="card overflow-hidden">
     <div class="card-header flex justify-between items-center">
       <h4 class="card-title">Daftar Wilayah</h4>
-      <a href="#" class="btn bg-danger text-white">Tambah Wilayah</a>
+      <a href="/admin/wilayah/tambah" class="btn bg-danger text-white">Tambah Wilayah</a>
     </div>
     <div>
       <div class="overflow-x-auto">
@@ -33,7 +33,7 @@
                     <a href="/admin/peta/sastra" class="text-orange-600 hover:underline">+ Sastra</a>
                   </td>
                   <td class="px-6 py-4 text-sm text-end font-medium space-x-3">
-                    <a href="#" class="text-blue-600 hover:underline">Edit</a>
+                    <a href="/admin/wilayah/edit" class="text-blue-600 hover:underline">Edit</a>
                     <a href="#" class="text-red-600 hover:underline">Delete</a>
                   </td>
                 </tr>

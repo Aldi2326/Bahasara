@@ -32,7 +32,7 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-default-800">-1.610100, 103.615800</td>
                   <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                    <a class="text-primary hover:text-primary-700" href="#">Edit</a> | 
+                    <a class="text-primary hover:text-primary-700" href="/admin/peta/sastra/edit">Edit</a> | 
                     <a class="text-danger hover:text-danger-700" href="#">Delete</a>
                   </td>
                 </tr>
