@@ -6,14 +6,16 @@ use App\Http\Controllers\PetaController;
 
 // Route::resource('kontak', KontakController::class);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // Route::get('/', function () {
 //     return view('pages.peta');
 // });
-
+Route::get('/admin/login', function () {
+    return view('pages.admin.login');
+});
 Route::get('/', [PetaController::class, 'index']);
 Route::get('/peta/{id}', [PetaController::class, 'show'])->name('peta.show');
 
