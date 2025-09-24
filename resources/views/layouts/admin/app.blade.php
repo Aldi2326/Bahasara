@@ -9,7 +9,7 @@
     <meta content="Myrathemes" name="author">
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/admin/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/img/bahasara-logo.png') }}">
 
     <!-- Icons css  (Mandatory in All Pages) -->
     <link href="{{ asset('assets/admin/css/icons.min.css')}}" rel="stylesheet" type="text/css">
