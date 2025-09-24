@@ -31,42 +31,26 @@
 
                 <!-- Profile Dropdown Button -->
                 <div class="relative">
-                    <div class="hs-dropdown relative inline-flex [--placement:bottom-right]">
-                        <button type="button" class="hs-dropdown-toggle">
-                            <img src="{{ asset('assets/admin/images/users/avatar-8.jpg') }}" alt="user-image" class="rounded-full h-10">
-                        </button>
-                        <div
-                            class="hs-dropdown-menu duration mt-2 min-w-48 rounded-lg border border-default-200 bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100 hidden">
-                            <a class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-default-100"
-                                href="#">
-                                Profile
-                            </a>
-                            <a class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-default-100"
-                                href="#">
-                                Feed
-                            </a>
-                            <a class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-default-100"
-                                href="#">
-                                Analytics
-                            </a>
-                            <a class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-default-100"
-                                href="#">
-                                Settings
-                            </a>
-                            <a class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-default-100"
-                                href="#">
-                                Support
-                            </a>
+    <div class="hs-dropdown relative inline-flex [--placement:bottom-right]">
+        <button type="button" class="hs-dropdown-toggle">
+            <img src="{{ asset('assets/admin/images/users/avatar-8.jpg') }}" 
+                 alt="user-image" class="rounded-full h-10">
+        </button>
+        <div
+            class="hs-dropdown-menu duration mt-2 min-w-48 rounded-lg border border-default-200 bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] hs-dropdown-open:opacity-100 hidden">
+            
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" 
+                    class="w-full text-left py-2 px-3 rounded-md text-sm text-default-800 hover:bg-default-100">
+                    Log Out
+                </button>
+            </form>
 
-                            <hr class="my-2 -mx-2">
+        </div>
+    </div>
+</div>
 
-                            <a class="flex items-center py-2 px-3 rounded-md text-sm text-default-800 hover:bg-default-100"
-                                href="#">
-                                Log Out
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </header>

@@ -18,6 +18,15 @@ Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('logi
 Route::post('/admin/login', [AuthController::class, 'login'])->name('login');
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Bungkus beberapa route dengan middleware auth
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('pages.admin.dashboard.index');
+    });
+
+    
+});
+
 Route::get('/', [PetaController::class, 'index']);
 Route::get('/peta/{id}', [PetaController::class, 'show'])->name('peta.show');
 
@@ -40,9 +49,7 @@ Route::get('/kontak', function () {
 
 Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
 
-Route::get('/admin/dashboard', function () {
-    return view('pages.admin.dashboard.index');
-});
+
 
 Route::get('/admin/wilayah', function () {
     return view('pages.admin.wilayah.index');
