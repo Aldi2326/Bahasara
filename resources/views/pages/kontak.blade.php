@@ -10,60 +10,63 @@
         <main id="ts-main">
 
             <!--PAGE TITLE
-                =========================================================================================================-->
+                            =========================================================================================================-->
             <section class="mt-5" id="page-title" style="padding-top: 100px;">
                 <div class="container">
                     <div class="ts-title">
                         @if (session('success'))
-    <div id="toast-success" class="toast-custom">
-        <span>{{ session('success') }}</span>
-        <span class="toast-close" onclick="closeToast()">×</span>
-    </div>
+                            <div id="toast-success" class="toast-custom">
+                                <span>{{ session('success') }}</span>
+                                <span class="toast-close" onclick="closeToast()">×</span>
+                            </div>
 
-    <script>
-        // Hilang otomatis setelah 3 detik
-        setTimeout(() => {
-            closeToast();
-        }, 3000);
+                            <script>
+                                // Hilang otomatis setelah 3 detik
+                                setTimeout(() => {
+                                    closeToast();
+                                }, 3000);
 
-        function closeToast() {
-            const toast = document.getElementById('toast-success');
-            if (toast) {
-                toast.style.opacity = '0'; // efek fade out
-                setTimeout(() => toast.remove(), 500); // hapus elemen setelah animasi
-            }
-        }
-    </script>
+                                function closeToast() {
+                                    const toast = document.getElementById('toast-success');
+                                    if (toast) {
+                                        toast.style.opacity = '0'; // efek fade out
+                                        setTimeout(() => toast.remove(), 500); // hapus elemen setelah animasi
+                                    }
+                                }
+                            </script>
 
-    <style>
-        .toast-custom {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            min-width: 250px;
-            max-width: 350px;
-            background-color: #28a745; /* hijau sukses */
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-        .toast-close {
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .toast-close:hover {
-            color: #ddd;
-        }
-    </style>
-@endif
+                            <style>
+                                .toast-custom {
+                                    position: fixed;
+                                    top: 20px;
+                                    right: 20px;
+                                    min-width: 250px;
+                                    max-width: 350px;
+                                    background-color: #28a745;
+                                    /* hijau sukses */
+                                    color: white;
+                                    padding: 12px 16px;
+                                    border-radius: 8px;
+                                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    gap: 10px;
+                                    z-index: 9999;
+                                    transition: opacity 0.5s ease;
+                                }
+
+                                .toast-close {
+                                    cursor: pointer;
+                                    font-size: 18px;
+                                    font-weight: bold;
+                                }
+
+                                .toast-close:hover {
+                                    color: #ddd;
+                                }
+                            </style>
+                        @endif
 
 
 
@@ -73,7 +76,7 @@
             </section>
 
             <!--MAP
-                =========================================================================================================-->
+                            =========================================================================================================-->
             <section id="map-address">
 
                 <div class="container mb-5">
@@ -81,12 +84,12 @@
 
                         <!--Address on map-->
                         <!-- <address class="position-absolute ts-bottom__0 ts-left__0 text-white m-3 p-4 ts-z-index__2" data-bg-color="rgba(0,0,0,.8)">
-                            <strong>Balai Bahasa Provinsi Jambi</strong>
-                            <br>
-                            Jalan Arif Rahman Hakim No. 101, Telanaipura Jambi
-                            <br>
-                            Indonesia, 36124
-                        </address> -->
+                                        <strong>Balai Bahasa Provinsi Jambi</strong>
+                                        <br>
+                                        Jalan Arif Rahman Hakim No. 101, Telanaipura Jambi
+                                        <br>
+                                        Indonesia, 36124
+                                    </address> -->
 
                         <!--Map-->
                         <iframe
@@ -98,13 +101,13 @@
             </section>
 
             <!--CONTACT INFO & FORM
-                =========================================================================================================-->
+                            =========================================================================================================-->
             <section id="contact-form">
                 <div class="container">
                     <div class="row">
 
                         <!--CONTACTS (LEFT SIDE)
-                            =============================================================================================-->
+                                        =============================================================================================-->
                         <div class="col-md-4">
 
                             <!--Title-->
@@ -151,7 +154,7 @@
                         <!--end col-md-4-->
 
                         <!--FORM (RIGHT SIDE)
-                            =============================================================================================-->
+                                        =============================================================================================-->
                         <div class="col-md-8">
 
                             <!--Title-->
