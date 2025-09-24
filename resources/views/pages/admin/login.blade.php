@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/img/bahasara-logo.png') }}">
 
     <!-- Icons css -->
-    <link href="{{ asset('assets/admin/css/icons.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/admin/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <!-- App css -->
     <link href="{{ asset('assets/admin/css/app.min.css') }}" rel="stylesheet" type="text/css">
 </head>
@@ -20,16 +20,28 @@
     <div class="card w-[420px] !max-w-none" style="width: 450px;">
         <div class="p-6">
             <h4 class="card-title mb-4 text-center">Login Admin</h4>
-
-            <form>
+            @if ($errors->any())
+                <div style="color: red;">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="text-default-800 text-sm font-medium inline-block mb-2">Username</label>
-                    <input type="text" class="form-input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Username">
+                    <label for="exampleInputEmail1"
+                        class="text-default-800 text-sm font-medium inline-block mb-2">Username</label>
+                    <input type="text" name="name" value="{{ old('name') }}" class="form-input" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        placeholder="Enter Username" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="exampleInputPassword1" class="text-default-800 text-sm font-medium inline-block mb-2">Password</label>
-                    <input type="password" class="form-input" id="exampleInputPassword1" placeholder="Password">
+                    <label for="exampleInputPassword1"
+                        class="text-default-800 text-sm font-medium inline-block mb-2">Password</label>
+                    <input type="password" name="password" class="form-input" id="exampleInputPassword1" placeholder="Password" required>
                 </div>
 
                 <button type="submit" class="btn bg-primary text-white w-full">Login</button>
