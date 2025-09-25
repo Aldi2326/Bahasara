@@ -19,7 +19,7 @@
                     <li class="nav-item ts-has-child">
 
                             <!--Main level link-->
-                            <a class="nav-link active" href="/">
+                            <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">
                                 Peta
                                 <span class="sr-only">(current)</span>
                             </a>
@@ -56,8 +56,21 @@
                             <!--end List (1st level) -->
 
                         </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('tentang-kami') }}">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('kontak') }}">Kontak</a></li>
+
+                    <li class="nav-item">
+    <a class="nav-link {{ request()->is('tentang-kami') ? 'active' : '' }}" 
+       href="{{ url('tentang-kami') }}">
+       Tentang Kami
+    </a>
+</li>
+
+                    <li class="nav-item">
+    <a class="nav-link {{ request()->is('kontak') ? 'active' : '' }}" 
+       href="{{ url('kontak') }}">
+       Kontak
+    </a>
+</li>
+
                 </ul>
             </div>
         </div>

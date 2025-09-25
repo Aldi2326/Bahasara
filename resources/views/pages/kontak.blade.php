@@ -3,11 +3,11 @@
 @section('title', 'Peta Bahasa & Sastra')
 
 @section('content')
-    <div>
+<div>
 
 
 
-        <main id="ts-main">
+    <main id="ts-main">
 
             <!--PAGE TITLE
                             =========================================================================================================-->
@@ -70,17 +70,21 @@
 
 
 
-                        <h1>Kontak</h1>
                     </div>
+
+
+
+
                 </div>
-            </section>
+            </div>
+        </section>
 
             <!--MAP
                             =========================================================================================================-->
             <section id="map-address">
 
-                <div class="container mb-5">
-                    <div class="ts-contact-map ts-map ts-shadow__sm position-relative">
+            <div class="container mb-5">
+                <div class="ts-contact-map ts-map ts-shadow__sm position-relative">
 
                         <!--Address on map-->
                         <!-- <address class="position-absolute ts-bottom__0 ts-left__0 text-white m-3 p-4 ts-z-index__2" data-bg-color="rgba(0,0,0,.8)">
@@ -102,127 +106,137 @@
 
             <!--CONTACT INFO & FORM
                             =========================================================================================================-->
-            <section id="contact-form">
-                <div class="container">
-                    <div class="row">
+            
 
-                        <!--CONTACTS (LEFT SIDE)
-                                        =============================================================================================-->
-                        <div class="col-md-4">
+        <!--CONTACT INFO & FORM
+                =========================================================================================================-->
+        <section id="contact-form">
+            <div class="container">
+                <div class="row">
 
-                            <!--Title-->
-                            <h3>Hubungi Kami</h3>
+                    <!--CONTACTS (LEFT SIDE)
+                            =============================================================================================-->
+                    <div class="col-md-4">
 
-                            <p>
-                                Apakah Anda memiliki pertanyaan, saran, atau ingin berkontribusi dalam pelestarian bahasa
-                                dan sastra daerah di Provinsi Jambi? Kami sangat terbuka untuk kolaborasi dan masukan dari
-                                masyarakat. Silakan hubungi kami melalui formulir atau informasi kontak di bawah ini.
-                            </p>
+                        <!--Title-->
+                        <h3>Hubungi Kami</h3>
 
-                            <!--Phone-->
-                            <figure class="ts-center__vertical">
-                                <i class="fa fa-phone ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
-                                <dl class="mb-0">
-                                    <dt>Telepon</dt>
-                                    <dd class="ts-opacity__50"> (0741) 669466</dd>
-                                </dl>
-                            </figure>
+                        <p>
+                            Apakah Anda memiliki pertanyaan, saran, atau ingin berkontribusi dalam pelestarian bahasa
+                            dan sastra daerah di Provinsi Jambi? Kami sangat terbuka untuk kolaborasi dan masukan dari
+                            masyarakat. Silakan hubungi kami melalui formulir atau informasi kontak di bawah ini.
+                        </p>
 
-                            <!--Email-->
-                            <figure class="ts-center__vertical">
-                                <i class="fa fa-envelope ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
-                                <dl class="mb-0">
-                                    <dt>Email</dt>
-                                    <dd class="ts-opacity__50">
-                                        <a href="#">bahasajambi@kemdikbud.go.id</a>
-                                    </dd>
-                                </dl>
-                            </figure>
+                        <!--Phone-->
+                        <figure class="ts-center__vertical">
+                            <i class="fa fa-phone ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
+                            <dl class="mb-0">
+                                <dt>Telepon</dt>
+                                <dd class="ts-opacity__50"> (0741) 669466</dd>
+                            </dl>
+                        </figure>
 
-                            <!--Facebook-->
-                            <figure class="ts-center__vertical">
-                                <i class="fab fa-facebook ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
-                                <dl class="mb-0">
-                                    <dt>Facebook</dt>
-                                    <dd class="ts-opacity__50">
-                                        <a href="#">Balai Bahasa Provinsi Jambi</a>
-                                    </dd>
-                                </dl>
-                            </figure>
+                        <!--Email-->
+                        <figure class="ts-center__vertical">
+                            <i class="fa fa-envelope ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
+                            <dl class="mb-0">
+                                <dt>Email</dt>
+                                <dd class="ts-opacity__50">
+                                    <a href="#">bahasajambi@kemdikbud.go.id</a>
+                                </dd>
+                            </dl>
+                        </figure>
 
-                        </div>
-                        <!--end col-md-4-->
-
-                        <!--FORM (RIGHT SIDE)
-                                        =============================================================================================-->
-                        <div class="col-md-8">
-
-                            <!--Title-->
-                            <h3>Formulir Kontak</h3>
-
-                            <!--Form-->
-                            <form id="form-contact" action="{{ route('kontak.store') }}" method="post"
-                                class="clearfix ts-form ts-form-email" data-php-path="assets/php/email.php">
-                                @csrf
-                                <!--Row-->
-                                <div class="row">
-
-                                    <!--Name-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="form-contact-name">Nama *</label>
-                                            <input type="text" class="form-control" id="form-contact-name" name="nama"
-                                                placeholder="Nama" required>
-                                        </div>
-                                    </div>
-
-                                    <!--Email-->
-                                    <div class="col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="form-contact-email">Email *</label>
-                                            <input type="email" class="form-control" id="form-contact-email"
-                                                name="email" placeholder="Email" required>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <!--end row -->
-
-                                <!--Subject-->
-                                <div class="form-group">
-                                    <label for="form-contact-email">Subjek *</label>
-                                    <input type="text" class="form-control" id="form-contact-subject" name="subjek"
-                                        placeholder="Subjek" required>
-                                </div>
-
-                                <!--Message-->
-                                <div class="form-group">
-                                    <label for="form-contact-message">Pesan *</label>
-                                    <textarea class="form-control" id="form-contact-message" rows="5" name="pesan" placeholder="Pesan" required></textarea>
-                                </div>
-
-                                <!--Submit button-->
-                                <div class="form-group clearfix">
-                                    <button type="submit" class="btn btn-primary float-right"
-                                        id="form-contact-submit">Kirim Pesan
-                                    </button>
-                                </div>
-
-                                <div class="form-contact-status"></div>
-
-                            </form>
-                            <!--end form-contact -->
-                        </div>
-                        <!--end col-md-8-->
+                        <!--Facebook-->
+                        <figure class="ts-center__vertical">
+                            <i class="fab fa-facebook ts-opacity__50 mr-3 mb-0 h4 font-weight-bold"></i>
+                            <dl class="mb-0">
+                                <dt>Facebook</dt>
+                                <dd class="ts-opacity__50">
+                                    <a href="#">Balai Bahasa Provinsi Jambi</a>
+                                </dd>
+                            </dl>
+                        </figure>
 
                     </div>
-                    <!--end row-->
+                    <!--end col-md-4-->
+
+                    <!--FORM (RIGHT SIDE)
+                            =============================================================================================-->
+                    <div class="col-md-8">
+
+                        <!--Title-->
+                        <h3>Formulir Kontak</h3>
+
+                        <!--Form-->
+                        <form id="form-contact" action="{{ route('kontak.store') }}" method="post"
+                            class="clearfix ts-form ts-form-email" data-php-path="assets/php/email.php">
+                            @csrf
+                            <!--Row-->
+                            <div class="row">
+
+                                <!--Name-->
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="form-contact-name">Nama *</label>
+                                        <input type="text" class="form-control" id="form-contact-name" name="nama"
+                                            placeholder="Nama" required>
+                                    </div>
+                                </div>
+
+                                <!--Email-->
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label for="form-contact-email">Email *</label>
+                                        <input type="email" class="form-control" id="form-contact-email"
+                                            name="email" placeholder="Email" required>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--end row -->
+
+                            <!--Subject-->
+                            <div class="form-group">
+                                <label for="form-contact-email">Subjek *</label>
+                                <input type="text" class="form-control" id="form-contact-subject" name="subjek"
+                                    placeholder="Subjek" required>
+                            </div>
+
+                            <!--Message-->
+                            <div class="form-group">
+                                <label for="form-contact-message">Pesan *</label>
+                                <textarea class="form-control" id="form-contact-message" rows="5" name="pesan" placeholder="Pesan" required></textarea>
+                            </div>
+
+                            <!--Submit button-->
+                            <div class="form-group clearfix">
+                                <button type="submit"
+                                    id="form-contact-submit"
+                                    class="btn btn-lg mt-3 px-4 float-right"
+                                    style="color: #17678d; border: 2px solid #17678d; transition: all 0.3s; background-color: transparent; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-size: 14px;"
+                                    onmouseover="this.style.backgroundColor='#17678d'; this.style.color='white';"
+                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#17678d';">
+                                    Kirim Pesan
+                                </button>
+
+                            </div>
+
+                            <div class="form-contact-status"></div>
+
+                        </form>
+                        <!--end form-contact -->
+                    </div>
+                    <!--end col-md-8-->
+
                 </div>
-                <!--end container-->
-            </section>
+                <!--end row-->
+            </div>
+            <!--end container-->
+        </section>
 
-        </main>
-        <!--end #ts-main-->
+    </main>
+    <!--end #ts-main-->
 
-    </div>
+</div>
 @endsection
