@@ -14,7 +14,7 @@
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="nama_bahasa" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
                 <div class="md:col-span-3">
-                    <input type="text" name="nama_bahasa" id="nama_bahasa" class="form-input" placeholder="Contoh: Kota Jambi" required>
+                    <input value="{{$wilayah->nama_wilayah}}" type="text" name="nama_wilayah" id="nama_bahasa" class="form-input" placeholder="Contoh: Kota Jambi" required>
                 </div>
             </div>
 

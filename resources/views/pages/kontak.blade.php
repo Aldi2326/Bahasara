@@ -9,64 +9,69 @@
 
     <main id="ts-main">
 
-        <!--PAGE TITLE
-                =========================================================================================================-->
-        <section class="mt-5" id="page-title" style="padding-top: 100px;">
-            <div class="container">
-                <div class="ts-title">
-                    @if (session('success'))
-                    <div id="toast-success" class="toast-custom">
-                        <span>{{ session('success') }}</span>
-                        <span class="toast-close" onclick="closeToast()">×</span>
+            <!--PAGE TITLE
+                            =========================================================================================================-->
+            <section class="mt-5" id="page-title" style="padding-top: 100px;">
+                <div class="container">
+                    <div class="ts-title">
+                        @if (session('success'))
+                            <div id="toast-success" class="toast-custom">
+                                <span>{{ session('success') }}</span>
+                                <span class="toast-close" onclick="closeToast()">×</span>
+                            </div>
+
+                            <script>
+                                // Hilang otomatis setelah 3 detik
+                                setTimeout(() => {
+                                    closeToast();
+                                }, 3000);
+
+                                function closeToast() {
+                                    const toast = document.getElementById('toast-success');
+                                    if (toast) {
+                                        toast.style.opacity = '0'; // efek fade out
+                                        setTimeout(() => toast.remove(), 500); // hapus elemen setelah animasi
+                                    }
+                                }
+                            </script>
+
+                            <style>
+                                .toast-custom {
+                                    position: fixed;
+                                    top: 20px;
+                                    right: 20px;
+                                    min-width: 250px;
+                                    max-width: 350px;
+                                    background-color: #28a745;
+                                    /* hijau sukses */
+                                    color: white;
+                                    padding: 12px 16px;
+                                    border-radius: 8px;
+                                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    gap: 10px;
+                                    z-index: 9999;
+                                    transition: opacity 0.5s ease;
+                                }
+
+                                .toast-close {
+                                    cursor: pointer;
+                                    font-size: 18px;
+                                    font-weight: bold;
+                                }
+
+                                .toast-close:hover {
+                                    color: #ddd;
+                                }
+                            </style>
+                        @endif
+
+
+
                     </div>
 
-                    <script>
-                        // Hilang otomatis setelah 3 detik
-                        setTimeout(() => {
-                            closeToast();
-                        }, 3000);
-
-                        function closeToast() {
-                            const toast = document.getElementById('toast-success');
-                            if (toast) {
-                                toast.style.opacity = '0'; // efek fade out
-                                setTimeout(() => toast.remove(), 500); // hapus elemen setelah animasi
-                            }
-                        }
-                    </script>
-
-                    <style>
-                        .toast-custom {
-                            position: fixed;
-                            top: 20px;
-                            right: 20px;
-                            min-width: 250px;
-                            max-width: 350px;
-                            background-color: #28a745;
-                            /* hijau sukses */
-                            color: white;
-                            padding: 12px 16px;
-                            border-radius: 8px;
-                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            gap: 10px;
-                            z-index: 9999;
-                            transition: opacity 0.5s ease;
-                        }
-
-                        .toast-close {
-                            cursor: pointer;
-                            font-size: 18px;
-                            font-weight: bold;
-                        }
-
-                        .toast-close:hover {
-                            color: #ddd;
-                        }
-                    </style>
-                    @endif
 
 
 
@@ -74,30 +79,34 @@
             </div>
         </section>
 
-        <!--MAP
-                =========================================================================================================-->
-        <section id="map-address">
+            <!--MAP
+                            =========================================================================================================-->
+            <section id="map-address">
 
             <div class="container mb-5">
                 <div class="ts-contact-map ts-map ts-shadow__sm position-relative">
 
-                    <!--Address on map-->
-                    <!-- <address class="position-absolute ts-bottom__0 ts-left__0 text-white m-3 p-4 ts-z-index__2" data-bg-color="rgba(0,0,0,.8)">
-                            <strong>Balai Bahasa Provinsi Jambi</strong>
-                            <br>
-                            Jalan Arif Rahman Hakim No. 101, Telanaipura Jambi
-                            <br>
-                            Indonesia, 36124
-                        </address> -->
+                        <!--Address on map-->
+                        <!-- <address class="position-absolute ts-bottom__0 ts-left__0 text-white m-3 p-4 ts-z-index__2" data-bg-color="rgba(0,0,0,.8)">
+                                        <strong>Balai Bahasa Provinsi Jambi</strong>
+                                        <br>
+                                        Jalan Arif Rahman Hakim No. 101, Telanaipura Jambi
+                                        <br>
+                                        Indonesia, 36124
+                                    </address> -->
 
-                    <!--Map-->
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.2292738392957!2d103.57259137455826!3d-1.6171257360763238!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2588f5c0b419f9%3A0xe4a980faaa00231!2sBalai%20Bahasa%20Provinsi%20Jambi.!5e0!3m2!1sen!2sid!4v1750088258135!5m2!1sen!2sid"
-                        width="1110" height="400" style="border:0;" allowfullscreen="" loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+                        <!--Map-->
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.2292738392957!2d103.57259137455826!3d-1.6171257360763238!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e2588f5c0b419f9%3A0xe4a980faaa00231!2sBalai%20Bahasa%20Provinsi%20Jambi.!5e0!3m2!1sen!2sid!4v1750088258135!5m2!1sen!2sid"
+                            width="1110" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
 
-        </section>
+            </section>
+
+            <!--CONTACT INFO & FORM
+                            =========================================================================================================-->
+            
 
         <!--CONTACT INFO & FORM
                 =========================================================================================================-->

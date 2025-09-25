@@ -10,20 +10,21 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('kontaks', function (Blueprint $table) {
+        Schema::create('aksara', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('email');
-            $table->string('subjek');
-            $table->text('pesan');
+            $table->string('nama_aksara');
+            $table->string('status');
+            $table->string('deskripsi');
+            $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('kontaks');
+        Schema::dropIfExists('aksara');
     }
 };

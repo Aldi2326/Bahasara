@@ -10,20 +10,19 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('kontaks', function (Blueprint $table) {
+        Schema::create('wilayah', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('email');
-            $table->string('subjek');
-            $table->text('pesan');
+            $table->string('nama_wilayah');
+            $table->string('file_geojson');
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('kontaks');
+        Schema::dropIfExists('wilayah');
     }
 };
