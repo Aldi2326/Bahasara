@@ -74,18 +74,57 @@ class WilayahController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+ * Update the specified resource in storage.
+ */
+public function update(Request $request, string $id)
+{
+    $wilayah = Wilayah::findOrFail($id);
+
+    $request->validate([
+        'nama_wilayah' => 'required|string|max:255',
+        'file_geojson' => 'nullable|file|mimes:geojson,json',
+    ]);
+
+    $data = [
+        'nama_wilayah' => $request->nama_wilayah,
+    ];
+
+    if ($request->hasFile('file_geojson')) {
+        // hapus file lama jika ada
+        if ($wilayah->file_geojson && file_exists(public_path($wilayah->file_geojson))) {
+            unlink(public_path($wilayah->file_geojson));
+        }
+
+        // simpan file baru
+        $file = $request->file('file_geojson');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('wilayah'), $filename);
+
+        $data['file_geojson'] = 'wilayah/' . $filename;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    $wilayah->update($data);
+
+    return redirect()->route('wilayah.index')
+        ->with('success', 'Wilayah berhasil diperbarui.');
+}
+
+/**
+ * Remove the specified resource from storage.
+ */
+public function destroy(string $id)
+{
+    $wilayah = Wilayah::findOrFail($id);
+
+    // hapus file geojson jika ada
+    if ($wilayah->file_geojson && file_exists(public_path($wilayah->file_geojson))) {
+        unlink(public_path($wilayah->file_geojson));
     }
+
+    $wilayah->delete();
+
+    return redirect()->route('wilayah.index')
+        ->with('success', 'Wilayah berhasil dihapus.');
+}
+
 }
