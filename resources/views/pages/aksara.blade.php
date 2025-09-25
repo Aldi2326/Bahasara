@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <div>Penutur: ${b.jumlah_penutur.toLocaleString()}</div>
                                     `;
                                     div.addEventListener("click", function () {
-                                        window.location.href = "/peta/" + b.id;
+                                        window.location.href = "/detail/aksara";
                                     });
                                     cardList.appendChild(div);
                                 });

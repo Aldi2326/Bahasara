@@ -57,6 +57,16 @@ Route::get('/admin/wilayah/edit', function () {
 Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
 Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
 
+Route::get('/detail/bahasa', function () {
+    return view('pages.detail-bahasa');
+});
+Route::get('/detail/sastra', function () {
+    return view('pages.detail-sastra');
+});
+Route::get('/detail/aksara', function () {
+    return view('pages.detail-aksara');
+});
+
 Route::get('/admin/peta/bahasa', function () {
     return view('pages.admin.peta.bahasa.index');
 });

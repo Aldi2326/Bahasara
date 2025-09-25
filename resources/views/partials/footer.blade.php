@@ -12,7 +12,13 @@
                         (SIG) yang berfungsi untuk menampilkan Bahasa
                         dan Sastra yang ada di Provinsi Jambi.
                     </p>
-                    <a href="{{ url('kontak') }}" class="btn btn-outline-dark mb-4">Kontak Kami</a>
+                    <a href="{{ url('/') }}" 
+                       class="btn btn-lg mt-3 px-4" 
+                       style="color: #17678d; border: 2px solid #17678d; transition: all 0.3s; background-color: transparent; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" 
+                       onmouseover="this.style.backgroundColor='#17678d'; this.style.color='white';" 
+                       onmouseout="this.style.backgroundColor='transparent'; this.style.color='#17678d';">
+                       Kontak Kami
+                    </a>
                 </div>
 
                 <!-- Navigation -->
