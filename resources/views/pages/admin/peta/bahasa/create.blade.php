@@ -3,12 +3,13 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title mb-4">Input Data Bahasa</h4>
+        <h4 class="card-title mb-4">Input Data Bahasa </h4>
     </div>
     <div class="p-6">
 
-        <form class="flex flex-col gap-4" method="POST" action="" enctype="multipart/form-data">
+        <form class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST">
             @csrf
+            <input type="hidden" name="wilayah_id" value="{{$wilayahId}}" id="">
 
             <!-- Nama Bahasa -->
             <div class="grid grid-cols-4 items-center gap-6">
@@ -22,7 +23,7 @@
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="status_bahasa" class="text-default-800 text-sm font-medium">Status Bahasa</label>
                 <div class="md:col-span-3">
-                    <select name="status_bahasa" id="status_bahasa" class="form-select" required>
+                    <select name="status" id="status_bahasa" class="form-select" required>
                         <option value="">-- Pilih Status --</option>
                         <option value="aktif">Aktif</option>
                         <option value="tidak_aktif">Tidak Aktif</option>
@@ -44,15 +45,6 @@
                 <div class="md:col-span-3">
                     <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi lengkap bahasa..." required></textarea>
                     <p class="mt-1 text-xs text-default-500">Isi dengan penjelasan lebih detail (mendukung teks panjang)</p>
-                </div>
-            </div>
-
-            <!-- Upload GeoJSON -->
-            <div class="grid grid-cols-4 items-center gap-6">
-                <label for="geojson_file" class="text-default-800 text-sm font-medium">File GeoJSON</label>
-                <div class="md:col-span-3">
-                    <input type="file" name="geojson_file" id="geojson_file" class="form-input" accept=".geojson,application/geo+json" required>
-                    <p class="mt-1 text-xs text-default-500">Hanya file dengan format <b>.geojson</b> (maks 2MB)</p>
                 </div>
             </div>
 
