@@ -7,9 +7,9 @@
         <h4 class="card-title mb-4">Input Data Sastra</h4>
     </div>
     <div class="p-6">
-
-        <form class="flex flex-col gap-4" method="POST" action="" enctype="multipart/form-data">
+        <form class="flex flex-col gap-4" method="POST" action="{{ route('sastra.store') }}">
             @csrf
+            <input type="hidden" name="wilayah_id" value="{{$wilayahId}}" id="">
 
             <!-- Nama Sastra -->
             <div class="grid grid-cols-4 items-center gap-6">
@@ -23,7 +23,7 @@
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="jenis_sastra" class="text-default-800 text-sm font-medium">Jenis Sastra</label>
                 <div class="md:col-span-3">
-                    <select name="jenis_sastra" id="jenis_sastra" class="form-select" required>
+                    <select name="jenis" id="jenis_sastra" class="form-select" required>
                         <option value="">-- Pilih Jenis --</option>
                         <option value="lisan">Lisan</option>
                         <option value="tulisan">Tulisan</option>

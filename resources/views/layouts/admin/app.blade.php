@@ -12,7 +12,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/img/bahasara-logo.png') }}">
 
     <!-- Icons css  (Mandatory in All Pages) -->
-    <link href="{{ asset('assets/admin/css/icons.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/admin/css/icons.min.css') }}" rel="stylesheet" type="text/css">
 
     <!-- App css  (Mandatory in All Pages) -->
     <link href="{{ asset('assets/admin/css/app.min.css') }}" rel="stylesheet" type="text/css">
@@ -32,7 +32,59 @@
             <!-- Topbar End -->
 
             <main>
+                @if (session('success'))
+                    <div id="toast-success" class="toast-custom">
+                        <span>{{ session('success') }}</span>
+                        <span class="toast-close" onclick="closeToast()">×</span>
+                    </div>
 
+                    <script>
+                        // Hilang otomatis setelah 3 detik
+                        setTimeout(() => {
+                            closeToast();
+                        }, 3000);
+
+                        function closeToast() {
+                            const toast = document.getElementById('toast-success');
+                            if (toast) {
+                                toast.style.opacity = '0'; // efek fade out
+                                setTimeout(() => toast.remove(), 500); // hapus elemen setelah animasi
+                            }
+                        }
+                    </script>
+
+                    <style>
+                        .toast-custom {
+                            position: fixed;
+                            top: 20px;
+                            right: 20px;
+                            min-width: 250px;
+                            max-width: 350px;
+                            background-color: #28a745;
+                            /* hijau sukses */
+                            color: white;
+                            padding: 12px 16px;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            gap: 10px;
+                            z-index: 9999;
+                            transition: opacity 0.5s ease;
+                        }
+
+                        .toast-close {
+                            cursor: pointer;
+                            font-size: 18px;
+                            font-weight: bold;
+                        }
+
+                        .toast-close:hover {
+                            color: #ddd;
+                        }
+                    </style>
+                @endif
                 <!-- Page Title Start -->
                 @yield('content')
                 <!-- Page Title End -->
@@ -40,7 +92,7 @@
 
             <!-- Footer Start -->
             @include('partials.admin.footer')
-            
+
             <!-- Footer End -->
 
         </div>

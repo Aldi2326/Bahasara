@@ -43,7 +43,9 @@
                     </td>
                     <td class="px-6 py-4 text-sm text-default-800 space-x-2">
                       <a href="{{ route('bahasa.index', ['wilayah_id' => $item->id]) }}" class="text-green-600 hover:underline">+ Bahasa</a>
-
+                      <a href="{{ route('sastra.index', ['wilayah_id' => $item->id]) }}" class="text-orange-600 hover:underline">+ Sastra</a>
+                      <a href="{{ route('aksara.index', ['wilayah_id' => $item->id]) }}" class="text-purple-600 hover:underline">+ Aksara</a>
+                      
                       {{-- <a href="{{ route('bahasa.create', $item->id) }}" class="text-green-600 hover:underline">+ Bahasa</a>
                       <a href="{{ route('aksara.create', $item->id) }}" class="text-purple-600 hover:underline">+ Aksara</a>
                       <a href="{{ route('sastra.create', $item->id) }}" class="text-orange-600 hover:underline">+ Sastra</a> --}}

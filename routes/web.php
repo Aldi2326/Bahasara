@@ -6,6 +6,8 @@ use App\Http\Controllers\PetaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\BahasaController;
+use App\Http\Controllers\AksaraController;
+use App\Http\Controllers\SastraController;
 
 // Route::resource('kontak', KontakController::class);
 
@@ -27,6 +29,8 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('/admin/wilayah', WilayahController::class);
     Route::resource('/admin/peta/bahasa', BahasaController::class);
+    Route::resource('/admin/peta/aksara', AksaraController::class);
+    Route::resource('/admin/peta/sastra', SastraController::class);
 
     // Bahasa
 
@@ -34,20 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
     Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
 
-    Route::get('/admin/peta/sastra', function () {
-        return view('pages.admin.peta.sastra.index');
-    });
 
-    Route::get('/admin/peta/sastra/tambah', function () {
-        return view('pages.admin.peta.sastra.create');
-    });
 
     Route::get('/admin/peta/sastra/edit', function () {
         return view('pages.admin.peta.sastra.edit');
-    });
-
-    Route::get('/admin/peta/aksara', function () {
-        return view('pages.admin.peta.aksara.index');
     });
 
     Route::get('/admin/peta/aksara/tambah', function () {
@@ -84,18 +78,6 @@ Route::get('/admin/dashboard', function () {
     return view('pages.admin.dashboard.index');
 });
 
-Route::get('/admin/wilayah', function () {
-    return view('pages.admin.wilayah.index');
-});
-
-Route::get('/admin/wilayah/tambah', function () {
-    return view('pages.admin.wilayah.create');
-});
-
-Route::get('/admin/wilayah/edit', function () {
-    return view('pages.admin.wilayah.edit');
-});
-
 Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
 Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
 
@@ -109,32 +91,13 @@ Route::get('/detail/aksara', function () {
     return view('pages.detail-aksara');
 });
 
-Route::get('/admin/peta/bahasa', function () {
-    return view('pages.admin.peta.bahasa.index');
-});
-Route::get('/admin/peta/bahasa/tambah', function () {
-    return view('pages.admin.peta.bahasa.create');
-})->name('bahasa.create');
 
-Route::get('/admin/peta/bahasa/edit', function () {
-    return view('pages.admin.peta.bahasa.edit');
-})->name('bahasa.edit');
-
-Route::get('/admin/peta/sastra', function () {
-    return view('pages.admin.peta.sastra.index');
-});
-
-Route::get('/admin/peta/sastra/tambah', function () {
-    return view('pages.admin.peta.sastra.create');
-});
 
 Route::get('/admin/peta/sastra/edit', function () {
     return view('pages.admin.peta.sastra.edit');
 });
 
-Route::get('/admin/peta/aksara', function () {
-    return view('pages.admin.peta.aksara.index');
-});
+
 
 Route::get('/admin/peta/aksara/tambah', function () {
     return view('pages.admin.peta.aksara.create');
