@@ -32,25 +32,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('/admin/peta/aksara', AksaraController::class);
     Route::resource('/admin/peta/sastra', SastraController::class);
 
-    // Bahasa
-
-
+    Route::get('/admin/dashboard', function () {
+        return view('pages.admin.dashboard.index');
+    });
     Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
     Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
 
-
-
-    Route::get('/admin/peta/sastra/edit', function () {
-        return view('pages.admin.peta.sastra.edit');
-    });
-
-    Route::get('/admin/peta/aksara/tambah', function () {
-        return view('pages.admin.peta.aksara.create');
-    })->name('aksara.create');
-
-    Route::get('/admin/peta/aksara/edit', function () {
-        return view('pages.admin.peta.aksara.edit');
-    })->name('aksara.edit');
 });
 
 Route::get('/', [PetaController::class, 'index']);
@@ -68,15 +55,8 @@ Route::get('/kontak', function () {
     return view('pages.kontak');
 });
 
-Route::get('/kontak', function () {
-    return view('pages.kontak');
-});
 
 Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
-
-Route::get('/admin/dashboard', function () {
-    return view('pages.admin.dashboard.index');
-});
 
 Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
 Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
@@ -92,19 +72,3 @@ Route::get('/detail/aksara', function () {
 });
 
 
-
-Route::get('/admin/peta/sastra/edit', function () {
-    return view('pages.admin.peta.sastra.edit');
-});
-
-
-
-Route::get('/admin/peta/aksara/tambah', function () {
-    return view('pages.admin.peta.aksara.create');
-})->name('aksara.create');
-
-Route::get('/admin/peta/aksara/edit', function () {
-    return view('pages.admin.peta.aksara.edit');
-})->name('aksara.edit');
-
-Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');

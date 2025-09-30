@@ -32,9 +32,14 @@ class SastraController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        
+        $request->validate([
+            'nama_sastra' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'wilayah_id' => 'required|integer|exists:wilayah,id',
+        ]);
 
         Sastra::create($request->all());
 

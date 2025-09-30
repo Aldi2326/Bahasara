@@ -18,14 +18,15 @@ class AksaraController extends Controller
 
         return view('pages.admin.peta.aksara.index', compact('wilayahId', 'aksara'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $wilayahId = $request->query('wilayah_id');
+        return view('pages.admin.peta.aksara.create', compact('wilayahId'));
     }
 
     /**
@@ -33,7 +34,12 @@ class AksaraController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+
+        Aksara::create($request->all());
+
+        return redirect()->route('aksara.index', ['wilayah_id' => $request->wilayah_id])
+            ->with('success', 'Aksara berhasil ditambahkan.');
     }
 
     /**
@@ -47,24 +53,34 @@ class AksaraController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $aksara = Aksara::findOrFail($id);
+        return view('pages.admin.peta.aksara.edit', compact('aksara'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $aksara = Aksara::findOrFail($id);
+        $aksara->update($request->all());
+
+        return redirect()->route('aksara.index', ['wilayah_id' => $aksara->wilayah_id])
+            ->with('success', 'Data aksara berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $aksara = Aksara::findOrFail($id);
+        $wilayahId = $aksara->wilayah_id;
+        $aksara->delete();
+
+        return redirect()->route('aksara.index', ['wilayah_id' => $wilayahId])
+            ->with('success', 'Data aksara berhasil dihapus.');
     }
 }
