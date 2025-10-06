@@ -24,7 +24,7 @@
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="status_aksara" class="text-default-800 text-sm font-medium">Status</label>
                     <div class="md:col-span-3">
-                        <select name="status" id="status_aksara" class="form-select" required>
+                        <select name="status_aksara" id="status_aksara" class="form-select" required>
                             <option value="">-- Pilih Status --</option>
                             <option value="aktif">Aktif</option>
                             <option value="tidak_aktif">Tidak Aktif</option>

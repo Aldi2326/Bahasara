@@ -8,20 +8,6 @@
 
     <!-- Map Container -->
     <div style="position: relative;">
-        <!-- Floating Control: Dropdown + Search -->
-        <div class="search-control">
-            <!-- Dropdown Bahasa -->
-            <select id="languageSelect" class="form-select form-select-sm mb-2">
-                <option value="">-- Pilih Sastra --</option>
-                @foreach($wilayah as $w)
-                    @foreach($w->bahasa as $b)
-                        <option value="{{ $b->id }}">{{ $b->nama_bahasa }}</option>
-                    @endforeach
-                @endforeach
-            </select>
-
-        </div>
-
         <!-- Peta -->
         <div id="map" style="height: 680px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border-radius:12px;"></div>
 
@@ -82,117 +68,50 @@
 <!-- Script Leaflet -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    var wilayahData = @json($wilayah);
+    var map = L.map('map').setView([-1.6, 103.6], 8);
 
-    var jambiBounds = L.latLngBounds(
-        L.latLng(-2.8, 101.1),
-        L.latLng(0.5, 104.8)
-    );
-
-    var map = L.map('map', {
-        center: [-1.6101, 103.6158],
-        zoom: 8,
-        zoomControl: false,
-        maxBounds: jambiBounds,
-        maxBoundsViscosity: 1.0
-    });
-
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '© OpenStreetMap'
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-    // Card element
     var languageCard = document.getElementById("languageCard");
-    var cardList = document.getElementById("cardList");
     var cardWilayah = document.getElementById("cardWilayah");
+    var cardList = document.getElementById("cardList");
 
-    var selectedLayer = null;
-    var wilayahLayers = {};
+    var wilayahData = @json($wilayah);
 
-    // Load GeoJSON per wilayah
-    wilayahData.forEach(function (wilayah) {
-        if (wilayah.geojson) {
-            fetch('/wilayah/' + wilayah.geojson)
-                .then(response => response.json())
-                .then(data => {
-                    var geojsonLayer = L.geoJSON(data, {
-                        style: {
-                            color: "blue",
-                            weight: 2,
-                            fillOpacity: 0,
-                            opacity: 0
-                        },
-                        onEachFeature: function (feature, layer) {
-                            layer.on("mouseover", function () {
-                                if (selectedLayer !== layer) {
-                                    layer.setStyle({ opacity: 1 });
-                                }
-                            });
-                            layer.on("mouseout", function () {
-                                if (selectedLayer !== layer) {
-                                    layer.setStyle({ opacity: 0 });
-                                }
-                            });
-                            layer.on("click", function () {
-                                if (selectedLayer && selectedLayer !== layer) {
-                                    selectedLayer.setStyle({ opacity: 0 });
-                                }
-                                selectedLayer = layer;
-                                layer.setStyle({ opacity: 1 });
+    wilayahData.forEach(function(w) {
+        w.sastra.forEach(function(s) {
+            if (s.koordinat) {
+                var coords = s.koordinat.split(',');
+                var lat = parseFloat(coords[0].trim());
+                var lng = parseFloat(coords[1].trim());
 
-                                cardWilayah.textContent = wilayah.nama_wilayah;
-                                cardList.innerHTML = "";
-                                wilayah.bahasa.forEach(function (b) {
-                                    var div = document.createElement("div");
-                                    div.classList.add("language-item");
-                                    div.innerHTML = `
-                                        <div class="language-name">${b.nama_bahasa}</div>
-                                        <div>Status: ${b.status}</div>
-                                        <div>Penutur: ${b.jumlah_penutur.toLocaleString()}</div>
-                                    `;
-                                    div.addEventListener("click", function () {
-                                        window.location.href = "/detail/sastra" ;
-                                    });
-                                    cardList.appendChild(div);
-                                });
-                                languageCard.classList.remove("d-none");
-                            });
-                        }
-                    }).addTo(map);
+                var marker = L.marker([lat, lng]).addTo(map);
 
-                    wilayahLayers[wilayah.id] = {
-                        layer: geojsonLayer,
-                        data: wilayah
-                    };
-                })
-                .catch(error => console.error("Error loading GeoJSON:", error));
-        }
-    });
+                marker.on("click", function() {
+                    cardWilayah.textContent = w.nama_wilayah;
+                    cardList.innerHTML = `
+                        <div class="language-item" data-id="${s.id}">
+                            <div class="language-name">${s.nama_sastra}</div>
+                            <p class="language-desc">${s.deskripsi}</p>
+                        </div>
+                    `;
+                    languageCard.classList.remove("d-none");
 
-    // Event select bahasa
-    document.getElementById("languageSelect").addEventListener("change", function () {
-        var selectedBahasaId = this.value;
-
-        // Reset semua layer
-        Object.values(wilayahLayers).forEach(function (w) {
-            w.layer.setStyle({ color: "blue", weight: 2, opacity: 0 });
+                    // Klik item → redirect detail
+                    document.querySelector(".language-item").addEventListener("click", function() {
+                        window.location.href = "/detail/sastra/" + this.dataset.id;
+                    });
+                });
+            }
         });
-
-        if (selectedBahasaId) {
-            Object.values(wilayahLayers).forEach(function (w) {
-                var bahasaMatch = w.data.bahasa.find(b => b.id == selectedBahasaId);
-                if (bahasaMatch) {
-                    // Highlight wilayah → biru, lebih tebal
-                    w.layer.setStyle({ color: "blue", weight: 3, opacity: 1 });
-                }
-            });
-        }
     });
 });
+
 </script>
+
 
 
 

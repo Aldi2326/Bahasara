@@ -11,6 +11,7 @@
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+                
                 <!-- Nama Bahasa -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="nama_bahasa" class="text-default-800 text-sm font-medium">Nama Bahasa</label>

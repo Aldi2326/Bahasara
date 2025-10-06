@@ -29,7 +29,7 @@
                                         <td class="px-6 py-4 text-sm font-medium text-default-800">{{ $key + 1 }}</td>
                                         <td class="px-6 py-4 text-sm text-default-800">{{ $item->nama_aksara }}</td>
                                         <td class="px-6 py-4 text-sm text-default-800">
-                                            @if ($item->status == 'aktif')
+                                            @if ($item->status == 'aktif')  
                                                 <span class="px-2 py-1 rounded bg-green-500 text-white">Aktif</span>
                                             @else
                                                 <span class="px-2 py-1 rounded bg-red-500 text-white">Tidak Aktif</span>
@@ -56,7 +56,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="6" class="px-6 py-4 text-center text-sm text-default-500">
-                                            Belum ada data bahasa untuk wilayah ini.
+                                            Belum ada data aksara untuk wilayah ini.
                                         </td>
                                     </tr>
                                 @endforelse

@@ -41,6 +41,7 @@
                                             style="white-space:normal;word-wrap:break-word;">
                                             {{ $item->deskripsi }}
                                         </td>
+                                        
                                         <td class="px-6 py-4 text-sm text-end font-medium space-x-3 flex">
                                             <a href="{{ route('bahasa.edit', $item->id) }}"
                                                 class="text-blue-600 hover:underline">Edit</a>

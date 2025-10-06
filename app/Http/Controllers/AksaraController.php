@@ -34,7 +34,7 @@ class AksaraController extends Controller
      */
     public function store(Request $request)
     {
-        
+
 
         Aksara::create($request->all());
 
@@ -64,6 +64,14 @@ class AksaraController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nama_aksara' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
+            'jumlah_penutur' => 'nullable|integer',
+            'deskripsi' => 'required|string',
+            
+        ]);
+
         $aksara = Aksara::findOrFail($id);
         $aksara->update($request->all());
 

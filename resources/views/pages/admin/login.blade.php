@@ -34,14 +34,15 @@
                 <div class="mb-3">
                     <label for="exampleInputEmail1"
                         class="text-default-800 text-sm font-medium inline-block mb-2">Username</label>
-                    <input type="text" name="name" value="{{ old('name') }}" class="form-input" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="Enter Username" required>
+                    <input type="text" name="name" value="{{ old('name') }}" class="form-input"
+                        id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Username" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="exampleInputPassword1"
                         class="text-default-800 text-sm font-medium inline-block mb-2">Password</label>
-                    <input type="password" name="password" class="form-input" id="exampleInputPassword1" placeholder="Password" required>
+                    <input type="password" name="password" class="form-input" id="exampleInputPassword1"
+                        placeholder="Password" required>
                 </div>
 
                 <button type="submit" class="btn bg-primary text-white w-full">Login</button>

@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Wilayah;
 use App\Models\Bahasa;
 use Illuminate\Http\Request;
 

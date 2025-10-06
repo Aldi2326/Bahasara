@@ -28,14 +28,9 @@
         });
     </script>
 
-    <style>
-        /* Custom tombol layer kanan atas */
-        .leaflet-touch .leaflet-control-layers-toggle {
-            width: 44px;
-            height: 44px;
-            background-image: url("{{ asset('assets/image-peta/layers.png') }}");
-        }
-    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <title>@yield('title', 'MyHouse')</title>
 </head>
 

@@ -6,10 +6,10 @@
             <h4 class="card-title mb-4">Edit Data Sastra</h4>
         </div>
         <div class="p-6">
-
             <form class="flex flex-col gap-4" method="POST" action="{{ route('sastra.update', $sastra->id) }}">
                 @csrf
                 @method('PUT')
+                
                 <!-- Nama Sastra -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
@@ -74,35 +74,60 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Inisialisasi peta
-            var map = L.map('map').setView([-1.6101, 103.6158], 7); // Jambi sebagai default
+    document.addEventListener("DOMContentLoaded", function() {
+        // Default koordinat Jambi
+        var defaultLat = -1.6101;
+        var defaultLng = 103.6158;
+        var defaultZoom = 7;
 
-            // Tambah layer OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
+        // Ambil koordinat dari database
+        var koordinatDB = "{{ $sastra->koordinat }}";
+        var lat = defaultLat;
+        var lng = defaultLng;
+        var zoom = defaultZoom;
 
-            var marker;
+        if (koordinatDB) {
+            var coords = koordinatDB.split(',');
+            lat = parseFloat(coords[0].trim());
+            lng = parseFloat(coords[1].trim());
+            zoom = 11; // zoom lebih dekat kalau ada data
+        }
 
-            // Event klik pada peta
-            map.on('click', function(e) {
-                var lat = e.latlng.lat.toFixed(6);
-                var lng = e.latlng.lng.toFixed(6);
-                var koordinat = lat + ", " + lng;
+        // Inisialisasi peta
+        var map = L.map('map').setView([lat, lng], zoom);
 
-                // isi input koordinat
-                document.getElementById("koordinat").value = koordinat;
+        // Tambah layer OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
 
-                // hapus marker lama jika ada
-                if (marker) {
-                    map.removeLayer(marker);
-                }
+        var marker;
 
-                // tambah marker baru
-                marker = L.marker([lat, lng]).addTo(map)
-                    .bindPopup("Koordinat: " + koordinat).openPopup();
-            });
+        // Kalau ada koordinat dari DB → tampilkan marker
+        if (koordinatDB) {
+            marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup("Koordinat: " + lat + ", " + lng).openPopup();
+        }
+
+        // Event klik pada peta
+        map.on('click', function(e) {
+            var newLat = e.latlng.lat.toFixed(6);
+            var newLng = e.latlng.lng.toFixed(6);
+            var koordinat = newLat + ", " + newLng;
+
+            // isi input koordinat
+            document.getElementById("koordinat").value = koordinat;
+
+            // hapus marker lama jika ada
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            // tambah marker baru
+            marker = L.marker([newLat, newLng]).addTo(map)
+                .bindPopup("Koordinat: " + koordinat).openPopup();
         });
-    </script>
+    });
+</script>
+
 @endsection

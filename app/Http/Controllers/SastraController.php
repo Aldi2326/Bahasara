@@ -16,7 +16,6 @@ class SastraController extends Controller
     {
         $wilayahId = $request->query('wilayah_id'); // ambil dari query string
         $sastra = Sastra::where('wilayah_id', $wilayahId)->get();
-
         return view('pages.admin.peta.sastra.index', compact('wilayahId', 'sastra'));
     }
 
@@ -36,8 +35,9 @@ class SastraController extends Controller
     {
         $request->validate([
             'nama_sastra' => 'required|string|max:255',
-            'status' => 'required|string|max:255',
+            'jenis' => 'required|string|max:255',
             'deskripsi' => 'required|string',
+            'koordinat' => 'required|string',
             'wilayah_id' => 'required|integer|exists:wilayah,id',
         ]);
 

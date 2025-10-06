@@ -7,7 +7,6 @@
             <a href="{{ route('sastra.create', ['wilayah_id' => $wilayahId]) }}" class="btn bg-danger text-white">Tambah
                 Data</a>
         </div>
-
         <div>
             <div class="overflow-x-auto">
                 <div class="min-w-full inline-block align-middle">
@@ -33,7 +32,6 @@
                                         <td class="px-6 py-4 text-sm text-default-800">{{ $item->jenis }}</td>
                                         <td class="px-6 py-4 text-sm text-default-800">{{ $item->deskripsi }}</td>
                                         <td class="px-6 py-4 text-sm text-default-800">{{ $item->koordinat }}</td>
-                                        
                                         <td class="px-6 py-4 text-sm text-end font-medium space-x-3 flex">
                                             <a href="{{ route('sastra.edit', $item->id) }}"
                                                 class="text-blue-600 hover:underline">Edit</a>
@@ -49,7 +47,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="6" class="px-6 py-4 text-center text-sm text-default-500">
-                                            Belum ada data bahasa untuk wilayah ini.
+                                            Belum ada data sastra untuk wilayah ini.
                                         </td>
                                     </tr>
                                 @endforelse

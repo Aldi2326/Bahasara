@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Bahasa')
+@section('title', 'Detail Sastra')
 
 @section('content')
 <div class="container" style="margin-top: 150px; margin-bottom: 200px">
@@ -8,37 +8,31 @@
         
         <!-- Header -->
         <div class="card-header text-white" style="background-color: #1b81ae;">
-            <h3 class="mb-0">Bahasa Incung</h3>
-            <small class="opacity-75">Wilayah: Kerinci, Provinsi Jambi</small>
+            <h3 class="mb-0">{{ $sastra->nama_sastra }}</h3>
+            <small class="opacity-75">Wilayah: {{ $sastra->wilayah->nama_wilayah }}, Provinsi Jambi</small>
         </div>
 
         <!-- Body -->
         <div class="card-body">
             <div class="row mb-4">
-                <div class="col-md-6 border-end">
-                    <h6 class="text-muted">Jumlah Penutur</h6>
-                    <p class="fs-5 fw-semibold mb-0">± 1.500 orang</p>
-                </div>
                 <div class="col-md-6">
-                    <h6 class="text-muted">Status Bahasa</h6>
-                    <span class="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill">
-                        Terancam Punah
-                    </span>
+                    <h6 class="text-muted">Status Sastra</h6>
+                    <span
+                            class="badge 
+                        @if ($sastra->jenis == 'lisan') bg-success 
+                        @elseif($sastra->jenis == 'tulisan') bg-warning text-dark 
+                        @else bg-secondary @endif 
+                        fs-6 px-3 py-2 rounded-pill">
+                            {{ $sastra->jenis }}
+                        </span>
                 </div>
             </div>
 
             <div class="mb-4">
                 <h5 class="text-muted">Deskripsi</h5>
                 <p class="text-justify fs-6">
-                    Bahasa Incung adalah bahasa daerah masyarakat Kerinci, Provinsi Jambi. 
-                    Keunikannya terletak pada aksara kuno bernama <strong>Aksara Incung</strong> 
-                    yang ditemukan pada naskah manuskrip. 
-                </p>
-                <p class="text-justify fs-6">
-                    Saat ini, penggunaan bahasa ini semakin terbatas dan umumnya dipertahankan dalam 
-                    upacara adat, kegiatan budaya, serta penelitian akademik. Upaya revitalisasi 
-                    dilakukan melalui komunitas lokal dan pendidikan budaya.
-                </p>
+                        {{ $sastra->deskripsi ?? 'Tidak ada deskripsi.' }}
+                    </p>
             </div>
 
             <!-- Peta Leaflet -->
@@ -67,27 +61,35 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Inisialisasi map
-        var map = L.map('map').setView([-2.0833, 101.4], 9); // koordinat Kerinci, zoom level 9
+        // Ambil koordinat dari Laravel
+        var koordinat = "{{ $sastra->koordinat }}";
 
-        // Tambahkan tile layer
+        // Default fallback (misalnya pusat Jambi)
+        var lat = -1.6;
+        var lng = 103.6;
+        var zoomLevel = 8;
+
+        if (koordinat) {
+            var coords = koordinat.split(",");
+            lat = parseFloat(coords[0].trim());
+            lng = parseFloat(coords[1].trim());
+            zoomLevel = 11; // zoom lebih dekat kalau ada titik
+        }
+
+        // Inisialisasi map
+        var map = L.map('map').setView([lat, lng], zoomLevel);
+
+        // Tambahkan tile layer OSM
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
-        // Load GeoJSON eksternal
-        fetch("{{ asset('geojson/kerinci.geojson') }}")
-            .then(response => response.json())
-            .then(data => {
-                L.geoJSON(data, {
-                    style: {
-                        color: "#1b81ae",
-                        weight: 2,
-                        fillColor: "#1b81ae",
-                        fillOpacity: 0.3
-                    }
-                }).addTo(map);
-            });
+        // Tambahkan marker jika ada koordinat
+        if (koordinat) {
+            L.marker([lat, lng]).addTo(map)
+        }
     });
 </script>
+
 @endsection
