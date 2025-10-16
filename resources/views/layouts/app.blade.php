@@ -30,6 +30,12 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Tambahkan di head (kalau belum ada) -->
+<link rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.1/dist/css/bootstrap-multiselect.css">
+
+
+
 
     <title>@yield('title', 'MyHouse')</title>
 </head>
@@ -50,7 +56,9 @@
         @include('partials.footer')
 
     </div>
-
+<!-- Tambahkan sebelum </body> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.1/dist/js/bootstrap-multiselect.min.js"></script>
     <!-- JS -->
     <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/popper.min.js') }}"></script>

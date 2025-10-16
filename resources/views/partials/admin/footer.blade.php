@@ -3,10 +3,7 @@
         <div>
             <script>
                 document.write(new Date().getFullYear())
-            </script> © Drezoc
-        </div>
-        <div class="md:flex hidden gap-2 item-center md:justify-end">
-            Design &amp; Develop by<a href="#" class="text-primary">Myrathemes</a>
+            </script> © Bahasara
         </div>
     </div>
 </footer>

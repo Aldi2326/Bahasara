@@ -22,13 +22,15 @@
                     <div class="col-md-6">
                         <h6 class="text-muted">Status Bahasa</h6>
                         <span
-                            class="badge 
-                        @if ($bahasa->status == 'Aktif') bg-success 
-                        @elseif($bahasa->status == 'Terancam Punah') bg-warning text-dark 
-                        @else bg-secondary @endif 
-                        fs-6 px-3 py-2 rounded-pill">
-                            {{ $bahasa->status }}
-                        </span>
+    class="badge 
+        @if (strtolower($bahasa->status) == 'aktif') bg-success text-white
+        @elseif (strtolower($bahasa->status) == 'terancam punah') bg-warning text-dark 
+        @else bg-secondary 
+        @endif 
+    fs-6 px-3 py-2 rounded-pill">
+    {{ ucfirst(strtolower($bahasa->status)) }}
+</span>
+
                     </div>
                 </div>
 

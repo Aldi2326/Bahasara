@@ -16,6 +16,10 @@
 
     <!-- App css  (Mandatory in All Pages) -->
     <link href="{{ asset('assets/admin/css/app.min.css') }}" rel="stylesheet" type="text/css">
+    <!-- Bootstrap Icons CDN -->
+<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 </head>
 
 <body>
