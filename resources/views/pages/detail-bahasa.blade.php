@@ -25,6 +25,7 @@
     class="badge 
         @if (strtolower($bahasa->status) == 'aktif') bg-success text-white
         @elseif (strtolower($bahasa->status) == 'terancam punah') bg-warning text-dark 
+        
         @else bg-secondary 
         @endif 
     fs-6 px-3 py-2 rounded-pill">

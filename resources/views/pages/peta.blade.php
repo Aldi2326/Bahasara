@@ -71,6 +71,16 @@
             <h5 class="fw-bold mb-2" id="cardWilayah"></h5>
             <div id="cardList"></div>
         </div>
+
+        <!-- 🔹 LEGEND PETA -->
+        <div id="legendCard" class="legend-card shadow">
+            <h6 class="fw-bold mb-2">Keterangan Peta</h6>
+            <div class="legend-item"><span class="legend-color" style="background:#FF6B6B"></span> Bahasa Melayu</div>
+            <div class="legend-item"><span class="legend-color" style="background:#FFD93D"></span> Bahasa Kerinci</div>
+            <div class="legend-item"><span class="legend-color" style="background:#4D96FF"></span> Bahasa Minang</div>
+            <div class="legend-item"><span class="legend-color" style="background:#6BCB77"></span> Bahasa Batak </div>
+            <div class="legend-item"><span class="legend-color" style="background:#6BCB77"></span> Bahasa Alien </div>
+        </div>
     </div>
 </div>
 
@@ -99,36 +109,16 @@
         bahasaCheckboxes.forEach(cb => {
             cb.addEventListener('change', () => {
                 updateButtonLabel(bahasaCheckboxes, bahasaBtn, '-- Pilih Bahasa --');
-                // TODO: Tambahkan aksi filter peta berdasarkan bahasa di sini
             });
         });
 
         wilayahCheckboxes.forEach(cb => {
             cb.addEventListener('change', () => {
                 updateButtonLabel(wilayahCheckboxes, wilayahBtn, '-- Pilih Wilayah --');
-                // TODO: Tambahkan aksi filter peta berdasarkan wilayah di sini
             });
         });
     });
 </script>
-
-<!-- Custom Style -->
-<style>
-    .dropdown-menu label {
-        cursor: pointer;
-    }
-
-    .dropdown-menu input {
-        margin-right: 6px;
-    }
-
-    .dropdown-toggle::after {
-        margin-left: 8px;
-    }
-</style>
-
-
-
 
 <!-- Custom CSS -->
 <style>
@@ -154,29 +144,33 @@
         overflow-y: auto;
     }
 
-    .language-item {
-        padding: 8px;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
+    /* 🔹 LEGEND CARD STYLE */
+    .legend-card {
+        position: absolute;
+        bottom: 15px;
+        left: calc(var(--bs-gutter-x, 1.5rem));
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(4px);
+        border-radius: 12px;
+        padding: 12px 16px;
+        width: 220px;
+        z-index: 1100;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     }
 
-    .language-item:last-child {
-        border-bottom: none;
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
     }
 
-    .language-item:hover {
-        background: #f9f9f9;
-    }
-
-    .language-name {
-        font-weight: 600;
-        margin-bottom: 4px;
-    }
-
-    .language-desc {
-        font-size: 0.85rem;
-        color: #555;
-        margin-bottom: 0;
+    .legend-color {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        margin-right: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .leaflet-popup-content-wrapper {
@@ -212,51 +206,79 @@
         });
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        // Kontrol Zoom
         L.control.zoom({
             position: 'bottomright'
         }).addTo(map);
 
-        // Card element
         var languageCard = document.getElementById("languageCard");
         var cardList = document.getElementById("cardList");
         var cardWilayah = document.getElementById("cardWilayah");
 
-        var selectedLayer = null;
         var wilayahLayers = {};
 
-        // Daftar warna terang
-        const brightColors = [
-            "#FF6B6B", "#FFD93D", "#6BCB77",
-            "#4D96FF", "#A66CFF", "#FF9F1C", "#FF66C4"
-        ];
+//         | Warna           | Link Ikon                |
+// | :-------------- | :----------------------- |
+// | **Biru**        | `marker-icon-blue.png`   |
+// | **Merah**       | `marker-icon-red.png`    |
+// | **Hijau**       | `marker-icon-green.png`  |
+// | **Oranye**      | `marker-icon-orange.png` |
+// | **Kuning**      | `marker-icon-yellow.png` |
+// | **Hitam**       | `marker-icon-black.png`  |
+// | **Abu-abu**     | `marker-icon-grey.png`   |
+// | **Violet/Ungu** | `marker-icon-violet.png` |
 
-        let angka = 0;
 
-        // 🔹 Tambahkan marker berdasarkan koordinat bahasa
         bahasaList.forEach(function(b) {
             if (b.lat && b.lng) {
-                const marker = L.marker([b.lat, b.lng])
+                // Tentukan warna marker berdasarkan nama bahasa
+                let iconUrl = '';
+
+                if (b.nama_bahasa === 'Bahasa Melayu') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png';
+                } else if (b.nama_bahasa === 'Bahasa Kerinci') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
+                } else if (b.nama_bahasa === 'Bahasa Jambi') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
+                } else {
+                    // Default warna abu-abu
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png';
+                }
+
+                // Buat ikon custom
+                const customIcon = L.icon({
+                    iconUrl: iconUrl,
+                    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+
+                // Tambahkan marker ke map
+                const marker = L.marker([b.lat, b.lng], {
+                        icon: customIcon
+                    })
                     .addTo(map)
                     .bindPopup(`
-                        <strong>${b.nama_bahasa}</strong><br>
-                        Koordinat: ${b.lat.toFixed(4)}, ${b.lng.toFixed(4)}
-                    `);
+                <div style="background:white; padding:8px; border-radius:4px;">
+                    <strong>${b.nama_bahasa}</strong><br>
+                    Koordinat: ${b.lat.toFixed(4)}, ${b.lng.toFixed(4)}
+                </div>
+            `);
             }
         });
 
-        // 🔹 Load GeoJSON per wilayah
+
+        // Load GeoJSON wilayah
         wilayahData.forEach(function(wilayah) {
             if (wilayah.file_geojson) {
                 fetch('/' + wilayah.file_geojson)
-                    .then(response => response.json())
+                    .then(res => res.json())
                     .then(data => {
-                        const color = "#FF6B6B";
-                        angka++;
-
+                        var color = "#FF6B6B";
                         var geojsonLayer = L.geoJSON(data, {
                             style: {
                                 color: color,
@@ -292,42 +314,7 @@
                             data: wilayah
                         };
                     })
-                    .catch(error => console.error("Error loading GeoJSON:", error));
-            }
-        });
-
-        // 🔹 Filter Bahasa
-        document.getElementById("languageSelect").addEventListener("change", function() {
-            var selectedBahasa = this.value;
-
-            Object.values(wilayahLayers).forEach(function(w) {
-                w.layer.setStyle({
-                    color: "transparent",
-                    weight: 2,
-                    opacity: 0,
-                    fillOpacity: 0
-                });
-            });
-
-            if (selectedBahasa) {
-                Object.values(wilayahLayers).forEach(function(w) {
-                    var bahasaMatch = w.data.bahasa.find(b => b.nama_bahasa === selectedBahasa);
-                    if (bahasaMatch) {
-                        w.layer.setStyle({
-                            color: "blue",
-                            weight: 3,
-                            opacity: 1,
-                            fillColor: "blue",
-                            fillOpacity: 0.3
-                        });
-                    }
-                });
-
-                // 🔸 Zoom ke marker bahasa yang dipilih
-                var selected = bahasaList.find(b => b.nama_bahasa === selectedBahasa);
-                if (selected && selected.lat && selected.lng) {
-                    map.setView([selected.lat, selected.lng], 10);
-                }
+                    .catch(err => console.error("Error loading GeoJSON:", err));
             }
         });
     });

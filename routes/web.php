@@ -11,6 +11,7 @@ use App\Http\Controllers\AksaraController;
 use App\Http\Controllers\SastraController;
 use App\Http\Controllers\PetaSastraController;
 use App\Http\Controllers\DashboardAdminController;
+use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\TentangKamiController;
 
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login.form');
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [DashboardAdminController::class, 'index']);
     Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
     Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
+    Route::resource('/admin/pengguna', PenggunaController::class);
+
 });
 
 Route::get('/', [PetaController::class, 'index']);
