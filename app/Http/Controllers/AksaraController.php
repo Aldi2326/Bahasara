@@ -34,8 +34,6 @@ class AksaraController extends Controller
      */
     public function store(Request $request)
     {
-
-
         Aksara::create($request->all());
 
         return redirect()->route('aksara.index', ['wilayah_id' => $request->wilayah_id])

@@ -8,7 +8,21 @@
         <div class="p-6">
             <form class="flex flex-col gap-4" method="POST" action="{{ route('sastra.store') }}">
                 @csrf
-                <input type="hidden" name="wilayah_id" value="{{ $wilayahId }}" id="">
+                <!-- Nama Wilayah -->
+                <div class="grid grid-cols-4 items-center gap-6">
+                    <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
+                    <div class="md:col-span-3">
+                        <select name="wilayah_id" id="wilayah_id" class="form-select" required>
+                            <option value="">-- Pilih Wilayah --</option>
+                            @foreach ($wilayahList as $wilayah)
+                                <option value="{{ $wilayah->id }}"
+                                    {{ isset($wilayahId) && $wilayahId == $wilayah->id ? 'selected' : '' }}>
+                                    {{ $wilayah->nama_wilayah }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
                 <!-- Nama Sastra -->
                 <div class="grid grid-cols-4 items-center gap-6">
@@ -16,6 +30,15 @@
                     <div class="md:col-span-3">
                         <input type="text" name="nama_sastra" id="nama_sastra" class="form-input"
                             placeholder="Contoh: Gurindam Dua Belas" required>
+                    </div>
+                </div>
+
+                <!-- Alamat -->
+                <div class="grid grid-cols-4 items-start gap-6">
+                    <label for="alamat" class="text-default-800 text-sm font-medium">Alamat</label>
+                    <div class="md:col-span-3">
+                        <textarea name="alamat" id="alamat" rows="3" class="form-input"
+                            placeholder="Masukkan alamat lengkap lokasi bahasa..." required></textarea>
                     </div>
                 </div>
 
@@ -41,14 +64,24 @@
                     </div>
                 </div>
 
-                <!-- Koordinat -->
+                <!-- Input Koordinat -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="koordinat" class="text-default-800 text-sm font-medium">Koordinat</label>
                     <div class="md:col-span-3">
                         <input type="text" name="koordinat" id="koordinat" class="form-input"
-                            placeholder="Klik pada peta untuk mengisi koordinat" readonly required>
-                        <p class="mt-1 text-xs text-default-500">Klik titik pada peta di bawah untuk memilih koordinat
-                            lokasi.</p>
+                            placeholder="Klik peta atau isi manual, contoh: -1.234567, 103.123456" required>
+                    </div>
+                </div>
+
+                <!-- Peta Interaktif -->
+                <div class="grid grid-cols-4 items-start gap-6">
+                    <label class="text-default-800 text-sm font-medium">Peta Lokasi</label>
+                    <div class="md:col-span-3">
+                        <div id="map" style="height: 400px; border-radius: 8px; z-index: 1;"></div>
+                        <p class="mt-2 text-xs text-default-500">
+                            Klik pada peta untuk memilih lokasi. Koordinat akan otomatis terisi dalam format: <br>
+                            <code>latitude, longitude</code>
+                        </p>
                     </div>
                 </div>
 
@@ -60,49 +93,42 @@
                 </div>
             </form>
 
-            <!-- Map Leaflet -->
-            <div class="mt-6">
-                <h5 class="text-lg font-semibold mb-2">Pilih Lokasi di Peta</h5>
-                <div id="map" style="height: 400px; border-radius: 8px;"></div>
-            </div>
+            {{-- ======== Leaflet Map Script ======== --}}
+            <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    // Koordinat awal (Pusat Provinsi Jambi)
+                    var map = L.map('map').setView([-1.610122, 103.613120], 7);
+
+                    // Tambah tile layer
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(map);
+
+                    var marker;
+
+                    // Event klik peta
+                    map.on('click', function(e) {
+                        var lat = e.latlng.lat.toFixed(6);
+                        var lng = e.latlng.lng.toFixed(6);
+                        var koordinat = lat + ', ' + lng;
+
+                        // Isi input otomatis
+                        document.getElementById('koordinat').value = koordinat;
+
+                        // Hapus marker lama jika ada
+                        if (marker) {
+                            map.removeLayer(marker);
+                        }
+
+                        // Tambah marker baru
+                        marker = L.marker([lat, lng]).addTo(map)
+                            .bindPopup("Koordinat:<br>" + koordinat).openPopup();
+                    });
+                });
+            </script>
         </div>
     </div>
-
-    <!-- Leaflet JS & CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Inisialisasi peta
-            var map = L.map('map').setView([-1.6101, 103.6158], 7); // Jambi sebagai default
-
-            // Tambah layer OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-
-            var marker;
-
-            // Event klik pada peta
-            map.on('click', function(e) {
-                var lat = e.latlng.lat.toFixed(6);
-                var lng = e.latlng.lng.toFixed(6);
-                var koordinat = lat + ", " + lng;
-
-                // isi input koordinat
-                document.getElementById("koordinat").value = koordinat;
-
-                // hapus marker lama jika ada
-                if (marker) {
-                    map.removeLayer(marker);
-                }
-
-                // tambah marker baru
-                marker = L.marker([lat, lng]).addTo(map)
-                    .bindPopup("Koordinat: " + koordinat).openPopup();
-            });
-        });
-    </script>
 @endsection

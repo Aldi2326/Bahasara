@@ -6,7 +6,6 @@
             <h4 class="card-title mb-4">Edit Data Aksara</h4>
         </div>
         <div class="p-6">
-
             <form class="flex flex-col gap-4" method="POST" action="{{ route('aksara.update', $aksara->id) }}"
                 enctype="multipart/form-data">
                 @csrf
@@ -22,9 +21,9 @@
 
                 <!-- Status Aksara -->
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="status_aksara" class="text-default-800 text-sm font-medium">Status</label>
+                    <label for="status" class="text-default-800 text-sm font-medium">Status</label>
                     <div class="md:col-span-3">
-                        <select name="status" id="status_aksara" class="form-select" required>
+                        <select name="status" id="status" class="form-select" required>
                             <option value="">-- Pilih Status --</option>
                             <option value="aktif" {{ $aksara->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
                             <option value="tidak_aktif" {{ $aksara->status == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
@@ -36,7 +35,7 @@
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="jumlah_pengguna" class="text-default-800 text-sm font-medium">Jumlah Penutur</label>
                     <div class="md:col-span-3">
-                        <input type="number" value="{{ $aksara->jumlah_penutur }}" name="jumlah_penutur" id="jumlah_pengguna" class="form-input"
+                        <input type="number" value="{{ $aksara->jumlah_penutur }}" name="jumlah_penutur" id="jumlah_penutur" class="form-input"
                             placeholder="Contoh: 100">
                     </div>
                 </div>

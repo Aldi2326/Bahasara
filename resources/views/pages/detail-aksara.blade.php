@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Bahasa')
+@section('title', 'Detail Aksara')
 
 @section('content')
     <div class="container" style="margin-top: 150px; margin-bottom: 200px">

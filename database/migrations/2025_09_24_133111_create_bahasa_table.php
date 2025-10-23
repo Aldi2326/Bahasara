@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
             $table->string('status');
             $table->integer('jumlah_penutur');
+            $table->string('koordinat');
+            $table->text('alamat');
             $table->timestamps();
         });
     }

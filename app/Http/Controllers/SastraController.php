@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Sastra;
+use App\Models\Wilayah;
 
 
 class SastraController extends Controller
@@ -14,40 +15,67 @@ class SastraController extends Controller
      */
     public function index(Request $request)
     {
-        $wilayahId = $request->query('wilayah_id'); // ambil dari query string
-        $sastra = Sastra::where('wilayah_id', $wilayahId)->get();
-        return view('pages.admin.peta.sastra.index', compact('wilayahId', 'sastra'));
+        $query = Sastra::with('wilayah');
+
+        // 🔍 Pencarian (optional)
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_sastra', 'like', '%' . $request->search . '%')
+                ->orWhereHas('wilayah', function ($q) use ($request) {
+                    $q->where('nama_wilayah', 'like', '%' . $request->search . '%');
+                });
+        }
+
+        // 🔽 Sorting
+        $sortBy = $request->get('sort_by', 'nama_sastra');
+        $order = $request->get('order', 'asc');
+
+        // Pastikan kolom yang boleh diurutkan
+        $allowedSorts = ['id', 'jenis', 'jumlah_penutur'];
+        if (in_array($sortBy, $allowedSorts)) {
+            $query->orderBy($sortBy, $order);
+        }
+
+        // 🔄 Ambil data
+        $sastra = $query->get();
+
+        return view('pages.admin.peta.sastra.index', compact('sastra', 'sortBy', 'order'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create()
     {
-        $wilayahId = $request->query('wilayah_id');
-        return view('pages.admin.peta.sastra.create', compact('wilayahId'));
+        $wilayahList = Wilayah::all();
+        return view('pages.admin.peta.sastra.create', compact('wilayahList'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama_sastra' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'koordinat' => 'required|string',
-            'wilayah_id' => 'required|integer|exists:wilayah,id',
-        ]);
+{
+    $request->validate([
+        'nama_sastra' => 'required|string|max:255',
+        'alamat' => 'required|string|max:255',
+        'jenis' => 'required|string',
+        'deskripsi' => 'required|string',
+        'koordinat' => 'required|string',
+        'wilayah_id' => 'required|integer',
+    ]);
 
-        Sastra::create($request->all());
+    // Simpan data ke database
+    Sastra::create([
+        'nama_sastra' => $request->nama_sastra,
+        'alamat' => $request->alamat,
+        'jenis' => $request->jenis,
+        'deskripsi' => $request->deskripsi,
+        'koordinat' => $request->koordinat,
+        'wilayah_id' => $request->wilayah_id,
+    ]);
 
-        return redirect()->route('sastra.index', ['wilayah_id' => $request->wilayah_id])
-            ->with('success', 'Sastra berhasil ditambahkan.');
-    }
-
-
+    return redirect()->route('sastra.index')->with('success', 'Data sastra berhasil disimpan!');
+}
     /**
      * Display the specified resource.
      */
