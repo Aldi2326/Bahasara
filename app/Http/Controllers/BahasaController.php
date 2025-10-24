@@ -9,32 +9,36 @@ use Illuminate\Http\Request;
 class BahasaController extends Controller
 {
     public function index(Request $request)
-    {
-        $query = Bahasa::with('wilayah');
+{
+    $query = Bahasa::with('wilayah')
+        ->select('bahasa.*')
+        ->join('wilayah', 'bahasa.wilayah_id', '=', 'wilayah.id');
 
-        // 🔍 Pencarian (optional)
-        if ($request->has('search') && $request->search != '') {
-            $query->where('nama_bahasa', 'like', '%' . $request->search . '%')
-                ->orWhereHas('wilayah', function ($q) use ($request) {
-                    $q->where('nama_wilayah', 'like', '%' . $request->search . '%');
-                });
-        }
-
-        // 🔽 Sorting
-        $sortBy = $request->get('sort_by', 'nama_bahasa');
-        $order = $request->get('order', 'asc');
-
-        // Pastikan kolom yang boleh diurutkan
-        $allowedSorts = ['nama_bahasa', 'status', 'jumlah_penutur'];
-        if (in_array($sortBy, $allowedSorts)) {
-            $query->orderBy($sortBy, $order);
-        }
-
-        // 🔄 Ambil data
-        $bahasa = $query->get();
-
-        return view('pages.admin.peta.bahasa.index', compact('bahasa', 'sortBy', 'order'));
+    // 🔍 Pencarian (optional)
+    if ($request->has('search') && $request->search != '') {
+        $query->where('bahasa.nama_bahasa', 'like', '%' . $request->search . '%')
+            ->orWhere('wilayah.nama_wilayah', 'like', '%' . $request->search . '%');
     }
+
+    // 🔽 Sorting
+    $sortBy = $request->get('sort_by', 'nama_bahasa');
+    $order = $request->get('order', 'asc');
+
+    $allowedSorts = ['nama_bahasa', 'status', 'nama_wilayah', 'jumlah_penutur'];
+    if (in_array($sortBy, $allowedSorts)) {
+        if ($sortBy === 'nama_wilayah') {
+            $query->orderBy('wilayah.nama_wilayah', $order);
+        } else {
+            $query->orderBy('bahasa.' . $sortBy, $order);
+        }
+    }
+
+    // 🔄 Ambil data
+    $bahasa = $query->get();
+
+    return view('pages.admin.peta.bahasa.index', compact('bahasa', 'sortBy', 'order'));
+}
+
 
     public function create()
     {

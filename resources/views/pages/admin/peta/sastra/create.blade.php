@@ -8,6 +8,7 @@
         <div class="p-6">
             <form class="flex flex-col gap-4" method="POST" action="{{ route('sastra.store') }}">
                 @csrf
+                
                 <!-- Nama Wilayah -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
@@ -55,15 +56,6 @@
                     </div>
                 </div>
 
-                <!-- Deskripsi -->
-                <div class="grid grid-cols-4 items-start gap-6">
-                    <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
-                    <div class="md:col-span-3">
-                        <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi sastra..."
-                            required></textarea>
-                    </div>
-                </div>
-
                 <!-- Input Koordinat -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="koordinat" class="text-default-800 text-sm font-medium">Koordinat</label>
@@ -79,9 +71,17 @@
                     <div class="md:col-span-3">
                         <div id="map" style="height: 400px; border-radius: 8px; z-index: 1;"></div>
                         <p class="mt-2 text-xs text-default-500">
-                            Klik pada peta untuk memilih lokasi. Koordinat akan otomatis terisi dalam format: <br>
-                            <code>latitude, longitude</code>
+                            Klik pada peta untuk memilih lokasi. Koordinat akan otomatis terisi.
                         </p>
+                    </div>
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="grid grid-cols-4 items-start gap-6">
+                    <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
+                    <div class="md:col-span-3">
+                        <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi sastra..."
+                            required></textarea>
                     </div>
                 </div>
 

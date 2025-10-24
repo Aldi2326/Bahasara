@@ -35,13 +35,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', [PetaController::class, 'index']);
-Route::get('/detail/bahasa/{id}', [PetaController::class, 'show'])->name('bahasa.show');
+Route::get('/detail/bahasa/{id}', [PetaController::class, 'show'])->name('bahasa.user.show');
 
 Route::get('/aksara', [PetaAksaraController::class, 'index']);
-Route::get('/detail/aksara/{id}', [PetaAksaraController::class, 'show'])->name('aksara.show');
+Route::get('/detail/aksara/{id}', [PetaAksaraController::class, 'show'])->name('peta.aksara.show');
 
 Route::get('/sastra', [PetaSastraController::class, 'index']);
-Route::get('/detail/sastra/{id}', [PetaSastraController::class, 'show'])->name('aksara.show');
+Route::get('/detail/sastra/{id}', [PetaSastraController::class, 'show'])->name('peta.aksara.show');
 
 
 Route::get('/tentang-kami', [TentangKamiController::class, 'index']);

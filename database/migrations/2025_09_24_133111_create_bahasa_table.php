@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('jumlah_penutur');
             $table->string('koordinat');
             $table->text('alamat');
+            $table->text('deskripsi');
             $table->timestamps();
         });
     }

@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('nama_aksara');
             $table->string('status');
             $table->string('deskripsi');
+            $table->string('dokumentasi');
+             $table->string('koordinat');
             $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
             $table->timestamps();
         });

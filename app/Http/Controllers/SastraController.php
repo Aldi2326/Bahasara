@@ -14,32 +14,38 @@ class SastraController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $query = Sastra::with('wilayah');
+{
+    $query = Sastra::with('wilayah')
+        ->select('sastra.*')
+        ->join('wilayah', 'sastra.wilayah_id', '=', 'wilayah.id');
 
-        // 🔍 Pencarian (optional)
-        if ($request->has('search') && $request->search != '') {
-            $query->where('nama_sastra', 'like', '%' . $request->search . '%')
-                ->orWhereHas('wilayah', function ($q) use ($request) {
-                    $q->where('nama_wilayah', 'like', '%' . $request->search . '%');
-                });
-        }
-
-        // 🔽 Sorting
-        $sortBy = $request->get('sort_by', 'nama_sastra');
-        $order = $request->get('order', 'asc');
-
-        // Pastikan kolom yang boleh diurutkan
-        $allowedSorts = ['id', 'jenis', 'jumlah_penutur'];
-        if (in_array($sortBy, $allowedSorts)) {
-            $query->orderBy($sortBy, $order);
-        }
-
-        // 🔄 Ambil data
-        $sastra = $query->get();
-
-        return view('pages.admin.peta.sastra.index', compact('sastra', 'sortBy', 'order'));
+    // 🔍 Pencarian (opsional)
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('sastra.nama_sastra', 'like', '%' . $search . '%')
+              ->orWhere('wilayah.nama_wilayah', 'like', '%' . $search . '%');
+        });
     }
+
+    // 🔽 Sorting
+    $sortBy = $request->get('sort_by', 'nama_sastra');
+    $order = $request->get('order', 'asc');
+
+    $allowedSorts = ['id', 'nama_wilayah', 'jenis', 'nama_sastra'];
+    if (in_array($sortBy, $allowedSorts)) {
+        if ($sortBy === 'nama_wilayah') {
+            $query->orderBy('wilayah.nama_wilayah', $order);
+        } else {
+            $query->orderBy('sastra.' . $sortBy, $order);
+        }
+    }
+
+    $sastra = $query->get();
+
+    return view('pages.admin.peta.sastra.index', compact('sastra', 'sortBy', 'order'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -79,9 +85,18 @@ class SastraController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        // Ambil data dari tabel sastra berdasarkan ID
+        $sastra = sastra::find($id);
+
+        // Jika tidak ditemukan, tampilkan error 404
+        if (!$sastra) {
+            abort(404, 'Data sastra tidak ditemukan.');
+        }
+
+        // Kirim data ke view
+        return view('pages.admin.peta.sastra.show', compact('sastra'));
     }
 
     /**
@@ -90,7 +105,8 @@ class SastraController extends Controller
     public function edit($id)
     {
         $sastra = Sastra::findOrFail($id);
-        return view('pages.admin.peta.sastra.edit', compact('sastra'));
+        $wilayahList = Wilayah::all();
+        return view('pages.admin.peta.sastra.edit', compact('sastra','wilayahList'));
     }
 
     /**

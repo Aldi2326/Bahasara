@@ -43,6 +43,16 @@
                                     <th class="px-6 py-3 text-start text-sm text-default-500">
                                         <div class="flex items-center gap-1">
                                             <span>Nama Wilayah</span>
+                                            <a href="?sort_by=nama_wilayah&order={{ nextOrder($order) }}"
+                                                class="text-gray-600 hover:text-blue-600">
+                                                @if ($sortBy === 'nama_wilayah' && $order === 'asc')
+                                                    <i class="bi bi-sort-alpha-up"></i>
+                                                @elseif ($sortBy === 'nama_wilayah' && $order === 'desc')
+                                                    <i class="bi bi-sort-alpha-down"></i>
+                                                @else
+                                                    <i class="bi bi-arrow-down-up"></i>
+                                                @endif
+                                            </a>
                                         </div>
                                     </th>
 
