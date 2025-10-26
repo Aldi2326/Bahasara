@@ -1,255 +1,251 @@
 @extends('layouts.app')
 
-@section('title', 'Peta Bahasa & Sastra')
+@section('title', 'Peta Aksara Jambi')
 
 @section('content')
-    <div class="mt-5">
-        <h2 class="text-center fw-bold mb-3">Peta Provinsi Jambi</h2>
-
-        <!-- Map Container -->
-        <div style="position: relative;">
-            <!-- Floating Control: Dropdown + Search -->
-            <div class="search-control">
-                <select id="languageSelect" class="form-select form-select-sm mb-2">
-                    <option value="">-- Pilih Aksara --</option>
-                    @foreach ($aksaraList as $b)
-                        <option value="{{ $b->nama_aksara }}">{{ $b->nama_aksara }}</option>
+<div class="mt-5 pt-5">
+    <div style="position: relative;">
+        <!-- Floating Control: Dropdown -->
+        <div class="search-control d-flex flex-wrap gap-3">
+            <!-- Dropdown Aksara -->
+            <div class="dropdown" style="margin-right: 10px;">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAksara" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    -- Pilih Aksara --
+                </button>
+                <ul class="dropdown-menu p-2" style="max-height: 250px; overflow-y: auto;"
+                    aria-labelledby="dropdownAksara" id="aksaraListDropdown">
+                    <li>
+                        <label class="dropdown-item d-flex align-items-center gap-2">
+                            <input class="form-check-input aksara-checkbox" type="checkbox" value="Semua Aksara">
+                            <span>Semua Aksara</span>
+                        </label>
+                    </li>
+                    @foreach ($aksaraList as $a)
+                    <li>
+                        <label class="dropdown-item d-flex align-items-center gap-2">
+                            <input class="form-check-input aksara-checkbox" type="checkbox" value="{{ $a->nama_aksara }}">
+                            <span>{{ $a->nama_aksara }}</span>
+                        </label>
+                    </li>
                     @endforeach
-                </select>
+                </ul>
             </div>
 
-            <!-- Peta -->
-            <div id="map" style="height: 680px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border-radius:12px;"></div>
-
-            <!-- Card Detail Bahasa -->
-            <div id="languageCard" class="language-card shadow d-none">
-                <h5 class="fw-bold mb-2" id="cardWilayah"></h5>
-                <div id="cardList"></div>
+            <!-- Dropdown Wilayah -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownWilayah" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    -- Pilih Wilayah --
+                </button>
+                <ul class="dropdown-menu p-2" style="max-height: 250px; overflow-y: auto;"
+                    aria-labelledby="dropdownWilayah" id="wilayahListDropdown">
+                    <li>
+                        <label class="dropdown-item d-flex align-items-center gap-2">
+                            <input class="form-check-input wilayah-checkbox" type="checkbox" value="Semua Wilayah">
+                            <span>Semua Wilayah</span>
+                        </label>
+                    </li>
+                    @foreach ($wilayah as $w)
+                    <li>
+                        <label class="dropdown-item d-flex align-items-center gap-2">
+                            <input class="form-check-input wilayah-checkbox" type="checkbox" value="{{ $w->nama_wilayah }}">
+                            <span>{{ $w->nama_wilayah }}</span>
+                        </label>
+                    </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
+
+        <!-- Peta -->
+        <div id="map" style="height: 680px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border-radius:12px; position: relative;"></div>
+
+        <!-- 🔹 LEGEND PETA -->
+        <div id="legendCard" class="legend-card shadow">
+            <h6 class="fw-bold mb-2">Keterangan Peta</h6>
+            <div class="legend-item"><span class="legend-color" style="background:#FF0000"></span> Aksara Incung</div>
+            <div class="legend-item"><span class="legend-color" style="background:#FFD700"></span> Aksara Arab Melayu</div>
+
+        </div>
     </div>
+</div>
 
-    <!-- Custom CSS -->
-    <style>
-        .search-control {
-            position: absolute;
-            top: 15px;
-            left: calc(var(--bs-gutter-x, 1.5rem));
-            z-index: 1000;
-            padding: 10px;
-            border-radius: 8px;
+<!-- Script Dropdown -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const aksaraCheckboxes = document.querySelectorAll('.aksara-checkbox');
+        const wilayahCheckboxes = document.querySelectorAll('.wilayah-checkbox');
+        const aksaraBtn = document.getElementById('dropdownAksara');
+        const wilayahBtn = document.getElementById('dropdownWilayah');
+
+        function updateButtonLabel(checkboxes, button, placeholder) {
+            const checked = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            if (checked.length === 0) {
+                button.textContent = placeholder;
+            } else if (checked.length === 1) {
+                button.textContent = checked[0];
+            } else {
+                button.textContent = checked.length + ' dipilih';
+            }
         }
 
-        .language-card {
-            position: absolute;
-            bottom: 15px;
-            left: calc(var(--bs-gutter-x, 1.5rem));
-            background: white;
-            border-radius: 8px;
-            padding: 12px;
-            width: 320px;
-            z-index: 1000;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .language-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-        }
-
-        .language-item:last-child {
-            border-bottom: none;
-        }
-
-        .language-item:hover {
-            background: #f9f9f9;
-        }
-
-        .language-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .language-desc {
-            font-size: 0.85rem;
-            color: #555;
-            margin-bottom: 0;
-        }
-    </style>
-
-    <!-- Script Leaflet -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var wilayahData = @json($wilayah);
-
-            var jambiBounds = L.latLngBounds(
-                L.latLng(-2.8, 101.1),
-                L.latLng(0.5, 104.8)
-            );
-
-            var map = L.map('map', {
-                center: [-1.6101, 103.6158],
-                zoom: 8,
-                zoomControl: false,
-                maxBounds: jambiBounds,
-                maxBoundsViscosity: 1.0
+        aksaraCheckboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                updateButtonLabel(aksaraCheckboxes, aksaraBtn, '-- Pilih Aksara --');
             });
+        });
 
-            var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
-            }).addTo(map);
+        wilayahCheckboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                updateButtonLabel(wilayahCheckboxes, wilayahBtn, '-- Pilih Wilayah --');
+            });
+        });
+    });
+</script>
 
-            L.control.zoom({
-                position: 'bottomright'
-            }).addTo(map);
+<!-- Custom CSS -->
+<style>
+    .search-control {
+        position: absolute;
+        top: 15px;
+        left: calc(var(--bs-gutter-x, 1.5rem));
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 8px;
+    }
 
-            // Card element
-            var languageCard = document.getElementById("languageCard");
-            var cardList = document.getElementById("cardList");
-            var cardWilayah = document.getElementById("cardWilayah");
+    .legend-card {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
+        padding: 12px 16px;
+        width: 220px;
+        z-index: 1500;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        border-left: 4px solid #0d6efd;
+    }
 
-            var selectedLayer = null;
-            var wilayahLayers = {};
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
 
-            // Load GeoJSON per wilayah
-            // daftar warna terang pilihan
-            const brightColors = [
-                "#FF6B6B", // merah muda terang
-                "#FFD93D", // kuning terang
-                "#6BCB77", // hijau terang
-                "#4D96FF", // biru terang
-                "#A66CFF", // ungu terang
-                "#FF9F1C", // oranye terang
-                "#FF66C4" // pink terang
-            ];
+    .legend-color {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        margin-right: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
 
-            wilayahData.forEach(function(wilayah) {
-                if (wilayah.file_geojson) {
-                    fetch('/' + wilayah.file_geojson)
-                        .then(response => response.json())
-                        .then(data => {
-                            // pilih warna dari daftar
-                            const randomColor = brightColors[Math.floor(Math.random() * brightColors
-                                .length)];
+    .leaflet-popup-content-wrapper {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(4px);
+        color: #000;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
 
-                            var geojsonLayer = L.geoJSON(data, {
-                                style: {
-                                    color: "transparent",
-                                    weight: 2,
-                                    opacity: 0,
-                                    fillOpacity: 0
-                                },
-                                onEachFeature: function(feature, layer) {
+    .leaflet-popup-tip {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+    }
+</style>
 
-                                    layer.on("mouseover", function() {
-                                        if (selectedLayer !== layer) {
-                                            layer.setStyle({
-                                                color: randomColor, // border ikut warna
-                                                weight: 2,
-                                                opacity: 1,
-                                                fillColor: randomColor,
-                                                fillOpacity: 0.3
-                                            });
-                                        }
-                                    });
+<!-- Script Leaflet -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var wilayahData = @json($wilayah);
+        var aksaraList = @json($aksaraList);
 
-                                    layer.on("mouseout", function() {
-                                        if (selectedLayer !== layer) {
-                                            layer.setStyle({
-                                                color: "transparent",
-                                                weight: 2,
-                                                opacity: 0,
-                                                fillOpacity: 0
-                                            });
-                                        }
-                                    });
+        // 🔹 Batas Provinsi Jambi
+        var jambiBounds = L.latLngBounds(
+            L.latLng(-2.85, 101.0),
+            L.latLng(0.60, 104.9)
+        );
 
-                                    layer.on("click", function() {
-                                        if (selectedLayer && selectedLayer !==
-                                            layer) {
-                                            selectedLayer.setStyle({
-                                                color: "transparent",
-                                                opacity: 0,
-                                                fillOpacity: 0
-                                            });
-                                        }
-                                        selectedLayer = layer;
-                                        layer.setStyle({
-                                            color: randomColor,
-                                            opacity: 1,
-                                            fillColor: randomColor,
-                                            fillOpacity: 0.3
-                                        });
+        // 🔹 Inisialisasi peta
+        var map = L.map('map', { zoomControl: false });
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        map.fitBounds(jambiBounds);
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-                                        cardWilayah.textContent = wilayah
-                                            .nama_wilayah;
-                                        cardList.innerHTML = "";
-                                        wilayah.aksara.forEach(function(b) {
-                                            var div = document
-                                                .createElement("div");
-                                            div.classList.add(
-                                                "language-item");
-                                            div.innerHTML = `
-                                    <div class="language-name">${b.nama_aksara}</div>
-                                    <div>Status: ${b.status}</div>
-                                    <div>Penutur: ${b.jumlah_penutur.toLocaleString()}</div>
-                                `;
-                                            div.addEventListener("click",
-                                                function() {
-                                                    window.location
-                                                        .href =
-                                                        "/detail/aksara/" +
-                                                        b.id;
-                                                });
-                                            cardList.appendChild(div);
-                                        });
-                                        languageCard.classList.remove("d-none");
-                                    });
-                                }
-                            }).addTo(map);
+        var wilayahLayers = {};
 
-                            wilayahLayers[wilayah.id] = {
-                                layer: geojsonLayer,
-                                data: wilayah
-                            };
-                        })
-                        .catch(error => console.error("Error loading GeoJSON:", error));
+        // 🔹 Marker Aksara
+        aksaraList.forEach(function(a) {
+            if (a.lat && a.lng) {
+                let iconUrl = '';
+
+                if (a.nama_aksara === 'Aksara Melayu Jambi') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
+                } else if (a.nama_aksara === 'Aksara Kerinci') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png';
+                } else if (a.nama_aksara === 'Aksara Rejang') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png';
+                } else if (a.nama_aksara === 'Aksara Jawa') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
+                } else if (a.nama_aksara === 'Aksara Minangkabau') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png';
+                } else {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png';
                 }
-            });
 
-            document.getElementById("languageSelect").addEventListener("change", function() {
-                var selectedBahasa = this.value;
-
-                // Reset semua layer
-                Object.values(wilayahLayers).forEach(function(w) {
-                    w.layer.setStyle({
-                        color: "transparent",
-                        weight: 2,
-                        opacity: 0,
-                        fillOpacity: 0
-                    });
+                const customIcon = L.icon({
+                    iconUrl: iconUrl,
+                    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
                 });
 
-                if (selectedBahasa) {
-                    Object.values(wilayahLayers).forEach(function(w) {
-                        var bahasaMatch = w.data.aksara.find(b => b.nama_aksara === selectedBahasa);
-                        if (bahasaMatch) {
-                            // Highlight wilayah
-                            w.layer.setStyle({
-                                color: "blue",
-                                weight: 3,
-                                opacity: 1,
-                                fillColor: "blue",
-                                fillOpacity: 0.3
-                            });
-                        }
-                    });
-                }
-            });
-
+                L.marker([a.lat, a.lng], { icon: customIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="background:white; padding:8px; border-radius:4px;">
+                            <strong>${a.nama_aksara}</strong><br>
+                            Status: ${a.status}<br>
+                            Koordinat: ${a.lat.toFixed(4)}, ${a.lng.toFixed(4)}
+                        </div>
+                    `);
+            }
         });
-    </script>
+
+        // 🔹 GeoJSON Wilayah
+        wilayahData.forEach(function(wilayah) {
+            if (wilayah.file_geojson) {
+                fetch('/' + wilayah.file_geojson)
+                    .then(res => res.json())
+                    .then(data => {
+                        var color = "#0000FF";
+                        var geojsonLayer = L.geoJSON(data, {
+                            style: {
+                                color: color,
+                                weight: 2,
+                                opacity: 1,
+                                fillColor: color,
+                                fillOpacity: 0
+                            }
+                        }).addTo(map);
+                        wilayahLayers[wilayah.id] = {
+                            layer: geojsonLayer,
+                            data: wilayah
+                        };
+                    })
+                    .catch(err => console.error("Error loading GeoJSON:", err));
+            }
+        });
+    });
+</script>
 @endsection

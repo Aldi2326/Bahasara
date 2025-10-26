@@ -44,7 +44,7 @@
 
                 <!-- Peta Leaflet -->
                 <div class="mb-4">
-                    <h5 class="text-muted">Peta Sebaran</h5>
+                    <h5 class="text-muted">Peta</h5>
                     <div id="map" style="height: 400px; border-radius: 10px; border: 1px solid #ccc;"></div>
                 </div>
             </div>

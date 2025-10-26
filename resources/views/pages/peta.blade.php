@@ -7,7 +7,6 @@
     <div style="position: relative;">
         <!-- Floating Control: Dropdown + Search -->
         <div class="search-control d-flex flex-wrap gap-3">
-
             <!-- Custom Multi-Select Bahasa -->
             <div class="dropdown" style="margin-right: 10px;">
                 <button class="btn btn-light dropdown-toggle" type="button" id="dropdownBahasa" data-bs-toggle="dropdown"
@@ -45,7 +44,7 @@
                     aria-labelledby="dropdownWilayah" id="wilayahListDropdown">
                     <li>
                         <label class="dropdown-item d-flex align-items-center gap-2">
-                            <input class="form-check-input bahasa-checkbox" type="checkbox"
+                            <input class="form-check-input wilayah-checkbox" type="checkbox"
                                 value="Semua Wilayah">
                             <span>Semua Wilayah</span>
                         </label>
@@ -64,22 +63,18 @@
         </div>
 
         <!-- Peta -->
-        <div id="map" style="height: 680px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border-radius:12px;"></div>
+        <div id="map" style="height: 680px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border-radius:12px; position: relative;"></div>
 
-        <!-- Card Detail Bahasa -->
-        <div id="languageCard" class="language-card shadow d-none">
-            <h5 class="fw-bold mb-2" id="cardWilayah"></h5>
-            <div id="cardList"></div>
-        </div>
-
-        <!-- 🔹 LEGEND PETA -->
+        <!-- 🔹 LEGEND PETA-->
         <div id="legendCard" class="legend-card shadow">
             <h6 class="fw-bold mb-2">Keterangan Peta</h6>
-            <div class="legend-item"><span class="legend-color" style="background:#FF6B6B"></span> Bahasa Melayu</div>
-            <div class="legend-item"><span class="legend-color" style="background:#FFD93D"></span> Bahasa Kerinci</div>
-            <div class="legend-item"><span class="legend-color" style="background:#4D96FF"></span> Bahasa Minang</div>
-            <div class="legend-item"><span class="legend-color" style="background:#6BCB77"></span> Bahasa Batak </div>
-            <div class="legend-item"><span class="legend-color" style="background:#6BCB77"></span> Bahasa Alien </div>
+            <div class="legend-item"><span class="legend-color" style="background:#FF0000"></span> Bahasa Melayu Jambi</div>
+            <div class="legend-item"><span class="legend-color" style="background:#FFD700"></span> Bahasa Bajau Tungkal Satu</div>
+            <div class="legend-item"><span class="legend-color" style="background:#0000FF"></span> Bahasa Banjar</div>
+            <div class="legend-item"><span class="legend-color" style="background:#008000"></span> Bahasa Bugis</div>
+            <div class="legend-item"><span class="legend-color" style="background:#FFA500"></span> Bahasa Kerinci</div>
+            <div class="legend-item"><span class="legend-color" style="background:#8A2BE2"></span> Bahasa Minangkabau</div>
+            <div class="legend-item"><span class="legend-color" style="background:#808080"></span> Bahasa Jawa</div>
         </div>
     </div>
 </div>
@@ -131,31 +126,18 @@
         border-radius: 8px;
     }
 
-    .language-card {
-        position: absolute;
-        bottom: 15px;
-        left: calc(var(--bs-gutter-x, 1.5rem));
-        background: white;
-        border-radius: 8px;
-        padding: 12px;
-        width: 320px;
-        z-index: 1000;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-
-    /* 🔹 LEGEND CARD STYLE */
     .legend-card {
         position: absolute;
-        bottom: 15px;
-        left: calc(var(--bs-gutter-x, 1.5rem));
+        top: 15px;
+        right: 15px;
         background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(6px);
         border-radius: 12px;
         padding: 12px 16px;
         width: 220px;
-        z-index: 1100;
+        z-index: 1500;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        border-left: 4px solid #0d6efd;
     }
 
     .legend-item {
@@ -192,62 +174,55 @@
         var wilayahData = @json($wilayah);
         var bahasaList = @json($bahasaList);
 
+        // 🔹 Batas geografis provinsi Jambi
         var jambiBounds = L.latLngBounds(
-            L.latLng(-2.8, 101.1),
-            L.latLng(0.5, 104.8)
+            L.latLng(-2.85, 101.0),
+            L.latLng(0.60, 104.9)
         );
 
+        // 🔹 Inisialisasi peta tanpa batas zoom
         var map = L.map('map', {
-            center: [-1.6101, 103.6158],
-            zoom: 9,
-            zoomControl: false,
-            maxBounds: jambiBounds,
-            maxBoundsViscosity: 1.0
+            zoomControl: false
         });
 
+        // 🔹 Tambahkan tile layer
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
+        // 🔹 Fokus otomatis ke wilayah Jambi
+        map.fitBounds(jambiBounds);
+
+        // 🔹 Zoom control di kanan bawah
         L.control.zoom({
             position: 'bottomright'
         }).addTo(map);
 
-        var languageCard = document.getElementById("languageCard");
-        var cardList = document.getElementById("cardList");
-        var cardWilayah = document.getElementById("cardWilayah");
-
         var wilayahLayers = {};
 
-//         | Warna           | Link Ikon                |
-// | :-------------- | :----------------------- |
-// | **Biru**        | `marker-icon-blue.png`   |
-// | **Merah**       | `marker-icon-red.png`    |
-// | **Hijau**       | `marker-icon-green.png`  |
-// | **Oranye**      | `marker-icon-orange.png` |
-// | **Kuning**      | `marker-icon-yellow.png` |
-// | **Hitam**       | `marker-icon-black.png`  |
-// | **Abu-abu**     | `marker-icon-grey.png`   |
-// | **Violet/Ungu** | `marker-icon-violet.png` |
-
-
+        // 🔹 Marker Bahasa
         bahasaList.forEach(function(b) {
             if (b.lat && b.lng) {
-                // Tentukan warna marker berdasarkan nama bahasa
                 let iconUrl = '';
 
-                if (b.nama_bahasa === 'Bahasa Melayu') {
-                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png';
-                } else if (b.nama_bahasa === 'Bahasa Kerinci') {
+                if (b.nama_bahasa === 'Bahasa Melayu Jambi') {
                     iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
-                } else if (b.nama_bahasa === 'Bahasa Jambi') {
-                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
-                } else {
-                    // Default warna abu-abu
+                } else if (b.nama_bahasa === 'Bahasa Bajau Tungkal Satu') {
                     iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png';
+                } else if (b.nama_bahasa === 'Bahasa Bajar') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png';
+                } else if (b.nama_bahasa === 'Bahasa Bugis') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
+                } else if (b.nama_bahasa === 'Bahasa Kerinci') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png';
+                } else if (b.nama_bahasa === 'Bahasa Minangkabau') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png';
+                } else if (b.nama_bahasa === 'Bahasa Jawa') {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png';
+                } else {
+                    iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png';
                 }
-
-                // Buat ikon custom
+                
                 const customIcon = L.icon({
                     iconUrl: iconUrl,
                     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -257,22 +232,18 @@
                     shadowSize: [41, 41]
                 });
 
-                // Tambahkan marker ke map
-                const marker = L.marker([b.lat, b.lng], {
-                        icon: customIcon
-                    })
+                L.marker([b.lat, b.lng], { icon: customIcon })
                     .addTo(map)
                     .bindPopup(`
-                <div style="background:white; padding:8px; border-radius:4px;">
-                    <strong>${b.nama_bahasa}</strong><br>
-                    Koordinat: ${b.lat.toFixed(4)}, ${b.lng.toFixed(4)}
-                </div>
-            `);
+                        <div style="background:white; padding:8px; border-radius:4px;">
+                            <strong>${b.nama_bahasa}</strong><br>
+                            Koordinat: ${b.lat.toFixed(4)}, ${b.lng.toFixed(4)}
+                        </div>
+                    `);
             }
         });
 
-
-        // Load GeoJSON wilayah
+        // 🔹 GeoJSON Wilayah
         wilayahData.forEach(function(wilayah) {
             if (wilayah.file_geojson) {
                 fetch('/' + wilayah.file_geojson)
@@ -286,29 +257,8 @@
                                 opacity: 1,
                                 fillColor: color,
                                 fillOpacity: 0
-                            },
-                            onEachFeature: function(feature, layer) {
-                                layer.on("click", function() {
-                                    cardWilayah.textContent = wilayah.nama_wilayah;
-                                    cardList.innerHTML = "";
-                                    wilayah.bahasa.forEach(function(b) {
-                                        var div = document.createElement("div");
-                                        div.classList.add("language-item");
-                                        div.innerHTML = `
-                                            <div class="language-name">${b.nama_bahasa}</div>
-                                            <div>Status: ${b.status}</div>
-                                            <div>Penutur: ${b.jumlah_penutur.toLocaleString()}</div>
-                                        `;
-                                        div.addEventListener("click", function() {
-                                            window.location.href = "/detail/bahasa/" + b.id;
-                                        });
-                                        cardList.appendChild(div);
-                                    });
-                                    languageCard.classList.remove("d-none");
-                                });
                             }
                         }).addTo(map);
-
                         wilayahLayers[wilayah.id] = {
                             layer: geojsonLayer,
                             data: wilayah
