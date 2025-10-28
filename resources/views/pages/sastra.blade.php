@@ -243,11 +243,16 @@
                         })
                         .addTo(map)
                         .bindPopup(`
-                    <div style="background:white; padding:8px; border-radius:4px;">
-                        <strong>${s.nama_sastra}</strong><br>
-                        Koordinat: ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}
-                    </div>
-                `);
+                            <div style="background:white; padding:8px; border-radius:4px;">
+                                <strong>${s.nama_sastra}</strong><br>
+                                Koordinat: ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}<br>
+                                Alamat: ${s.alamat}<br>
+                                <a href="{{ url('detail/sastra') }}/${s.id}"
+                                class="text-blue-600 hover:underline mt-2 inline-block">
+                                Lihat Detail
+                                </a>
+                            </div>
+                        `);
                 }
             });
         });

@@ -263,11 +263,17 @@
                         })
                         .addTo(map)
                         .bindPopup(`
-                    <div style="background:white; padding:8px; border-radius:4px;">
-                        <strong>${b.nama_bahasa}</strong><br>
-                        Koordinat: ${b.lat.toFixed(4)}, ${b.lng.toFixed(4)}
-                    </div>
-                `);
+                            <div style="background:white; padding:8px; border-radius:4px;">
+                                <strong>${b.nama_bahasa}</strong><br>
+                                Koordinat: ${b.lat.toFixed(4)}, ${b.lng.toFixed(4)}<br>
+                                Alamat: ${b.alamat}<br>
+                                <a href="{{ url('detail/bahasa') }}/${b.id}"
+                                class="text-blue-600 hover:underline mt-2 inline-block">
+                                Lihat Detail
+                                </a>
+                            </div>
+                        `);
+
                 }
             });
         });

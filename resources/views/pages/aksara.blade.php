@@ -233,7 +233,11 @@
                         .bindPopup(`
                     <div style="background:white; padding:8px; border-radius:4px;">
                         <strong>${a.nama_aksara}</strong><br>
-                        Koordinat: ${a.lat.toFixed(4)}, ${a.lng.toFixed(4)}
+                        Koordinat: ${a.lat.toFixed(4)}, ${a.lng.toFixed(4)}<br>
+                        <a href="{{ url('detail/aksara') }}/${a.id}"
+                        class="text-blue-600 hover:underline mt-2 inline-block">
+                        Lihat Detail
+                        </a>
                     </div>
                 `);
                 }

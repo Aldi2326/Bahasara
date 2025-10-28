@@ -38,7 +38,7 @@ Route::middleware(['auth', 'superadmin'])->group(function () {
 });
 
 Route::get('/', [PetaController::class, 'index'])->name('peta.index');
-Route::get('/detail/bahasa/{id}', [PetaController::class, 'show'])->name('bahasa.user.show');
+Route::get('/detail/bahasa/{id}', [PetaController::class, 'show'])->name('peta.bahasa.show');
 
 Route::get('/sastra', [PetaSastraController::class, 'index'])->name('peta.sastra');
 Route::get('/detail/sastra/{id}', [PetaSastraController::class, 'show'])->name('peta.aksara.show');
