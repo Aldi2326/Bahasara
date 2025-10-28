@@ -127,7 +127,7 @@
                                         <td>{{ $item->koordinat ?? '-' }}</td>
                                         <td class="px-6 py-4 text-sm text-end font-medium flex space-x-3">
                                             <a href="{{ route('sastra.show', $item->id) }}"
-                                                class="text-green-600 hover:underline">Show</a>
+                                                class="text-green-600 hover:underline">Tampil</a>
                                             <a href="{{ route('sastra.edit', $item->id) }}"
                                                 class="text-blue-600 hover:underline">Edit</a>
                                             <form action="{{ route('sastra.destroy', $item->id) }}" method="POST"
@@ -135,13 +135,13 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Yakin hapus?')"
-                                                    class="text-red-600 hover:underline">Delete</button>
+                                                    class="text-red-600 hover:underline">Hapus</button>
                                             </form>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada data bahasa.
+                                        <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada data sastra.
                                         </td>
                                     </tr>
                                 @endforelse

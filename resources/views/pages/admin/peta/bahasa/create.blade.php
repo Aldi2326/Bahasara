@@ -32,16 +32,12 @@
                     <select name="nama_bahasa" id="nama_bahasa" class="form-select" required>
                         <option value="">-- Pilih Bahasa --</option>
                         <option value="Bahasa Melayu Jambi">Bahasa Melayu Jambi</option>
+                        <option value="Bahasa Bajau Tungkal Satu">Bahasa Bajau Tungkal Satu</option>
+                        <option value="Bahasa Banjar">Bahasa Banjar</option>
+                        <option value="Bahasa Bugis">Bahasa Bugis</option>
                         <option value="Bahasa Kerinci">Bahasa Kerinci</option>
-                        <option value="Bahasa Bungo">Bahasa Bungo</option>
-                        <option value="Bahasa Tebo">Bahasa Tebo</option>
-                        <option value="Bahasa Batanghari">Bahasa Batanghari</option>
-                        <option value="Bahasa Sarolangun">Bahasa Sarolangun</option>
-                        <option value="Bahasa Merangin">Bahasa Merangin</option>
-                        <option value="Bahasa Muaro Jambi">Bahasa Muaro Jambi</option>
-                        <option value="Bahasa Tanjung Jabung Barat">Bahasa Tanjung Jabung Barat</option>
-                        <option value="Bahasa Tanjung Jabung Timur">Bahasa Tanjung Jabung Timur</option>
-                        <option value="Bahasa Sungai Penuh">Bahasa Sungai Penuh</option>
+                        <option value="Bahasa Minangkabau">Bahasa Minangkabau</option>
+                        <option value="Bahasa Jawa">Bahasa Jawa</option>                     
                     </select>
                 </div>
             </div>

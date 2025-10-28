@@ -46,9 +46,32 @@ class AksaraController extends Controller
     return view('pages.admin.peta.aksara.index', compact('aksara', 'sortBy', 'order'));
 }
 
+public function petaAksara()
+{
+    // Ambil semua wilayah (beserta file geojson-nya)
+    $wilayah = \App\Models\Wilayah::select('id', 'nama_wilayah', 'file_geojson')->get();
+
+    // Ambil semua data akasara, pastikan koordinat dipisah jadi lat & lng
+    $aksaraList = \App\Models\Aksara::with('wilayah')
+        ->get()
+        ->map(function ($item): Aksara {
+            if (!empty($item->koordinat)) {
+                $koordinat = explode(',', $item->koordinat);
+                $item->lat = (float) $koordinat[0];
+                $item->lng = (float) $koordinat[1];
+            } else {
+                $item->lat = null;
+                $item->lng = null;
+            }
+            return $item;
+        });
+
+    return view('pages.aksara', compact('wilayah', 'aksaraList'));
+}
+
     public function show($id)
     {
-        // Ambil data dari tabel sastra berdasarkan ID
+        // Ambil data dari tabel akasara berdasarkan ID
         $aksara = Aksara::find($id);
 
         // Jika tidak ditemukan, tampilkan error 404

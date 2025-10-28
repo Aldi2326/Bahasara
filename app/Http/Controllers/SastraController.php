@@ -8,6 +8,7 @@ use App\Models\Sastra;
 use App\Models\Wilayah;
 
 
+
 class SastraController extends Controller
 {
     /**
@@ -46,6 +47,28 @@ class SastraController extends Controller
     return view('pages.admin.peta.sastra.index', compact('sastra', 'sortBy', 'order'));
 }
 
+public function petaSastra()
+{
+    // Ambil semua wilayah (beserta file geojson-nya)
+    $wilayah = \App\Models\Wilayah::select('id', 'nama_wilayah', 'file_geojson')->get();
+
+    // Ambil semua data sastra, pastikan koordinat dipisah jadi lat & lng
+    $sastraList = \App\Models\Sastra::with('wilayah')
+        ->get()
+        ->map(function ($item) {
+            if (!empty($item->koordinat)) {
+                $koordinat = explode(',', $item->koordinat);
+                $item->lat = (float) $koordinat[0];
+                $item->lng = (float) $koordinat[1];
+            } else {
+                $item->lat = null;
+                $item->lng = null;
+            }
+            return $item;
+        });
+
+    return view('pages.sastra', compact('wilayah', 'sastraList'));
+}
 
     /**
      * Show the form for creating a new resource.

@@ -122,7 +122,7 @@
                             <!-- Action -->
                             <td class="px-6 py-4 text-sm text-center font-medium flex gap-2 justify-center">
                                 <a href="{{ route('aksara.show', $item->id) }}"
-                                                class="text-green-600 hover:underline">Show</a>
+                                                class="text-green-600 hover:underline">Tampil</a>
                                 <a href="{{ route('aksara.edit', $item->id) }}" class="text-blue-600 hover:underline">Edit</a>
                                 <form action="{{ route('aksara.destroy', $item->id) }}" method="POST"
                                     onsubmit="return confirm('Yakin hapus data ini?')" class="inline">

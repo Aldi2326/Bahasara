@@ -13,6 +13,7 @@ use App\Http\Controllers\PetaSastraController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\TentangKamiController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [AuthController::class, 'login'])->name('login');
@@ -30,19 +31,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [DashboardAdminController::class, 'index']);
     Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
     Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
-    Route::resource('/admin/pengguna', PenggunaController::class);
+    Route::resource('/admin/pengguna', AdminController::class);
 
 });
 
-Route::get('/', [PetaController::class, 'index']);
+Route::middleware(['superadmin'])->group(function () {
+    Route::get('/admin/pengguna/create', [AdminController::class, 'create'])->name('users.create');
+    Route::post('/admin/pengguna/store', [AdminController::class, 'store'])->name('users.store');
+});
+
+// Route::get('/sastra', [SastraController::class, 'petaSastra'])->name('peta.sastra');
+// Route::get('/aksara', [AksaraController::class, 'petaAksara'])->name('peta.aksara');
+
+Route::get('/', [PetaController::class, 'index'])->name('peta.index');
 Route::get('/detail/bahasa/{id}', [PetaController::class, 'show'])->name('bahasa.user.show');
 
-Route::get('/aksara', [PetaAksaraController::class, 'index']);
-Route::get('/detail/aksara/{id}', [PetaAksaraController::class, 'show'])->name('peta.aksara.show');
-
-Route::get('/sastra', [PetaSastraController::class, 'index']);
+Route::get('/sastra', [PetaSastraController::class, 'index'])->name('peta.sastra');
 Route::get('/detail/sastra/{id}', [PetaSastraController::class, 'show'])->name('peta.aksara.show');
 
+Route::get('/aksara', [PetaAksaraController::class, 'index'])->name('peta.aksara');
+Route::get('/detail/aksara/{id}', [PetaAksaraController::class, 'show'])->name('peta.aksara.show');
 
 Route::get('/tentang-kami', [TentangKamiController::class, 'index']);
 

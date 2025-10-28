@@ -33,16 +33,12 @@
                     <select name="nama_bahasa" id="nama_bahasa" class="form-select" required>
                         <option value="">-- Pilih Bahasa --</option>
                         <option value="Bahasa Melayu Jambi" {{ $bahasa->nama_bahasa == 'Bahasa Melayu Jambi' ? 'selected' : '' }}>Bahasa Melayu Jambi</option>
+                        <option value="Bahasa Bajau Tungkal Satu" {{ $bahasa->nama_bahasa == 'Bahasa Bajau Tungkal Satu' ? 'selected' : '' }}>Bahasa Bajau Tungkal Satu</option>
+                        <option value="Bahasa Banjar" {{ $bahasa->nama_bahasa == 'Bahasa Banjar' ? 'selected' : '' }}>Bahasa Banjar</option>
+                        <option value="Bahasa Bugis" {{ $bahasa->nama_bahasa == 'Bahasa Bugis' ? 'selected' : '' }}>Bahasa Bugis</option>
                         <option value="Bahasa Kerinci" {{ $bahasa->nama_bahasa == 'Bahasa Kerinci' ? 'selected' : '' }}>Bahasa Kerinci</option>
-                        <option value="Bahasa Bungo" {{ $bahasa->nama_bahasa == 'Bahasa Bungo' ? 'selected' : '' }}>Bahasa Bungo</option>
-                        <option value="Bahasa Tebo" {{ $bahasa->nama_bahasa == 'Bahasa Tebo' ? 'selected' : '' }}>Bahasa Tebo</option>
-                        <option value="Bahasa Batanghari" {{ $bahasa->nama_bahasa == 'Bahasa Batanghari' ? 'selected' : '' }}>Bahasa Batanghari</option>
-                        <option value="Bahasa Sarolangun" {{ $bahasa->nama_bahasa == 'Bahasa Sarolangun' ? 'selected' : '' }}>Bahasa Sarolangun</option>
-                        <option value="Bahasa Merangin" {{ $bahasa->nama_bahasa == 'Bahasa Merangin' ? 'selected' : '' }}>Bahasa Merangin</option>
-                        <option value="Bahasa Muaro Jambi" {{ $bahasa->nama_bahasa == 'Bahasa Muaro Jambi' ? 'selected' : '' }}>Bahasa Muaro Jambi</option>
-                        <option value="Bahasa Tanjung Jabung Barat" {{ $bahasa->nama_bahasa == 'Bahasa Tanjung Jabung Barat' ? 'selected' : '' }}>Bahasa Tanjung Jabung Barat</option>
-                        <option value="Bahasa Tanjung Jabung Timur" {{ $bahasa->nama_bahasa == 'Bahasa Tanjung Jabung Timur' ? 'selected' : '' }}>Bahasa Tanjung Jabung Timur</option>
-                        <option value="Bahasa Sungai Penuh" {{ $bahasa->nama_bahasa == 'Bahasa Sungai Penuh' ? 'selected' : '' }}>Bahasa Sungai Penuh</option>
+                        <option value="Bahasa Minangkabau" {{ $bahasa->nama_bahasa == 'Bahasa Minangkabau' ? 'selected' : '' }}>Bahasa Minangkabau</option>
+                        <option value="Bahasa Jawa" {{ $bahasa->nama_bahasa == 'Bahasa Jawa' ? 'selected' : '' }}>Bahasa Jawa</option>
                     </select>
                 </div>
             </div>

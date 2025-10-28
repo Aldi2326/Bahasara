@@ -29,13 +29,15 @@
 
                 <!-- Nama Aksara -->
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="nama_aksara" class="text-default-800 text-sm font-medium">Nama Aksara</label>
-                    <div class="md:col-span-3">
-                        <input type="text" name="nama_aksara" id="nama_aksara" class="form-input"
-                            value="{{ old('nama_aksara', $aksara->nama_aksara) }}" placeholder="Contoh: Aksara Incung"
-                            required>
-                    </div>
+                <label for="nama_aksara" class="text-default-800 text-sm font-medium">Nama Aksara</label>
+                <div class="md:col-span-3">
+                    <select name="nama_aksara" id="nama_aksara" class="form-select" required>
+                        <option value="">-- Pilih Aksara --</option>
+                        <option value="Aksara Incung" {{ $aksara->nama_aksara == 'Aksara Incung' ? 'selected' : '' }}>Aksara Incung</option>
+                        <option value="Aksara Arab Melayu" {{ $aksara->nama_aksara == 'Aksara Arab Melayu' ? 'selected' : '' }}>Aksara Arab Melayu</option>
+                    </select>
                 </div>
+            </div>
 
                 <!-- Status Aksara -->
                 <div class="grid grid-cols-4 items-center gap-6">

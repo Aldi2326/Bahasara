@@ -25,21 +25,26 @@
                     </div>
                 </div>
 
-                <!-- Nama Sastra -->
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
-                    <div class="md:col-span-3">
-                        <input type="text" name="nama_sastra" id="nama_sastra" class="form-input"
-                            placeholder="Contoh: Gurindam Dua Belas" required>
-                    </div>
+                <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
+                <div class="md:col-span-3">
+                    <select name="nama_sastra" id="nama_sastra" class="form-select" required>
+                        <option value="">-- Pilih Sastra --</option>
+                        <option value="Puisi Rakyat">Puisi Rakyat</option>
+                        <option value="Cerita Rakyat">Cerita Rakyat</option>
+                        <option value="Syair/Pantun">Syair/Pantun</option>
+                        <option value="Teks Keagamaan">Teks Keagamaan</option>
+                        <option value="Naskah Kuno">Naskah Kuno</option>                 
+                    </select>
                 </div>
+            </div>
 
                 <!-- Alamat -->
                 <div class="grid grid-cols-4 items-start gap-6">
                     <label for="alamat" class="text-default-800 text-sm font-medium">Alamat</label>
                     <div class="md:col-span-3">
                         <textarea name="alamat" id="alamat" rows="3" class="form-input"
-                            placeholder="Masukkan alamat lengkap lokasi bahasa..." required></textarea>
+                            placeholder="Masukkan alamat lengkap lokasi sastra..." required></textarea>
                     </div>
                 </div>
 

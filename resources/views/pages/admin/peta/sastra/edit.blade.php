@@ -28,12 +28,18 @@
 
                 <!-- Nama Sastra -->
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
-                    <div class="md:col-span-3">
-                        <input type="text" value="{{ $sastra->nama_sastra }}" name="nama_sastra" id="nama_sastra"
-                            class="form-input" placeholder="Contoh: Gurindam Dua Belas" required>
-                    </div>
+                <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
+                <div class="md:col-span-3">
+                    <select name="nama_sastra" id="nama_sastra" class="form-select" required>
+                        <option value="">-- Pilih Sastra --</option>
+                        <option value="Puisi Rakyat" {{ $sastra->nama_sastra == 'Puisi Rakyat' ? 'selected' : '' }}>Puisi Rakyat</option>
+                        <option value="Cerita Rakyat" {{ $sastra->nama_sastra == 'Cerita Rakyat' ? 'selected' : '' }}>Cerita Rakyat</option>
+                        <option value="Syair/Pantun" {{ $sastra->nama_sastra == 'Syair/Pantun' ? 'selected' : '' }}>Syair/Pantun</option>
+                        <option value="Teks Keagamaan" {{ $sastra->nama_sastra == 'Teks Keagamaan' ? 'selected' : '' }}>Teks Keagamaan</option>
+                        <option value="Naskah Kuno" {{ $sastra->nama_sastra == 'Naskah Kuno' ? 'selected' : '' }}>Naskah Kuno</option>
+                    </select>
                 </div>
+            </div>
 
                 <!-- Alamat -->
                 <div class="grid grid-cols-4 items-start gap-6">

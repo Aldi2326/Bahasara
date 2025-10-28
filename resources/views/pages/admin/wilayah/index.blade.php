@@ -27,19 +27,6 @@
                             <th class="px-6 py-3 text-start text-sm text-default-500">
                                 <div class="d-flex align-items-center gap-1">
                                     <span>No</span>
-                                    @php
-                                    $sortOrder = request('sort') === 'asc' ? 'desc' : 'asc';
-                                    @endphp
-                                    <a href="{{ route('wilayah.index', ['search' => request('search'), 'sort' => $sortOrder]) }}"
-                                        class="text-secondary text-decoration-none">
-                                        @if (request('sort') === 'asc')
-                                        <i class="bi bi-sort-numeric-up"></i>
-                                        @elseif(request('sort') === 'desc')
-                                        <i class="bi bi-sort-numeric-down"></i>
-                                        @else
-                                        <i class="bi bi-arrow-down-up"></i>
-                                        @endif
-                                    </a>
                                 </div>
 
                             </th>
@@ -85,7 +72,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:underline"
-                                        onclick="return confirm('Yakin hapus data ini?')">Delete</button>
+                                        onclick="return confirm('Yakin hapus data ini?')">Hapus</button>
                                 </form>
                             </td>
                         </tr>

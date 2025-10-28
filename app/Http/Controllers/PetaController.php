@@ -9,40 +9,66 @@ use Illuminate\Http\Request;
 
 class PetaController extends Controller
 {
-    public function index()
-{
-    $wilayah = Wilayah::with('bahasa')->get();
+    public function index(Request $request)
+    {
+        // Ambil filter dari request (array)
+        $selectedBahasa = $request->input('bahasa', []);
+        $selectedWilayah = $request->input('wilayah', []);
 
-    // Ambil daftar bahasa unik berdasarkan nama_bahasa
-    $bahasaList = Bahasa::select('nama_bahasa')
-        ->groupBy('nama_bahasa')
-        ->get();
+        // Ambil semua data untuk dropdown
+        $allWilayah = Wilayah::all();
+        $allBahasa = Bahasa::all();
 
-    // Tambahkan titik koordinat secara manual (contoh data)
-    $koordinatBahasa = [
-        'Bahasa Melayu Jambi' => ['lat' => -1.6101, 'lng' => 103.6158],
-        'Bahasa Kerinci' => ['lat' => -2.0833, 'lng' => 101.3833],
-        'Bahasa Bungo' => ['lat' => -1.4936, 'lng' => 102.1333],
-        'Bahasa Tebo' => ['lat' => -1.3779, 'lng' => 102.3500],
-        'Bahasa Batanghari' => ['lat' => -1.7000, 'lng' => 103.1000],
-        'Bahasa Sarolangun' => ['lat' => -2.3167, 'lng' => 102.7167],
-        'Bahasa Merangin' => ['lat' => -2.1167, 'lng' => 102.2667],
-        'Bahasa Muaro Jambi' => ['lat' => -1.6000, 'lng' => 103.7000],
-        'Bahasa Tanjung Jabung Barat' => ['lat' => -0.9000, 'lng' => 103.2000],
-        'Bahasa Tanjung Jabung Timur' => ['lat' => -1.0833, 'lng' => 103.8667],
-        'Bahasa Sungai Penuh' => ['lat' => -2.0833, 'lng' => 101.3833],
-    ];
+        // Mulai query dasar
+        $wilayahQuery = Wilayah::with('bahasa');
+        $bahasaQuery = Bahasa::query();
 
-    // Sisipkan koordinat ke setiap elemen $bahasaList
-    $bahasaList = $bahasaList->map(function ($b) use ($koordinatBahasa) {
-        $nama = $b->nama_bahasa;
-        $b->lat = $koordinatBahasa[$nama]['lat'] ?? null;
-        $b->lng = $koordinatBahasa[$nama]['lng'] ?? null;
-        return $b;
-    });
+        // ======== LOGIKA FILTER DINAMIS ========
 
-    return view('pages.peta', compact('wilayah', 'bahasaList'));
-}
+        // 1️⃣ Jika filter bahasa ada dan bukan “Semua Bahasa”
+        if (!empty($selectedBahasa) && !in_array('Semua Bahasa', $selectedBahasa)) {
+            $bahasaQuery->whereIn('nama_bahasa', $selectedBahasa);
+        }
+
+        // 2️⃣ Jika filter wilayah ada dan bukan “Semua Wilayah”
+        if (!empty($selectedWilayah) && !in_array('Semua Wilayah', $selectedWilayah)) {
+            $wilayahQuery->whereIn('nama_wilayah', $selectedWilayah);
+            $bahasaQuery->whereHas('wilayah', function ($q) use ($selectedWilayah) {
+                $q->whereIn('nama_wilayah', $selectedWilayah);
+            });
+        }
+
+        // =======================================
+
+        // Ambil data hasil filter
+        $wilayah = $wilayahQuery->get();
+
+        // Pisahkan koordinat menjadi lat/lng
+        $bahasaList = $bahasaQuery->get()->map(function ($b) {
+            if ($b->koordinat) {
+                [$lat, $lng] = explode(',', $b->koordinat);
+                $b->lat = (float) trim($lat);
+                $b->lng = (float) trim($lng);
+            } else {
+                $b->lat = null;
+                $b->lng = null;
+            }
+            return $b;
+        });
+
+        // Kirim semua ke view
+        return view('pages.peta', compact(
+            'wilayah',
+            'bahasaList',
+            'allWilayah',
+            'allBahasa',
+            'selectedBahasa',
+            'selectedWilayah'
+        ));
+    }
+
+
+
 
 
 
