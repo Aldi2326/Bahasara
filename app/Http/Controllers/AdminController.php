@@ -19,6 +19,36 @@ class AdminController extends Controller
         return view('pages.admin.pengguna.create');
     }
 
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('pages.admin.pengguna.edit', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        // Update password hanya jika diisi
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil diperbarui.');
+    }
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -34,12 +64,14 @@ class AdminController extends Controller
             'role' => 'admin', // otomatis admin biasa
         ]);
 
-        return redirect()->back()->with('success', 'Akun admin berhasil ditambahkan!');
+        return redirect()->route('pengguna.index')->with('success', 'Admin berhasil ditambahkan.');
     }
 
-    public function destroy(User $admin)
+    public function destroy($id)
     {
-        $admin->delete();
-        return redirect()->route('pages.admin.pengguna.index')->with('success', 'Admin berhasil dihapus.');
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil dihapus.');
     }
 }

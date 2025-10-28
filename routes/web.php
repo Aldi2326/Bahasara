@@ -31,17 +31,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [DashboardAdminController::class, 'index']);
     Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
     Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
+});
+
+Route::middleware(['auth', 'superadmin'])->group(function () {
     Route::resource('/admin/pengguna', AdminController::class);
-
 });
-
-Route::middleware(['superadmin'])->group(function () {
-    Route::get('/admin/pengguna/create', [AdminController::class, 'create'])->name('users.create');
-    Route::post('/admin/pengguna/store', [AdminController::class, 'store'])->name('users.store');
-});
-
-// Route::get('/sastra', [SastraController::class, 'petaSastra'])->name('peta.sastra');
-// Route::get('/aksara', [AksaraController::class, 'petaAksara'])->name('peta.aksara');
 
 Route::get('/', [PetaController::class, 'index'])->name('peta.index');
 Route::get('/detail/bahasa/{id}', [PetaController::class, 'show'])->name('bahasa.user.show');

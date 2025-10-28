@@ -1,12 +1,12 @@
 @extends('layouts.admin.app')
-@section('title', 'Pengguna')
+@section('title', 'Edit Pengguna')
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title mb-4">Input Data Pengguna</h4>
+            <h4 class="card-title mb-4">Edit Data Pengguna</h4>
         </div>
-        <div class="p-6">
 
+        <div class="p-6">
             {{-- ✅ Notifikasi sukses --}}
             @if(session('success'))
                 <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
@@ -26,15 +26,19 @@
                 </div>
             @endif
 
-            <form class="flex flex-col gap-4" method="POST" action="{{ route('pengguna.store') }}" enctype="multipart/form-data">
+            <form class="flex flex-col gap-4"
+                  method="POST"
+                  action="{{ route('pengguna.update', $user->id) }}"
+                  enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
 
                 <!-- Nama Pengguna -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="name" class="text-default-800 text-sm font-medium">Nama Pengguna</label>
                     <div class="md:col-span-3">
                         <input type="text" name="name" id="name"
-                               value="{{ old('name') }}"  {{-- isi ulang kalau gagal validasi --}}
+                               value="{{ old('name', $user->name) }}"
                                class="form-input @error('name') border-red-500 @enderror"
                                required>
                         @error('name')
@@ -48,7 +52,7 @@
                     <label for="email" class="text-default-800 text-sm font-medium">Email</label>
                     <div class="md:col-span-3">
                         <input type="email" name="email" id="email"
-                               value="{{ old('email') }}"
+                               value="{{ old('email', $user->email) }}"
                                class="form-input @error('email') border-red-500 @enderror"
                                required>
                         @error('email')
@@ -59,11 +63,11 @@
 
                 <!-- Password -->
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="password" class="text-default-800 text-sm font-medium">Password</label>
+                    <label for="password" class="text-default-800 text-sm font-medium">Password (Opsional)</label>
                     <div class="md:col-span-3">
                         <input type="password" name="password" id="password"
                                class="form-input @error('password') border-red-500 @enderror"
-                               required>
+                               placeholder="Kosongkan jika tidak ingin mengganti">
                         @error('password')
                             <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -73,11 +77,11 @@
                 <!-- Tombol Submit -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <div class="md:col-start-2">
-                        <button type="submit" class="btn bg-info text-white">Simpan Data</button>
+                        <button type="submit" class="btn bg-info text-white">Perbarui Data</button>
+                        <a href="{{ route('pengguna.index') }}" class="btn bg-gray-300 text-black ml-2">Kembali</a>
                     </div>
                 </div>
             </form>
-
         </div>
     </div>
 @endsection
