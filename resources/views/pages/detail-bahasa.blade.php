@@ -3,89 +3,159 @@
 @section('title', 'Detail Bahasa')
 
 @section('content')
-    <div class="container" style="margin-top: 150px; margin-bottom: 200px">
-        <div class="card shadow-lg border-0 rounded-3">
+<div class="container" style="margin-top: 150px; margin-bottom: 200px">
+    <div class="card shadow-lg border-0 rounded-3">
 
-            <!-- Header -->
-            <div class="card-header text-white" style="background-color: #1b81ae;">
-                <h3 class="mb-0">{{ $bahasa->nama_bahasa }}</h3>
-                <small class="opacity-75">Wilayah: {{ $bahasa->wilayah->nama_wilayah }}, Provinsi Jambi</small>
+        <!-- Header -->
+        <div class="card-header text-white" style="background-color: #1b81ae;">
+            <h3 class="mb-0">{{ $bahasa->nama_bahasa }}</h3>
+            <small class="opacity-75">
+                Wilayah: {{ $bahasa->wilayah->nama_wilayah }}, Provinsi Jambi
+            </small>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+
+            <!-- DESKRIPSI -->
+            <div class="mb-5" data-aos="fade-up" data-aos-duration="800">
+                <h5 class="text-muted">Deskripsi</h5>
+                <p class="text-justify fs-6">
+                    {{ $bahasa->deskripsi ?? 'Tidak ada deskripsi.' }}
+                </p>
             </div>
 
-            <!-- Body -->
-            <div class="card-body">
-                <div class="row mb-4">
-                    <div class="col-md-6 border-end">
-                        <h6 class="text-muted">Jumlah Penutur</h6>
-                        <p class="fs-5 fw-semibold mb-0">± {{ number_format($bahasa->jumlah_penutur) }} orang</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="text-muted">Status Bahasa</h6>
-                        <span
-    class="badge 
-        @if (strtolower($bahasa->status) == 'aktif') bg-success text-white
-        @elseif (strtolower($bahasa->status) == 'terancam punah') bg-warning text-dark 
-        
-        @else bg-secondary 
-        @endif 
-    fs-6 px-3 py-2 rounded-pill">
-    {{ ucfirst(strtolower($bahasa->status)) }}
-</span>
-
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <h5 class="text-muted">Deskripsi</h5>
-                    <p class="text-justify fs-6">
-                        {{ $bahasa->deskripsi ?? 'Tidak ada deskripsi.' }}
-                    </p>
-                </div>
-
-                <!-- Peta Leaflet -->
-                <div class="mb-4">
-                    <h5 class="text-muted">Peta</h5>
-                    <div id="map" style="height: 400px; border-radius: 10px; border: 1px solid #ccc;"></div>
-                </div>
+            <!-- JUMLAH PENUTUR -->
+            <div class="mb-4" data-aos="fade-right" data-aos-duration="700">
+                <h6 class="text-muted">Jumlah Penutur</h6>
+                <p class="fs-5 fw-semibold mb-0 text-dark">
+                    ± {{ number_format($bahasa->jumlah_penutur) }} orang
+                </p>
             </div>
 
-            <!-- Footer -->
-            <div class="card-footer text-end">
-                <a href="{{ url('/') }}" class="btn text-white" style="background-color: #1b81ae;">
-                    ← Kembali
-                </a>
+            <!-- STATUS -->
+            <div class="mb-4" data-aos="fade-left" data-aos-duration="700">
+                <h6 class="text-muted">Status Bahasa</h6>
+                <span
+                    class="badge 
+                    @if (strtolower($bahasa->status) == 'aktif') bg-success text-white
+                    @elseif (strtolower($bahasa->status) == 'terancam punah') bg-warning text-dark
+                    @else bg-secondary @endif
+                    fs-6 px-3 py-2 rounded-pill">
+                    {{ ucfirst(strtolower($bahasa->status)) }}
+                </span>
+            </div>
+
+            <!-- PETA SEBARAN -->
+            <div class="mb-4" data-aos="zoom-in" data-aos-duration="1000">
+                <h5 class="text-muted">Peta Sebaran</h5>
+                <div id="map" style="height: 400px; border-radius: 10px; border: 1px solid #ccc;"></div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <div class="card-footer text-end">
+            <a href="{{ url('/') }}" class="btn text-white" style="background-color: #1b81ae;">
+                ← Kembali
+            </a>
+        </div>
     </div>
+</div>
 
-    <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var map = L.map('map').setView([-1.6101, 103.6158], 8);
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    AOS.init();
+
+    // Inisialisasi peta
+    var map = L.map('map').setView([-1.6101, 103.6158], 8);
+
+    // Tambahkan layer OSM
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+    }).addTo(map);
+
+    // Ambil file GeoJSON wilayah bahasa
+    fetch("/{{ $bahasa->wilayah->file_geojson }}")
+        .then(response => response.json())
+        .then(data => {
+            var geoLayer = L.geoJSON(data, {
+                style: {
+                    color: "#1b81ae",
+                    weight: 2,
+                    fillColor: "#1b81ae",
+                    fillOpacity: 0.25
+                }
             }).addTo(map);
 
-            // load geojson wilayah dari DB
-            fetch("/{{ $bahasa->wilayah->file_geojson }}")
-                .then(response => response.json())
-                .then(data => {
-                    var layer = L.geoJSON(data, {
-                        style: {
-                            color: "#1b81ae",
-                            weight: 2,
-                            fillColor: "#1b81ae",
-                            fillOpacity: 0.3
-                        }
-                    }).addTo(map);
+            // Zoom otomatis ke batas geojson
+            map.fitBounds(geoLayer.getBounds());
 
-                    // zoom ke geojson
-                    map.fitBounds(layer.getBounds());
-                });
-        });
-    </script>
+            // Tambahkan marker statis di tengah wilayah
+            var center = geoLayer.getBounds().getCenter();
+            const iconUrl = "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png";
+            const customIcon = L.icon({
+                iconUrl: iconUrl,
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                iconSize: [30, 45],
+                iconAnchor: [15, 45],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const marker = L.marker([center.lat, center.lng], {
+                icon: customIcon,
+                draggable: false
+            }).addTo(map);
+
+            marker.bindPopup(`
+                <div style="
+                    background:white;
+                    padding:12px;
+                    border-radius:10px;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+                    animation: fadeInPopup 0.6s ease;">
+                    <h6 style="margin:0; color:#1b81ae;"><strong>{{ $bahasa->nama_bahasa }}</strong></h6>
+                    <small style="color:#555;">Wilayah: {{ $bahasa->wilayah->nama_wilayah }}</small><br>
+                    <a href="https://www.google.com/maps?q=${center.lat},${center.lng}" target="_blank" 
+                       class="text-blue-600 hover:underline" style="display:inline-block;margin-top:6px;">
+                        📍 Lihat di Google Maps
+                    </a>
+                </div>
+            `).openPopup();
+        })
+        .catch(err => console.error("Gagal memuat GeoJSON:", err));
+});
+</script>
+
+<style>
+@keyframes fadeInPopup {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Efek card elegan */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Teks deskripsi lebih nyaman dibaca */
+.text-justify {
+    text-align: justify;
+    line-height: 1.7;
+}
+</style>
 @endsection

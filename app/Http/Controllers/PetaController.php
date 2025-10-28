@@ -67,12 +67,6 @@ class PetaController extends Controller
         ));
     }
 
-
-
-
-
-
-
     public function show($id)
     {
         $bahasa = Bahasa::with('wilayah')->findOrFail($id);

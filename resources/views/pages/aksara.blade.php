@@ -215,31 +215,69 @@
                             iconUrl =
                                 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png';
                             break;
+                        default:
+                            iconUrl =
+                                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png';
                     }
 
                     const customIcon = L.icon({
                         iconUrl: iconUrl,
                         shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
+                        iconSize: [30, 45],
+                        iconAnchor: [15, 45],
+                        popupAnchor: [0, -40],
+                        shadowSize: [45, 45]
                     });
 
-                    L.marker([a.lat, a.lng], {
+                    const marker = L.marker([a.lat, a.lng], {
                             icon: customIcon
                         })
                         .addTo(map)
                         .bindPopup(`
-                    <div style="background:white; padding:8px; border-radius:4px;">
-                        <strong>${a.nama_aksara}</strong><br>
-                        Koordinat: ${a.lat.toFixed(4)}, ${a.lng.toFixed(4)}<br>
-                        <a href="{{ url('detail/aksara') }}/${a.id}"
-                        class="text-blue-600 hover:underline mt-2 inline-block">
-                        Lihat Detail
-                        </a>
+                <div style="
+                    background: linear-gradient(135deg, #ffffff 0%, #fafaf9 100%);
+                    padding: 14px 16px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+                    font-family: 'Poppins', sans-serif;
+                    animation: fadeInPopup 0.4s ease-in-out;
+                    width: 240px;
+                ">
+                    <div style="border-bottom: 1px solid #eee; padding-bottom: 6px; margin-bottom: 6px;">
+                        <strong style="font-size: 16px; color: #b45309;">${a.nama_aksara}</strong>
                     </div>
-                `);
+                    <div style="font-size: 13px; color: #374151; line-height: 1.5;">
+                            ✍️ <b>Koordinat:</b> ${a.lat.toFixed(4)}, ${a.lng.toFixed(4)}<br>
+                            🗺️ <b>Wilayah:</b> ${a.nama_wilayah ? a.nama_wilayah : '-'}
+                    </div>
+
+                    <a href="{{ url('detail/aksara') }}/${a.id}"
+                        style="
+                            display: inline-block;
+                            margin-top: 10px;
+                            padding: 6px 12px;
+                            background: linear-gradient(90deg, #f59e0b, #b45309);
+                            color: #fff;
+                            font-size: 13px;
+                            font-weight: 500;
+                            text-decoration: none;
+                            border-radius: 6px;
+                            transition: all 0.25s ease;
+                        "
+                        onmouseover="this.style.background='linear-gradient(90deg, #d97706, #92400e)'; this.style.transform='scale(1.05)';"
+                        onmouseout="this.style.background='linear-gradient(90deg, #f59e0b, #b45309)'; this.style.transform='scale(1)';"
+                    >
+                        🔍 Lihat Detail
+                    </a>
+                </div>
+
+                <style>
+                    @keyframes fadeInPopup {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                </style>
+            `);
                 }
             });
         });

@@ -202,57 +202,85 @@
             });
 
             // --- Marker sastra (berdasarkan filter) ---
-            sastraList.forEach(function(s) {
-                if (s.lat && s.lng) {
-                    let iconUrl = '';
+sastraList.forEach(function (s) {
+    if (s.lat && s.lng) {
+        let iconUrl = '';
 
-                    switch (s.nama_sastra) {
-                        case 'Puisi Rakyat':
-                            iconUrl =
-                                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
-                            break;
-                        case 'Teks Keagamaan':
-                            iconUrl =
-                                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png';
-                            break;
-                        case 'Syair/Pantun':
-                            iconUrl =
-                                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png';
-                            break;
-                        case 'Cerita Rakyat':
-                            iconUrl =
-                                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
-                            break;
-                        case 'Naskah Kuno':
-                            iconUrl =
-                                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png';
-                            break;
+        switch (s.nama_sastra) {
+            case 'Puisi Rakyat':
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
+                break;
+            case 'Teks Keagamaan':
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png';
+                break;
+            case 'Syair/Pantun':
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png';
+                break;
+            case 'Cerita Rakyat':
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
+                break;
+            case 'Naskah Kuno':
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png';
+                break;
+            default:
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png';
+        }
+
+        const customIcon = L.icon({
+            iconUrl: iconUrl,
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [30, 45],
+            iconAnchor: [15, 45],
+            popupAnchor: [0, -40],
+            shadowSize: [45, 45]
+        });
+
+        const marker = L.marker([s.lat, s.lng], { icon: customIcon })
+            .addTo(map)
+            .bindPopup(`
+                <div style="
+                    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+                    padding: 12px 16px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    font-family: 'Poppins', sans-serif;
+                    animation: fadeInPopup 0.4s ease-in-out;
+                    width: 230px;
+                ">
+                    <div style="border-bottom: 1px solid #eee; padding-bottom: 6px; margin-bottom: 6px;">
+                        <strong style="font-size: 16px; color: #9333ea;">${s.nama_sastra}</strong>
+                    </div>
+                    <div style="font-size: 13px; color: #374151; line-height: 1.4;">
+                        📍 <b>Koordinat:</b> ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}<br>
+                        🏠 <b>Alamat:</b> ${s.alamat}
+                    </div>
+                    <a href="{{ url('detail/sastra') }}/${s.id}"
+                        style="
+                            display: inline-block;
+                            margin-top: 10px;
+                            padding: 6px 12px;
+                            background: #9333ea;
+                            color: #fff;
+                            font-size: 13px;
+                            font-weight: 500;
+                            text-decoration: none;
+                            border-radius: 6px;
+                            transition: all 0.25s ease;
+                        "
+                        onmouseover="this.style.background='#7e22ce'; this.style.transform='scale(1.05)';"
+                        onmouseout="this.style.background='#9333ea'; this.style.transform='scale(1)';"
+                    >
+                        📚 Lihat Detail
+                    </a>
+                </div>
+
+                <style>
+                    @keyframes fadeInPopup {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
                     }
-
-                    const customIcon = L.icon({
-                        iconUrl: iconUrl,
-                        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    });
-
-                    L.marker([s.lat, s.lng], {
-                            icon: customIcon
-                        })
-                        .addTo(map)
-                        .bindPopup(`
-                            <div style="background:white; padding:8px; border-radius:4px;">
-                                <strong>${s.nama_sastra}</strong><br>
-                                Koordinat: ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}<br>
-                                Alamat: ${s.alamat}<br>
-                                <a href="{{ url('detail/sastra') }}/${s.id}"
-                                class="text-blue-600 hover:underline mt-2 inline-block">
-                                Lihat Detail
-                                </a>
-                            </div>
-                        `);
+                </style>
+            `);
                 }
             });
         });

@@ -14,34 +14,61 @@
 
             <!-- Body -->
             <div class="card-body">
-                <div class="row mb-4">
-                    <div class="col-md-6 border-end">
-                        <h6 class="text-muted">Jumlah Penutur</h6>
-                        <p class="fs-5 fw-semibold mb-0">± {{ number_format($aksara->jumlah_penutur) }} orang</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="text-muted">Status Aksara</h6>
-                        <span
-                            class="badge 
-                        @if ($aksara->status == 'Aktif') bg-success 
-                        @elseif($aksara->status == 'Tidak Aktif') bg-warning text-dark 
-                        @else bg-secondary @endif 
-                        fs-6 px-3 py-2 rounded-pill">
-                            {{ $aksara->status }}
-                        </span>
-                    </div>
-                </div>
 
-                <div class="mb-4">
+                <!-- DESKRIPSI -->
+                <div class="mb-5" data-aos="fade-up" data-aos-duration="800">
                     <h5 class="text-muted">Deskripsi</h5>
                     <p class="text-justify fs-6">
                         {{ $aksara->deskripsi ?? 'Tidak ada deskripsi.' }}
                     </p>
                 </div>
 
-                <!-- Peta Leaflet -->
-                <div class="mb-4">
-                    <h5 class="text-muted">Peta Sebaran</h5>
+                <!-- STATUS -->
+                <div class="mb-4" data-aos="fade-right" data-aos-duration="700">
+                    <h6 class="text-muted">Status Aksara</h6>
+                    <span
+                        class="badge 
+                        @if ($aksara->status == 'Aktif') bg-success 
+                        @elseif($aksara->status == 'Tidak Aktif') bg-warning text-dark 
+                        @else bg-secondary @endif 
+                        fs-6 px-3 py-2 rounded-pill">
+                        {{ $aksara->status }}
+                    </span>
+                </div>
+
+                <!-- DOKUMENTASI -->
+                <div class="mb-5" data-aos="zoom-in" data-aos-duration="800">
+                    <h5 class="text-muted mb-3">Dokumentasi</h5>
+
+                    @if ($aksara->dokumentasi)
+                        @php
+                            $ext = pathinfo($aksara->dokumentasi, PATHINFO_EXTENSION);
+                        @endphp
+
+                        @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif']))
+                            <div class="doc-container">
+                                <img src="{{ asset('storage/' . $aksara->dokumentasi) }}"
+                                     alt="Dokumentasi {{ $aksara->nama_aksara }}"
+                                     class="img-fluid rounded shadow-sm doc-item">
+                            </div>
+                        @elseif (in_array(strtolower($ext), ['mp4', 'mov', 'avi', 'webm']))
+                            <div class="doc-container">
+                                <video controls class="w-100 rounded shadow-sm doc-item">
+                                    <source src="{{ asset('storage/' . $aksara->dokumentasi) }}" type="video/{{ $ext }}">
+                                    Browser Anda tidak mendukung pemutaran video.
+                                </video>
+                            </div>
+                        @else
+                            <p class="text-muted fst-italic">Format dokumentasi tidak didukung.</p>
+                        @endif
+                    @else
+                        <p class="text-muted fst-italic">Tidak ada dokumentasi tersedia.</p>
+                    @endif
+                </div>
+
+                <!-- PETA SEBARAN -->
+                <div class="mb-4" data-aos="zoom-in" data-aos-duration="1000">
+                    <h5 class="text-muted">Peta</h5>
                     <div id="map" style="height: 400px; border-radius: 10px; border: 1px solid #ccc;"></div>
                 </div>
             </div>
@@ -59,15 +86,20 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            AOS.init();
+
             var map = L.map('map').setView([-1.6101, 103.6158], 8);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
             }).addTo(map);
 
-            // load geojson wilayah dari DB
             fetch("/{{ $aksara->wilayah->file_geojson }}")
                 .then(response => response.json())
                 .then(data => {
@@ -79,10 +111,36 @@
                             fillOpacity: 0.3
                         }
                     }).addTo(map);
-
-                    // zoom ke geojson
                     map.fitBounds(layer.getBounds());
                 });
         });
     </script>
+
+    <style>
+        /* Dokumentasi agar proporsional dan tidak terpotong */
+        .doc-container {
+            overflow: hidden;
+            border-radius: 10px;
+            max-width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 8px;
+        }
+
+        .doc-item {
+            width: auto;
+            max-width: 100%;
+            max-height: 400px;
+            height: auto;
+            object-fit: contain; /* Menjaga agar gambar/video tidak terpotong */
+            transition: transform 0.5s ease, box-shadow 0.3s ease;
+        }
+
+        .doc-container:hover .doc-item {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+    </style>
 @endsection

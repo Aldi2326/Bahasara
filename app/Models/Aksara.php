@@ -19,6 +19,6 @@ class Aksara extends Model
     // Relasi: Aksara milik 1 Wilayah
     public function wilayah()
     {
-        return $this->belongsTo(Wilayah::class);
+        return $this->belongsTo(Wilayah::class, 'wilayah_id');
     }
 }

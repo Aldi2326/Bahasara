@@ -46,28 +46,33 @@ class AksaraController extends Controller
     return view('pages.admin.peta.aksara.index', compact('aksara', 'sortBy', 'order'));
 }
 
-public function petaAksara()
+public function petaAksara(Request $request)
 {
-    // Ambil semua wilayah (beserta file geojson-nya)
-    $wilayah = \App\Models\Wilayah::select('id', 'nama_wilayah', 'file_geojson')->get();
+    $selectedAksara = $request->input('aksara', []);
+    $selectedWilayah = $request->input('wilayah', []);
 
-    // Ambil semua data akasara, pastikan koordinat dipisah jadi lat & lng
-    $aksaraList = \App\Models\Aksara::with('wilayah')
-        ->get()
-        ->map(function ($item): Aksara {
-            if (!empty($item->koordinat)) {
-                $koordinat = explode(',', $item->koordinat);
-                $item->lat = (float) $koordinat[0];
-                $item->lng = (float) $koordinat[1];
-            } else {
-                $item->lat = null;
-                $item->lng = null;
-            }
-            return $item;
-        });
+    // Gunakan with() dan join agar nama wilayah ikut terbaca
+    $query = Aksara::with('wilayah')
+        ->leftJoin('wilayah', 'aksara.wilayah_id', '=', 'wilayah.id')
+        ->select('aksara.*', 'wilayah.nama_wilayah'); // ← penting
 
-    return view('pages.aksara', compact('wilayah', 'aksaraList'));
+    if (!in_array('Semua Aksara', $selectedAksara) && !empty($selectedAksara)) {
+        $query->whereIn('nama_aksara', $selectedAksara);
+    }
+
+    if (!in_array('Semua Wilayah', $selectedWilayah) && !empty($selectedWilayah)) {
+        $query->whereIn('wilayah.nama_wilayah', $selectedWilayah);
+    }
+
+    $aksaraList = $query->get();
+    $allAksara = Aksara::select('nama_aksara')->distinct()->get();
+    $allWilayah = \App\Models\Wilayah::all();
+
+    return view('pages.aksara', compact(
+        'aksaraList', 'allAksara', 'allWilayah', 'selectedAksara', 'selectedWilayah'
+    ));
 }
+
 
     public function show($id)
     {
