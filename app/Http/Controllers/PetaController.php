@@ -17,7 +17,7 @@ class PetaController extends Controller
 
         // Ambil semua data untuk dropdown
         $allWilayah = Wilayah::all();
-        $allBahasa = Bahasa::all();
+        $allBahasa = Bahasa::all()->unique('nama_bahasa')->values();
 
         // Mulai query dasar
         $wilayahQuery = Wilayah::with('bahasa');

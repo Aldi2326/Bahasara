@@ -17,7 +17,7 @@ class PetaAksaraController extends Controller
 
         // Ambil semua data untuk dropdown
         $allWilayah = Wilayah::all();
-        $allAksara = Aksara::all();
+        $allAksara = Aksara::all()->unique('nama_aksara')->values();
 
         // Mulai query dasar
         $wilayahQuery = Wilayah::with('aksara');

@@ -17,7 +17,8 @@ class PetaSastraController extends Controller
 
         // Ambil semua data untuk dropdown
         $allWilayah = Wilayah::all();
-        $allSastra = Sastra::all();
+        $allSastra = Sastra::all()->unique('nama_sastra')->values();
+
 
         // Mulai query dasar
         $wilayahQuery = Wilayah::with('sastra');
