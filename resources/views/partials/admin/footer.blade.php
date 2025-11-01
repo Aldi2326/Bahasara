@@ -3,7 +3,7 @@
         <div>
             <script>
                 document.write(new Date().getFullYear())
-            </script> © Bahasara
+            </script> © SIBARAJA
         </div>
     </div>
 </footer>

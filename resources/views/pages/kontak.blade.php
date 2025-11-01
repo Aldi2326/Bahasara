@@ -166,7 +166,7 @@
                     <div class="col-md-8">
 
                         <!--Title-->
-                        <h3>Formulir Kontak</h3>
+                        <h3>Formulir Umpan Balik</h3>
 
                         <!--Form-->
                         <form id="form-contact" action="{{ route('kontak.store') }}" method="post"

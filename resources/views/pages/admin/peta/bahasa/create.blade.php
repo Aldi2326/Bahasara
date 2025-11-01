@@ -7,7 +7,7 @@
     </div>
 
     <div class="p-6">
-        <form class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST">
+        <form id="bahasaForm" class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST">
             @csrf
 
             <!-- Nama Wilayah -->
@@ -112,37 +112,51 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+{{-- ======== SweetAlert2 ======== --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Koordinat awal (Pusat Provinsi Jambi)
+    // Inisialisasi Peta
     var map = L.map('map').setView([-1.610122, 103.613120], 7);
 
-    // Tambah tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
     var marker;
 
-    // Event klik peta
     map.on('click', function (e) {
         var lat = e.latlng.lat.toFixed(6);
         var lng = e.latlng.lng.toFixed(6);
-
-        // Format koordinat menjadi "latitude, longitude"
         var koordinat = lat + ', ' + lng;
-
-        // Isi otomatis input koordinat
         document.getElementById('koordinat').value = koordinat;
 
-        // Hapus marker lama jika ada
-        if (marker) {
-            map.removeLayer(marker);
-        }
+        if (marker) map.removeLayer(marker);
 
-        // Tambah marker baru di lokasi yang diklik
         marker = L.marker([lat, lng]).addTo(map)
             .bindPopup("Koordinat:<br>" + koordinat).openPopup();
+    });
+
+    // SweetAlert konfirmasi sebelum submit
+    const form = document.getElementById('bahasaForm');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Cegah submit langsung
+
+        Swal.fire({
+            title: 'Simpan Data?',
+            text: "Pastikan data sudah benar sebelum disimpan.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Simpan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
     });
 });
 </script>

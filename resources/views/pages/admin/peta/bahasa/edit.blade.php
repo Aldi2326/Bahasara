@@ -7,7 +7,7 @@
     </div>
 
     <div class="p-6">
-        <form class="flex flex-col gap-4" action="{{ route('bahasa.update', $bahasa->id) }}" method="POST">
+        <form id="editBahasaForm" class="flex flex-col gap-4" action="{{ route('bahasa.update', $bahasa->id) }}" method="POST">
             @csrf
             @method('PUT')
 
@@ -113,24 +113,24 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Ambil koordinat awal dari database
+    // ======== Leaflet ========
     let koordinatString = "{{ $bahasa->koordinat }}";
-    let defaultLat = -1.610122, defaultLng = 103.613120; // default Jambi
+    let defaultLat = -1.610122, defaultLng = 103.613120;
     let lat = defaultLat, lng = defaultLng;
 
-    // Jika data koordinat ada
     if (koordinatString && koordinatString.includes(',')) {
         let parts = koordinatString.split(',');
         lat = parseFloat(parts[0]);
         lng = parseFloat(parts[1]);
     }
 
-    // Inisialisasi peta
     var map = L.map('map').setView([lat, lng], 8);
 
-    // Tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
@@ -139,20 +139,37 @@ document.addEventListener("DOMContentLoaded", function () {
         .bindPopup("Koordinat Awal:<br>" + lat + ", " + lng)
         .openPopup();
 
-    // Klik peta → ubah marker & isi input koordinat
     map.on('click', function(e) {
         let newLat = e.latlng.lat.toFixed(6);
         let newLng = e.latlng.lng.toFixed(6);
         let newCoord = newLat + ', ' + newLng;
-
-        // Update input
         document.getElementById('koordinat').value = newCoord;
 
-        // Ganti marker
         if (marker) map.removeLayer(marker);
         marker = L.marker([newLat, newLng]).addTo(map)
             .bindPopup("Koordinat Baru:<br>" + newCoord)
             .openPopup();
+    });
+
+    // ======== SweetAlert Konfirmasi Update ========
+    const form = document.getElementById('editBahasaForm');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Perbarui Data?',
+            text: "Perubahan akan disimpan permanen.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Update!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
     });
 });
 </script>

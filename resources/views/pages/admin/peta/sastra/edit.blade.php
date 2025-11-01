@@ -6,7 +6,7 @@
             <h4 class="card-title mb-4">Edit Data Sastra</h4>
         </div>
         <div class="p-6">
-            <form class="flex flex-col gap-4" method="POST" action="{{ route('sastra.update', $sastra->id) }}">
+            <form id="sastraForm" class="flex flex-col gap-4" method="POST" action="{{ route('sastra.update', $sastra->id) }}">
                 @csrf
                 @method('PUT')
 
@@ -17,8 +17,7 @@
                         <select name="wilayah_id" id="wilayah_id" class="form-select" required>
                             <option value="">-- Pilih Wilayah --</option>
                             @foreach ($wilayahList as $wilayah)
-                                <option value="{{ $wilayah->id }}"
-                                    {{ $sastra->wilayah_id == $wilayah->id ? 'selected' : '' }}>
+                                <option value="{{ $wilayah->id }}" {{ $sastra->wilayah_id == $wilayah->id ? 'selected' : '' }}>
                                     {{ $wilayah->nama_wilayah }}
                                 </option>
                             @endforeach
@@ -28,18 +27,18 @@
 
                 <!-- Nama Sastra -->
                 <div class="grid grid-cols-4 items-center gap-6">
-                <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
-                <div class="md:col-span-3">
-                    <select name="nama_sastra" id="nama_sastra" class="form-select" required>
-                        <option value="">-- Pilih Sastra --</option>
-                        <option value="Puisi Rakyat" {{ $sastra->nama_sastra == 'Puisi Rakyat' ? 'selected' : '' }}>Puisi Rakyat</option>
-                        <option value="Cerita Rakyat" {{ $sastra->nama_sastra == 'Cerita Rakyat' ? 'selected' : '' }}>Cerita Rakyat</option>
-                        <option value="Syair/Pantun" {{ $sastra->nama_sastra == 'Syair/Pantun' ? 'selected' : '' }}>Syair/Pantun</option>
-                        <option value="Teks Keagamaan" {{ $sastra->nama_sastra == 'Teks Keagamaan' ? 'selected' : '' }}>Teks Keagamaan</option>
-                        <option value="Naskah Kuno" {{ $sastra->nama_sastra == 'Naskah Kuno' ? 'selected' : '' }}>Naskah Kuno</option>
-                    </select>
+                    <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
+                    <div class="md:col-span-3">
+                        <select name="nama_sastra" id="nama_sastra" class="form-select" required>
+                            <option value="">-- Pilih Sastra --</option>
+                            <option value="Puisi Rakyat" {{ $sastra->nama_sastra == 'Puisi Rakyat' ? 'selected' : '' }}>Puisi Rakyat</option>
+                            <option value="Cerita Rakyat" {{ $sastra->nama_sastra == 'Cerita Rakyat' ? 'selected' : '' }}>Cerita Rakyat</option>
+                            <option value="Syair/Pantun" {{ $sastra->nama_sastra == 'Syair/Pantun' ? 'selected' : '' }}>Syair/Pantun</option>
+                            <option value="Teks Keagamaan" {{ $sastra->nama_sastra == 'Teks Keagamaan' ? 'selected' : '' }}>Teks Keagamaan</option>
+                            <option value="Naskah Kuno" {{ $sastra->nama_sastra == 'Naskah Kuno' ? 'selected' : '' }}>Naskah Kuno</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
                 <!-- Alamat -->
                 <div class="grid grid-cols-4 items-start gap-6">
@@ -57,7 +56,7 @@
                             <option value="">-- Pilih Jenis --</option>
                             <option value="lisan" {{ $sastra->jenis == 'lisan' ? 'selected' : '' }}>Lisan</option>
                             <option value="tulisan" {{ $sastra->jenis == 'tulisan' ? 'selected' : '' }}>Tulisan</option>
-                            <option value="lainnya">Lainnya</option>
+                            <option value="lainnya" {{ $sastra->jenis == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                         </select>
                     </div>
                 </div>
@@ -66,8 +65,7 @@
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="koordinat" class="text-default-800 text-sm font-medium">Koordinat</label>
                     <div class="md:col-span-3">
-                        <input type="text" name="koordinat" id="koordinat" class="form-input"
-                            value="{{ $sastra->koordinat }}" required>
+                        <input type="text" name="koordinat" id="koordinat" class="form-input" value="{{ $sastra->koordinat }}" required>
                     </div>
                 </div>
 
@@ -86,15 +84,14 @@
                 <div class="grid grid-cols-4 items-start gap-6">
                     <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                     <div class="md:col-span-3">
-                        <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi sastra..."
-                            required>{{ old('deskripsi', $sastra->deskripsi) }}</textarea>
+                        <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" required>{{ old('deskripsi', $sastra->deskripsi) }}</textarea>
                     </div>
                 </div>
 
                 <!-- Tombol Submit -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <div class="md:col-start-2">
-                        <button type="submit" class="btn bg-info text-white">Simpan Data</button>
+                        <button type="button" id="btnUpdate" class="btn bg-info text-white">Update Data</button>
                     </div>
                 </div>
             </form>
@@ -105,24 +102,17 @@
 
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
-                    // Ambil koordinat awal dari database
                     let koordinatString = "{{ $sastra->koordinat }}";
-                    let defaultLat = -1.610122,
-                        defaultLng = 103.613120; // default Jambi
-                    let lat = defaultLat,
-                        lng = defaultLng;
+                    let defaultLat = -1.610122, defaultLng = 103.613120;
+                    let lat = defaultLat, lng = defaultLng;
 
-                    // Jika data koordinat ada
                     if (koordinatString && koordinatString.includes(',')) {
                         let parts = koordinatString.split(',');
                         lat = parseFloat(parts[0]);
                         lng = parseFloat(parts[1]);
                     }
 
-                    // Inisialisasi peta
                     var map = L.map('map').setView([lat, lng], 8);
-
-                    // Tile layer
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; OpenStreetMap contributors'
                     }).addTo(map);
@@ -131,16 +121,13 @@
                         .bindPopup("Koordinat Awal:<br>" + lat + ", " + lng)
                         .openPopup();
 
-                    // Klik peta → ubah marker & isi input koordinat
                     map.on('click', function(e) {
                         let newLat = e.latlng.lat.toFixed(6);
                         let newLng = e.latlng.lng.toFixed(6);
                         let newCoord = newLat + ', ' + newLng;
 
-                        // Update input
                         document.getElementById('koordinat').value = newCoord;
 
-                        // Ganti marker
                         if (marker) map.removeLayer(marker);
                         marker = L.marker([newLat, newLng]).addTo(map)
                             .bindPopup("Koordinat Baru:<br>" + newCoord)
@@ -148,4 +135,27 @@
                     });
                 });
             </script>
-        @endsection
+
+            {{-- SweetAlert Konfirmasi Update --}}
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.getElementById("btnUpdate").addEventListener("click", function(e) {
+                    Swal.fire({
+                        title: 'Yakin ingin memperbarui data?',
+                        text: "Pastikan semua data sudah benar sebelum disimpan.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Update!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById("sastraForm").submit();
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+@endsection
