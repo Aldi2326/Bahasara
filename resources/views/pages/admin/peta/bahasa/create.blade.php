@@ -10,6 +10,18 @@
         <form id="bahasaForm" class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST">
             @csrf
 
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>Terjadi kesalahan:</strong>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+
             <!-- Nama Wilayah -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
@@ -17,9 +29,9 @@
                     <select name="wilayah_id" id="wilayah_id" class="form-select" required>
                         <option value="">-- Pilih Wilayah --</option>
                         @foreach ($wilayahList as $wilayah)
-                            <option value="{{ $wilayah->id }}" {{ isset($wilayahId) && $wilayahId == $wilayah->id ? 'selected' : '' }}>
-                                {{ $wilayah->nama_wilayah }}
-                            </option>
+                        <option value="{{ $wilayah->id }}" {{ isset($wilayahId) && $wilayahId == $wilayah->id ? 'selected' : '' }}>
+                            {{ $wilayah->nama_wilayah }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -37,16 +49,21 @@
                         <option value="Bahasa Bugis">Bahasa Bugis</option>
                         <option value="Bahasa Kerinci">Bahasa Kerinci</option>
                         <option value="Bahasa Minangkabau">Bahasa Minangkabau</option>
-                        <option value="Bahasa Jawa">Bahasa Jawa</option>                     
+                        <option value="Bahasa Jawa">Bahasa Jawa</option>
                     </select>
                 </div>
             </div>
-            
+
             <!-- Alamat -->
             <div class="grid grid-cols-4 items-start gap-6">
                 <label for="alamat" class="text-default-800 text-sm font-medium">Alamat</label>
                 <div class="md:col-span-3">
-                    <textarea name="alamat" id="alamat" rows="3" class="form-input" placeholder="Masukkan alamat lengkap lokasi bahasa..." required></textarea>
+                    <!-- <textarea name="alamat" id="alamat" rows="3" class="form-input" placeholder="Masukkan alamat lengkap lokasi bahasa..." required></textarea> -->
+                    <!-- <div id="editors" style="height: 300px;">
+
+                    </div>
+                    <input type="hidden" name="alamat" id="alamat"> -->
+                    <textarea id="froala-editor" name="alamat" class="prose"></textarea>
                 </div>
             </div>
 
@@ -93,7 +110,8 @@
             <div class="grid grid-cols-4 items-start gap-6">
                 <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                 <div class="md:col-span-3">
-                    <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi lengkap bahasa..." required></textarea>
+                    <textarea id="froala-editor" name="deskripsi" class="prose"></textarea>
+
                 </div>
             </div>
 
@@ -116,48 +134,78 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Inisialisasi Peta
-    var map = L.map('map').setView([-1.610122, 103.613120], 7);
+    document.addEventListener("DOMContentLoaded", function() {
+        // Inisialisasi Peta
+        var map = L.map('map').setView([-1.610122, 103.613120], 7);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
 
-    var marker;
+        var marker;
 
-    map.on('click', function (e) {
-        var lat = e.latlng.lat.toFixed(6);
-        var lng = e.latlng.lng.toFixed(6);
-        var koordinat = lat + ', ' + lng;
-        document.getElementById('koordinat').value = koordinat;
+        map.on('click', function(e) {
+            var lat = e.latlng.lat.toFixed(6);
+            var lng = e.latlng.lng.toFixed(6);
+            var koordinat = lat + ', ' + lng;
+            document.getElementById('koordinat').value = koordinat;
 
-        if (marker) map.removeLayer(marker);
+            if (marker) map.removeLayer(marker);
 
-        marker = L.marker([lat, lng]).addTo(map)
-            .bindPopup("Koordinat:<br>" + koordinat).openPopup();
-    });
-
-    // SweetAlert konfirmasi sebelum submit
-    const form = document.getElementById('bahasaForm');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Cegah submit langsung
-
-        Swal.fire({
-            title: 'Simpan Data?',
-            text: "Pastikan data sudah benar sebelum disimpan.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Simpan!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
+            marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup("Koordinat:<br>" + koordinat).openPopup();
         });
+
+        // SweetAlert konfirmasi sebelum submit
+        const form = document.getElementById('bahasaForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Cegah submit langsung
+
+            Swal.fire({
+                title: 'Simpan Data?',
+                text: "Pastikan data sudah benar sebelum disimpan.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Froala CSS & JS CDN -->
+
+
+<!-- Inisialisasi Editor -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    new FroalaEditor('#froala-editor', {
+        height: 300,
+        toolbarButtons: [
+            'bold', 'italic', 'underline', 'strikeThrough', '|',
+            'formatOL', 'formatUL', '|',
+            'insertLink', 'insertImage', '|',
+            'html'
+        ],
+        quickInsertEnabled: false,
+        imageUpload: true,
+        imageUploadURL: '/upload-image',
+        imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+        imageMaxSize: 5 * 1024 * 1024, // 5MB
+
+        // ✅ Kirim CSRF token ke Laravel
+        imageUploadParams: {
+            _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
     });
 });
 </script>
+
+
 @endsection

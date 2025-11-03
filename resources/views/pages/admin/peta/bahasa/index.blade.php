@@ -82,7 +82,9 @@
                                             {{ $item->wilayah ? $item->wilayah->nama_wilayah : '-' }}
                                         </td>
                                         <td class="px-6 py-4 text-sm text-default-800">{{ $item->nama_bahasa }}</td>
-                                        <td class="px-6 py-4 text-sm text-default-800">{{ $item->alamat }}</td>
+                                        <td class="px-6 py-4  text-default-800"><div class="prose">
+{!! $item->alamat !!}
+                                        </div> </td>
                                         <td class="px-6 py-4 text-sm text-default-800">
                                             @if ($item->status === 'aktif')
                                                 <span class="px-2 py-1 rounded bg-green-500 text-white text-xs">Aktif</span>

@@ -86,6 +86,8 @@
         </div>
 
     </div>
+
+    
 </div>
 
 <!-- CSS -->
@@ -150,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <div style="border-bottom:1px solid #eee; padding-bottom:6px; margin-bottom:6px;">
                         <strong style="font-size:16px; color:#1e40af;">${b.nama_bahasa}</strong>
                     </div>
-                    <div style="font-size:13px; color:#374151; line-height:1.4;">
+                    <div class="prose" style="font-size:13px; color:#374151; line-height:1.4;">
                         📍 <b>Koordinat:</b> ${b.lat.toFixed(4)}, ${b.lng.toFixed(4)}<br>
                         🏠 <b>Alamat:</b> ${b.alamat}
                     </div>

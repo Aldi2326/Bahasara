@@ -20,9 +20,9 @@
             <!-- DESKRIPSI -->
             <div class="mb-5" data-aos="fade-up" data-aos-duration="800">
                 <h5 class="text-muted">Deskripsi</h5>
-                <p class="text-justify fs-6">
-                    {{ $bahasa->deskripsi ?? 'Tidak ada deskripsi.' }}
-                </p>
+                <div class="text-justify fs-6 prose">
+                    {!! $bahasa->deskripsi ?? 'Tidak ada deskripsi.' !!}
+                </div>
             </div>
 
             <!-- JUMLAH PENUTUR -->

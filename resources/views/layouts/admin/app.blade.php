@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
     <meta content="Myrathemes" name="author">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/img/bahasara-logo.png') }}">
@@ -17,9 +19,27 @@
     <!-- App css  (Mandatory in All Pages) -->
     <link href="{{ asset('assets/admin/css/app.min.css') }}" rel="stylesheet" type="text/css">
     <!-- Bootstrap Icons CDN -->
-<link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="{{ asset('assets/admin/libs/quill/quill.core.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/admin/libs/quill/quill.bubble.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/admin/libs/quill/quill.snow.css') }}" rel="stylesheet" type="text/css">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/froala-editor@4.1.4/css/froala_editor.pkgd.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/froala-editor@4.1.4/css/froala_style.min.css">
+    <style>
+    /* 🔹 Aktifkan kembali style default untuk list */
+    .prose ul,
+    .prose ol {
+        all:revert;
+    }
+
+    /* 🔹 Supaya bullet/number juga muncul dalam hasil dari Froala */
+    .fr-view ul,
+    .fr-view ol {
+        all: revert;
+    }
+</style>
 </head>
 
 <body>
@@ -37,57 +57,57 @@
 
             <main>
                 @if (session('success'))
-                    <div id="toast-success" class="toast-custom">
-                        <span>{{ session('success') }}</span>
-                        <span class="toast-close" onclick="closeToast()">×</span>
-                    </div>
+                <div id="toast-success" class="toast-custom">
+                    <span>{{ session('success') }}</span>
+                    <span class="toast-close" onclick="closeToast()">×</span>
+                </div>
 
-                    <script>
-                        // Hilang otomatis setelah 3 detik
-                        setTimeout(() => {
-                            closeToast();
-                        }, 3000);
+                <script>
+                    // Hilang otomatis setelah 3 detik
+                    setTimeout(() => {
+                        closeToast();
+                    }, 3000);
 
-                        function closeToast() {
-                            const toast = document.getElementById('toast-success');
-                            if (toast) {
-                                toast.style.opacity = '0'; // efek fade out
-                                setTimeout(() => toast.remove(), 500); // hapus elemen setelah animasi
-                            }
+                    function closeToast() {
+                        const toast = document.getElementById('toast-success');
+                        if (toast) {
+                            toast.style.opacity = '0'; // efek fade out
+                            setTimeout(() => toast.remove(), 500); // hapus elemen setelah animasi
                         }
-                    </script>
+                    }
+                </script>
 
-                    <style>
-                        .toast-custom {
-                            position: fixed;
-                            top: 20px;
-                            right: 20px;
-                            min-width: 250px;
-                            max-width: 350px;
-                            background-color: #28a745;
-                            /* hijau sukses */
-                            color: white;
-                            padding: 12px 16px;
-                            border-radius: 8px;
-                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            gap: 10px;
-                            z-index: 9999;
-                            transition: opacity 0.5s ease;
-                        }
+                <style>
+                    .toast-custom {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        min-width: 250px;
+                        max-width: 350px;
+                        background-color: #28a745;
+                        /* hijau sukses */
+                        color: white;
+                        padding: 12px 16px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 10px;
+                        z-index: 9999;
+                        transition: opacity 0.5s ease;
+                    }
 
-                        .toast-close {
-                            cursor: pointer;
-                            font-size: 18px;
-                            font-weight: bold;
-                        }
+                    .toast-close {
+                        cursor: pointer;
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
 
-                        .toast-close:hover {
-                            color: #ddd;
-                        }
-                    </style>
+                    .toast-close:hover {
+                        color: #ddd;
+                    }
+                </style>
                 @endif
                 <!-- Page Title Start -->
                 @yield('content')
@@ -124,6 +144,11 @@
 
     <!-- Dashboard Project Page js -->
     <script src="{{ asset('assets/admin/js/pages/dashboard.js') }}"></script>
+
+    <script src="{{ asset('assets/admin/libs/quill/quill.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/pages/form-editor.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/froala-editor@4.1.4/js/froala_editor.pkgd.min.js"></script>
+
 
 </body>
 

@@ -14,10 +14,13 @@ use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\TentangKamiController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UploadController;
 
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [AuthController::class, 'login'])->name('login');
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/upload-image', [UploadController::class, 'store']);
+
 
 // Bungkus beberapa route dengan middleware auth
 Route::middleware('auth')->group(function () {
