@@ -12,6 +12,7 @@ class Aksara extends Model
         'wilayah_id',
         'status',
         'deskripsi',
+        'alamat',
         'koordinat',
         'dokumentasi',
     ];

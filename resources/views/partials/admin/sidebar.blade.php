@@ -5,7 +5,7 @@
         <!-- Sidenav Logo -->
         <div class="sticky top-0 flex h-topbar items-center justify-center px-6">
             <a href="/">
-                <img src="{{ asset('assets/img/logo-bahasara-light.png') }}" alt="logo" class="flex h-10">
+                <img src="{{ asset('assets/img/logo-sibaraja2.png') }}" alt="logo" class="flex h-10">
             </a>
         </div>
 
@@ -73,7 +73,7 @@
                 <li class="px-3 py-2 text-xs uppercase font-medium text-default-500">Master Data</li>
                 <li class="menu-item">
                     <a class="group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5"
-                        href="/admin/wilayah">
+                        href="/admin/namabahasa">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
                             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                 stroke-width="1.5"

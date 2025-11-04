@@ -11,15 +11,16 @@
             @csrf
 
             @if ($errors->any())
-            <div class="alert alert-danger">
-                <strong>Terjadi kesalahan:</strong>
-                <ul>
+            <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
+                <strong class="font-semibold">Terjadi kesalahan:</strong>
+                <ul class="mt-2 list-disc list-inside text-sm">
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
             @endif
+
 
 
             <!-- Nama Wilayah -->
@@ -180,32 +181,6 @@
 </script>
 
 <!-- Froala CSS & JS CDN -->
-
-
-<!-- Inisialisasi Editor -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    new FroalaEditor('#froala-editor', {
-        height: 300,
-        toolbarButtons: [
-            'bold', 'italic', 'underline', 'strikeThrough', '|',
-            'formatOL', 'formatUL', '|',
-            'insertLink', 'insertImage', '|',
-            'html'
-        ],
-        quickInsertEnabled: false,
-        imageUpload: true,
-        imageUploadURL: '/upload-image',
-        imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
-        imageMaxSize: 5 * 1024 * 1024, // 5MB
-
-        // ✅ Kirim CSRF token ke Laravel
-        imageUploadParams: {
-            _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-    });
-});
-</script>
 
 
 @endsection

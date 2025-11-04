@@ -52,11 +52,11 @@
                                     <th class="px-6 py-3 text-start text-sm text-default-500">
                                         <div class="flex items-center gap-1">
                                             <span>Nama Bahasa</span>
-                                            <a href="?sort_by=nama_bahasa&order={{ nextOrder($order) }}"
+                                            <a href=""
                                                 class="text-gray-600 hover:text-blue-600">
-                                                @if ($sortBy === 'nama_bahasa' && $order === 'asc')
+                                                @if ($sortBy === '' && $order === 'asc')
                                                     <i class="bi bi-sort-alpha-up"></i>
-                                                @elseif ($sortBy === 'nama_bahasa' && $order === 'desc')
+                                                @elseif ($sortBy === '' && $order === 'desc')
                                                     <i class="bi bi-sort-alpha-down"></i>
                                                 @else
                                                     <i class="bi bi-arrow-down-up"></i>
@@ -81,7 +81,7 @@
                                         <td class="px-6 py-4 text-sm text-default-800">
                                             {{ $item->wilayah ? $item->wilayah->nama_wilayah : '-' }}
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-default-800">{{ $item->nama_bahasa }}</td>
+                                        <td class="px-6 py-4 text-sm text-default-800"></td>
                                         <td class="px-6 py-4  text-default-800"><div class="prose">
 {!! $item->alamat !!}
                                         </div> </td>

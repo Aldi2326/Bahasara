@@ -21,6 +21,17 @@
         <form id="formAksara" class="flex flex-col gap-4" method="POST" action="{{ route('aksara.store') }}" enctype="multipart/form-data">
             @csrf
 
+            @if ($errors->any())
+            <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
+                <strong class="font-semibold">Terjadi kesalahan:</strong>
+                <ul class="mt-2 list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <!-- Nama Wilayah -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
@@ -48,6 +59,19 @@
                 </div>
             </div>
 
+            <!-- Alamat -->
+            <div class="grid grid-cols-4 items-start gap-6">
+                <label for="alamat" class="text-default-800 text-sm font-medium">Alamat</label>
+                <div class="md:col-span-3">
+                    <!-- <textarea name="alamat" id="alamat" rows="3" class="form-input" placeholder="Masukkan alamat lengkap lokasi bahasa..." required></textarea> -->
+                    <!-- <div id="editors" style="height: 300px;">
+
+                    </div>
+                    <input type="hidden" name="alamat" id="alamat"> -->
+                    <textarea id="froala-editor" name="alamat" class="prose"></textarea>
+                </div>
+            </div>
+
             <!-- Status Aksara -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="status" class="text-default-800 text-sm font-medium">Status</label>
@@ -64,7 +88,7 @@
             <div class="grid grid-cols-4 items-start gap-6">
                 <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                 <div class="md:col-span-3">
-                    <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi lengkap aksara..." required></textarea>
+                     <textarea id="froala-editor" name="deskripsi" class="prose"></textarea>
                     <p class="mt-1 text-xs text-default-500">Isi dengan penjelasan sejarah, fungsi, dan karakteristik aksara</p>
                 </div>
             </div>

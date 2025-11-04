@@ -3,7 +3,7 @@
         <div class="container">
             <!-- Brand Logo -->
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('assets/img/Logo-Bahasara.png') }}" alt="">
+                <img src="{{ asset('assets/img/logo-sibaraja.png') }}" alt="">
             </a>
 
             <!-- Responsive Collapse Button -->
@@ -16,7 +16,7 @@
             <!-- Navigation -->
             <div class="collapse navbar-collapse" id="navbarPrimary">
                 <ul class="navbar-nav ml-auto">
-                    
+
                     <!-- 🔹 Menu Beranda -->
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('/') ? 'active' : '' }}"
@@ -43,6 +43,14 @@
                                 <a href="/aksara" class="nav-link {{ request()->is('aksara') ? 'active' : '' }}">Aksara</a>
                             </li>
                         </ul>
+                    </li>
+
+                    <!-- 🔹 Menu Pengumuman -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('pengumuman') ? 'active' : '' }}"
+                            href="{{ url('pengumuman') }}">
+                            Pengumuman
+                        </a>
                     </li>
 
                     <!-- 🔹 Menu Tentang Kami -->

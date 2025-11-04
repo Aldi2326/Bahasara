@@ -14,6 +14,7 @@ use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\TentangKamiController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NamaBahasaController;
 use App\Http\Controllers\UploadController;
 
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login.form');
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
         return view('pages.admin.dashboard.index');
     });
     Route::resource('/admin/wilayah', WilayahController::class);
+    Route::resource('/admin/namabahasa', NamaBahasaController::class);
     Route::resource('/admin/peta/bahasa', BahasaController::class);
     Route::resource('/admin/peta/aksara', AksaraController::class);
     Route::resource('/admin/peta/sastra', SastraController::class);

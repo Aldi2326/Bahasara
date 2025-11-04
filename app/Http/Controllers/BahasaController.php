@@ -16,15 +16,15 @@ class BahasaController extends Controller
 
     // 🔍 Pencarian (optional)
     if ($request->has('search') && $request->search != '') {
-        $query->where('bahasa.nama_bahasa', 'like', '%' . $request->search . '%')
+        $query->where('bahasa.deskripsi', 'like', '%' . $request->search . '%')
             ->orWhere('wilayah.nama_wilayah', 'like', '%' . $request->search . '%');
     }
 
     // 🔽 Sorting
-    $sortBy = $request->get('sort_by', 'nama_bahasa');
+    $sortBy = $request->get('sort_by', 'deskripsi');
     $order = $request->get('order', 'asc');
 
-    $allowedSorts = ['nama_bahasa', 'status', 'nama_wilayah', 'jumlah_penutur'];
+    $allowedSorts = ['deskripsi', 'status', 'nama_wilayah', 'jumlah_penutur'];
     if (in_array($sortBy, $allowedSorts)) {
         if ($sortBy === 'nama_wilayah') {
             $query->orderBy('wilayah.nama_wilayah', $order);

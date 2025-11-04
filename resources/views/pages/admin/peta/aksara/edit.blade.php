@@ -10,6 +10,17 @@
             @csrf
             @method('PUT')
 
+            @if ($errors->any())
+            <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
+                <strong class="font-semibold">Terjadi kesalahan:</strong>
+                <ul class="mt-2 list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            
             <!-- Nama Wilayah -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
@@ -17,9 +28,9 @@
                     <select name="wilayah_id" id="wilayah_id" class="form-select" required>
                         <option value="">-- Pilih Wilayah --</option>
                         @foreach ($wilayahList as $wilayah)
-                            <option value="{{ $wilayah->id }}" {{ $aksara->wilayah_id == $wilayah->id ? 'selected' : '' }}>
-                                {{ $wilayah->nama_wilayah }}
-                            </option>
+                        <option value="{{ $wilayah->id }}" {{ $aksara->wilayah_id == $wilayah->id ? 'selected' : '' }}>
+                            {{ $wilayah->nama_wilayah }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -53,7 +64,7 @@
             <div class="grid grid-cols-4 items-start gap-6">
                 <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                 <div class="md:col-span-3">
-                    <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi lengkap aksara..." required>{{ old('deskripsi', $aksara->deskripsi) }}</textarea>
+                    <textarea id="froala-editor" name="deskripsi" required>{{ old('deskripsi', $aksara->deskripsi) }}</textarea>
                     <p class="mt-1 text-xs text-default-500">Isi dengan penjelasan sejarah, fungsi, dan karakteristik aksara</p>
                 </div>
             </div>
@@ -69,14 +80,14 @@
                     </p>
 
                     @if ($aksara->dokumentasi)
-                        <div class="mt-3">
-                            <p class="text-sm font-medium mb-1">Dokumentasi saat ini:</p>
-                            @if (Str::endsWith($aksara->dokumentasi, ['.mp4', '.mov', '.avi']))
-                                <video src="{{ asset('storage/' . $aksara->dokumentasi) }}" width="200" controls class="rounded-md shadow"></video>
-                            @else
-                                <img src="{{ asset('storage/' . $aksara->dokumentasi) }}" alt="Dokumentasi" width="150" class="rounded-md shadow">
-                            @endif
-                        </div>
+                    <div class="mt-3">
+                        <p class="text-sm font-medium mb-1">Dokumentasi saat ini:</p>
+                        @if (Str::endsWith($aksara->dokumentasi, ['.mp4', '.mov', '.avi']))
+                        <video src="{{ asset('storage/' . $aksara->dokumentasi) }}" width="200" controls class="rounded-md shadow"></video>
+                        @else
+                        <img src="{{ asset('storage/' . $aksara->dokumentasi) }}" alt="Dokumentasi" width="150" class="rounded-md shadow">
+                        @endif
+                    </div>
                     @endif
                 </div>
             </div>
@@ -118,50 +129,50 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Inisialisasi peta dengan koordinat lama
-    var initialCoords = "{{ $aksara->koordinat }}".split(',');
-    var lat = parseFloat(initialCoords[0]) || -1.610122;
-    var lng = parseFloat(initialCoords[1]) || 103.613120;
+    document.addEventListener("DOMContentLoaded", function() {
+        // Inisialisasi peta dengan koordinat lama
+        var initialCoords = "{{ $aksara->koordinat }}".split(',');
+        var lat = parseFloat(initialCoords[0]) || -1.610122;
+        var lng = parseFloat(initialCoords[1]) || 103.613120;
 
-    var map = L.map('map').setView([lat, lng], 7);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+        var map = L.map('map').setView([lat, lng], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-    var marker = L.marker([lat, lng]).addTo(map)
-        .bindPopup("Koordinat:<br>" + lat.toFixed(6) + ", " + lng.toFixed(6))
-        .openPopup();
-
-    map.on('click', function(e) {
-        var newLat = e.latlng.lat.toFixed(6);
-        var newLng = e.latlng.lng.toFixed(6);
-        var koordinat = newLat + ', ' + newLng;
-        document.getElementById('koordinat').value = koordinat;
-
-        map.removeLayer(marker);
-        marker = L.marker([newLat, newLng]).addTo(map)
-            .bindPopup("Koordinat:<br>" + koordinat)
+        var marker = L.marker([lat, lng]).addTo(map)
+            .bindPopup("Koordinat:<br>" + lat.toFixed(6) + ", " + lng.toFixed(6))
             .openPopup();
-    });
 
-    // SweetAlert konfirmasi edit
-    document.getElementById('btnSimpan').addEventListener('click', function() {
-        Swal.fire({
-            title: 'Simpan Perubahan Data Aksara?',
-            text: 'Perubahan akan disimpan ke database.',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Simpan',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('formEditAksara').submit();
-            }
+        map.on('click', function(e) {
+            var newLat = e.latlng.lat.toFixed(6);
+            var newLng = e.latlng.lng.toFixed(6);
+            var koordinat = newLat + ', ' + newLng;
+            document.getElementById('koordinat').value = koordinat;
+
+            map.removeLayer(marker);
+            marker = L.marker([newLat, newLng]).addTo(map)
+                .bindPopup("Koordinat:<br>" + koordinat)
+                .openPopup();
+        });
+
+        // SweetAlert konfirmasi edit
+        document.getElementById('btnSimpan').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Simpan Perubahan Data Aksara?',
+                text: 'Perubahan akan disimpan ke database.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Simpan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formEditAksara').submit();
+                }
+            });
         });
     });
-});
 </script>
 @endsection

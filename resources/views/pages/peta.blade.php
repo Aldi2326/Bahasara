@@ -95,7 +95,7 @@
 :root { --radius-smooth: 12px; }
 .btn, .dropdown-menu, .form-check-input, .search-control { border-radius: var(--radius-smooth) !important; }
 .search-control { position: absolute; top: 15px; left: calc(var(--bs-gutter-x,1.5rem)); z-index:1000; padding:10px; }
-.legend-card { position:absolute; bottom:15px; left:15px; background:rgba(255,255,255,0.95); backdrop-filter:blur(6px); border-radius:var(--radius-smooth); padding:12px 16px; width:220px; z-index:500; box-shadow:0 4px 10px rgba(0,0,0,0.25); border-left:4px solid #0d6efd; transition:all 0.3s ease; }
+.legend-card { position:absolute; bottom:15px; left:15px; background:rgba(255,255,255,0.95); backdrop-filter:blur(6px); border-radius:var(--radius-smooth); padding:12px 16px; width:220px; z-index:500; box-shadow:0 4px 10px rgba(0,0,0,0.25); border-left:4px solid #1b81ae; transition:all 0.3s ease; }
 .legend-header { display:flex; justify-content:space-between; align-items:center; }
 .toggle-btn { background:#e9ecef; border:1px solid #d1d5db; width:28px; height:28px; font-weight:bold; font-size:16px; cursor:pointer; color:#333; transition:background 0.25s ease, transform 0.2s ease; border-radius:var(--radius-smooth); }
 .toggle-btn:hover { background:#dbeafe; transform:scale(1.05); }

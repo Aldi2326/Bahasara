@@ -123,6 +123,68 @@
         <!-- End Page content -->
 
     </div>
+        <!-- Inisialisasi Editor -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    new FroalaEditor('#froala-editor', {
+        height: 400,
+
+        // 🔹 Semua toolbar Froala
+        toolbarButtons: {
+            moreText: {
+                buttons: [
+                    'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript',
+                    'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass',
+                    'inlineStyle', 'clearFormatting'
+                ],
+                align: 'left',
+                buttonsVisible: 10
+            },
+            moreParagraph: {
+                buttons: [
+                    'alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'formatOL',
+                    'formatUL', 'paragraphFormat', 'lineHeight', 'outdent', 'indent', 'quote'
+                ],
+                align: 'left',
+                buttonsVisible: 10
+            },
+            moreRich: {
+                buttons: [
+                    'insertLink', 'insertImage',   
+                    'emoticons', 'specialCharacters', 'insertHR'
+                ],
+                align: 'left',
+                buttonsVisible: 10
+            },
+            moreMisc: {
+                buttons: [
+                    'undo', 'redo', 'fullscreen', 'print', 'selectAll', 'html', 'help'
+                ],
+                align: 'right',
+                buttonsVisible: 10
+            }
+        },
+
+        quickInsertEnabled: true,
+
+        // 🔹 Upload Gambar Langsung
+        imageUpload: true,
+        imageUploadURL: '/upload-image',
+        imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+        imageMaxSize: 5 * 1024 * 1024, // 5MB
+
+        // 🔹 Kirim CSRF Token ke Laravel
+        imageUploadParams: {
+            _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+
+        // 🔹 Sedikit style biar tidak terlalu tinggi
+        heightMin: 300,
+        heightMax: 600
+    });
+});
+</script>
+
 
     <!-- Plugin Js (Mandatory in All Pages) -->
     <script src="{{ asset('assets/admin/libs/jquery/jquery.min.js') }}"></script>

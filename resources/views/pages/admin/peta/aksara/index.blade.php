@@ -86,7 +86,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-default-800" style="white-space: normal; max-width: 400px;">
-                            {{ Str::limit($item->deskripsi, 150) }}
+                            {!! Str::limit($item->deskripsi, 10) !!}
                         </td>
                         <td class="px-6 py-4 text-sm text-default-800">
                             @if ($item->dokumentasi)

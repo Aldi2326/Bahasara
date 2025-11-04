@@ -107,6 +107,7 @@ public function petaAksara(Request $request)
             'nama_aksara' => 'required|string|max:255',
             'status' => 'required|string',
             'deskripsi' => 'required|string',
+            'alamat' => 'required',
             'koordinat' => 'required|string|max:255',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov|max:20480', // max 20MB
         ]);
@@ -121,6 +122,7 @@ public function petaAksara(Request $request)
             'nama_aksara' => $request->nama_aksara,
             'status' => $request->status,
             'deskripsi' => $request->deskripsi,
+            'alamat' => $request->alamat,
             'koordinat' => $request->koordinat,
             'dokumentasi' => $filePath,
         ]);
@@ -149,6 +151,7 @@ public function petaAksara(Request $request)
             'nama_aksara' => 'required|string|max:255',
             'status' => 'required|string|max:255',
             'deskripsi' => 'required|string',
+            'alamat' => 'required|string',
             'koordinat' => 'required|string|max:255',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov|max:20480',
         ]);
@@ -169,6 +172,7 @@ public function petaAksara(Request $request)
             'nama_aksara' => $request->nama_aksara,
             'status' => $request->status,
             'deskripsi' => $request->deskripsi,
+            'alamat' => $request->alamat,
             'koordinat' => $request->koordinat,
             'dokumentasi' => $filePath,
         ]);
