@@ -1,15 +1,15 @@
 @extends('layouts.admin.app')
-@section('title', 'sastra')
+@section('title', 'pengumuman')
 
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title mb-4">Edit Nama sastra</h4>
+        <h4 class="card-title mb-4">Input Nama pengumuman</h4>
     </div>
 
     <div class="p-6">
         
-        <form class="flex flex-col gap-4" method="POST" action="{{ route('nama-sastra.store') }}" enctype="multipart/form-data">
+        <form class="flex flex-col gap-4" method="POST" action="{{ route('pengumuman.store') }}" enctype="multipart/form-data">
             @csrf
 
             @if ($errors->any())
@@ -23,12 +23,12 @@
             </div>
             @endif
 
-            <!-- Nama sastra -->
+            <!-- Nama pengumuman -->
             <div class="grid grid-cols-4 items-center gap-6">
-                <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama sastra</label>
+                <label for="nama_pengumuman" class="text-default-800 text-sm font-medium">Nama pengumuman</label>
                 <div class="md:col-span-3">
-                    <input type="text" name="nama_sastra" id="nama_sastra" class="form-input"
-                        placeholder="Contoh: sastra Melayu" required>
+                    <input type="text" name="nama_pengumuman" id="nama_pengumuman" class="form-input"
+                        placeholder="Contoh: pengumuman Melayu" required>
                 </div>
             </div>
 

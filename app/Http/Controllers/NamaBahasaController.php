@@ -28,10 +28,10 @@ class NamaBahasaController extends Controller
         $query->orderBy('nama_bahasa', $sortOrder);
 
         // Jalankan query dan ambil hasil
-        $namabahasa = $query->get();
+        $namaBahasa = $query->get();
 
         // Kirim data ke view
-        return view('pages.admin.masterdata.namabahasa.index', compact('namabahasa'));
+        return view('pages.admin.masterdata.namabahasa.index', compact('namaBahasa'));
     }
 
     /**
@@ -40,7 +40,6 @@ class NamaBahasaController extends Controller
     public function create()
     {
         return view('pages.admin.masterdata.namabahasa.create');
-        
     }
 
     /**
@@ -55,7 +54,7 @@ class NamaBahasaController extends Controller
 
         NamaBahasa::create($data);
 
-        return redirect()->route('namabahasa.index')->with('success', 'Data nama bahasa berhasil disimpan.');
+        return redirect()->route('nama-bahasa.index')->with('success', 'Data nama bahasa berhasil disimpan.');
     }
 
     /**
@@ -71,22 +70,34 @@ class NamaBahasaController extends Controller
      */
     public function edit(NamaBahasa $namaBahasa)
     {
-        //
+        // Menampilkan halaman edit dengan data bahasa yang dipilih
+        return view('pages.admin.masterdata.namabahasa.edit', compact('namaBahasa'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, NamaBahasa $namaBahasa)
     {
-        //
+        // Validasi inputan
+        $validatedData = $request->validate([
+            'nama_bahasa' => 'required|string|max:255',
+            'warna_pin' => 'required|string|max:7', 
+        ]);
+
+        // Update data bahasa
+        $namaBahasa->update($validatedData);
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('nama-bahasa.index')->with('success', 'Data bahasa berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(NamaBahasa $namaBahasa)
     {
-        //
+        $namaBahasa->delete();
+
+        return redirect()->route('nama-bahasa.index')
+            ->with('success', 'Nama bahasa  berhasil dihapus.');
     }
 }

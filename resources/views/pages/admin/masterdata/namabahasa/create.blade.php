@@ -9,7 +9,7 @@
 
     <div class="p-6">
         
-        <form class="flex flex-col gap-4" method="POST" action="{{ route('namabahasa.store') }}" enctype="multipart/form-data">
+        <form class="flex flex-col gap-4" method="POST" action="{{ route('nama-bahasa.store') }}" enctype="multipart/form-data">
             @csrf
 
             @if ($errors->any())

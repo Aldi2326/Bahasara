@@ -1,16 +1,16 @@
 @extends('layouts.admin.app')
-@section('title', 'Nama Sastra')
+@section('title', 'Pengumuman')
 @section('content')
 
 <div class="card overflow-hidden">
     <div class="card-header flex justify-between items-center">
-        <h4 class="card-title">Daftar Nama sastra</h4>
-        <a href="{{ route('nama-sastra.create') }}" class="btn bg-danger text-white">Tambah Nama sastra</a>
+        <h4 class="card-title">Daftar Pengumuman</h4>
+        <a href="{{ route('pengumuman.create') }}" class="btn bg-danger text-white">Tambah Pengumuman</a>
     </div>
 
     <!-- Search Bar -->
     <div class="px-6 py-4 flex justify-between items-center">
-        <form action="{{ route('nama-sastra.index') }}" method="GET" class="flex items-center space-x-2 w-full md:w-1/3">
+        <form action="{{ route('pengumuman.index') }}" method="GET" class="flex items-center space-x-2 w-full md:w-1/3">
             <input type="text" name="search" value="{{ request('search') }}"
                 class="form-input w-full border rounded-md px-3 py-2 text-sm"
                 placeholder="Cari nama namasastra...">
@@ -34,11 +34,11 @@
                             <!-- Kolom Nama namasastra dengan tombol urut -->
                             <th class="px-6 py-3 text-start text-sm text-default-500">
                                 <div class="flex items-center gap-1">
-                                    <span>Nama sastra</span>
+                                    <span>Pengumuman</span>
                                     @php
                                     $sortOrder = request('sort') === 'asc' ? 'desc' : 'asc';
                                     @endphp
-                                    <a href="{{ route('nama-sastra.index', ['search' => request('search'), 'sort' => $sortOrder]) }}"
+                                    <a href="{{ route('pengumuman.index', ['search' => request('search'), 'sort' => $sortOrder]) }}"
                                         class="text-gray-600 hover:text-blue-600">
                                         @if (request('sort') === 'asc')
                                         <i class="bi bi-sort-alpha-up"></i>
@@ -53,7 +53,7 @@
                             </th>
                             <th class="px-6 py-3 text-start text-sm text-default-500">
                                 <div class="d-flex align-items-center gap-1">
-                                    <span>Warna Pin</span>
+                                    <span>Pengumuman</span>
                                 </div>
 
                             </th>
@@ -67,18 +67,13 @@
                                 1
                             </td>
                             <td class="px-6 py-4 text-sm text-default-800">
-                                Nama sastra
+                                Pengumuman
                             </td>
                             <td class="px-6 py-4 text-sm text-default-800">
-                                <div id="pin-preview" class="flex items-center gap-2">
-                                    <svg id="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="#FF0000">
-                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5
-                            c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
-                                    </svg>
-                                </div>
+                                pengumuman
                             </td>
                             <td class="px-6 py-4 flex justify-end text-sm text-end font-medium space-x-3">
-                                <a href="{{ route('nama-sastra.edit', 'namaSastra') }}"
+                                <a href="{{ route('pengumuman.edit', 'namaSastra') }}"
                                     class="text-blue-600 hover:underline">Edit</a>
                                 <form action="" method="POST"
                                     class="inline">

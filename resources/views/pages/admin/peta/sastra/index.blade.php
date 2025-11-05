@@ -89,7 +89,7 @@
                                                 <span class="px-2 py-1 rounded bg-gray-500 text-white text-xs">Lainnya</span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-default-800">{{ $item->alamat }}</td>
+                                        <td class="px-6 py-4 text-sm text-default-800">{!! $item->alamat !!}</td>
                                         <td class="px-6 py-4 text-sm text-default-800"
                                             style="white-space:normal;word-wrap:break-word;">
                                             {{ Str::limit(strip_tags($item->deskripsi), 80) }}
