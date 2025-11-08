@@ -13,9 +13,9 @@ return new class extends Migration {
         Schema::create('sastra', function (Blueprint $table) {
             $table->id();
             $table->string('nama_sastra');
-            $table->string('alamat');
+            $table->text('alamat');
             $table->string('jenis');
-            $table->string('deskripsi');
+            $table->text('deskripsi');
             $table->string('koordinat');
             $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
             $table->timestamps();

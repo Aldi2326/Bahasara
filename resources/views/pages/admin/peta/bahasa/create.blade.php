@@ -7,8 +7,21 @@
     </div>
 
     <div class="p-6">
-        <form class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST">
+        <form id="bahasaForm" class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST">
             @csrf
+
+            @if ($errors->any())
+            <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
+                <strong class="font-semibold">Terjadi kesalahan:</strong>
+                <ul class="mt-2 list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+
 
             <!-- Nama Wilayah -->
             <div class="grid grid-cols-4 items-center gap-6">
@@ -17,9 +30,9 @@
                     <select name="wilayah_id" id="wilayah_id" class="form-select" required>
                         <option value="">-- Pilih Wilayah --</option>
                         @foreach ($wilayahList as $wilayah)
-                            <option value="{{ $wilayah->id }}" {{ isset($wilayahId) && $wilayahId == $wilayah->id ? 'selected' : '' }}>
-                                {{ $wilayah->nama_wilayah }}
-                            </option>
+                        <option value="{{ $wilayah->id }}" {{ isset($wilayahId) && $wilayahId == $wilayah->id ? 'selected' : '' }}>
+                            {{ $wilayah->nama_wilayah }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -37,16 +50,21 @@
                         <option value="Bahasa Bugis">Bahasa Bugis</option>
                         <option value="Bahasa Kerinci">Bahasa Kerinci</option>
                         <option value="Bahasa Minangkabau">Bahasa Minangkabau</option>
-                        <option value="Bahasa Jawa">Bahasa Jawa</option>                     
+                        <option value="Bahasa Jawa">Bahasa Jawa</option>
                     </select>
                 </div>
             </div>
-            
+
             <!-- Alamat -->
             <div class="grid grid-cols-4 items-start gap-6">
                 <label for="alamat" class="text-default-800 text-sm font-medium">Alamat</label>
                 <div class="md:col-span-3">
-                    <textarea name="alamat" id="alamat" rows="3" class="form-input" placeholder="Masukkan alamat lengkap lokasi bahasa..." required></textarea>
+                    <!-- <textarea name="alamat" id="alamat" rows="3" class="form-input" placeholder="Masukkan alamat lengkap lokasi bahasa..." required></textarea> -->
+                    <!-- <div id="editors" style="height: 300px;">
+
+                    </div>
+                    <input type="hidden" name="alamat" id="alamat"> -->
+                    <textarea id="froala-editor" name="alamat" class="prose"></textarea>
                 </div>
             </div>
 
@@ -93,7 +111,8 @@
             <div class="grid grid-cols-4 items-start gap-6">
                 <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                 <div class="md:col-span-3">
-                    <textarea name="deskripsi" id="deskripsi" rows="8" class="form-input" placeholder="Tuliskan deskripsi lengkap bahasa..." required></textarea>
+                    <textarea id="froala-editor" name="deskripsi" class="prose"></textarea>
+
                 </div>
             </div>
 
@@ -112,38 +131,56 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+{{-- ======== SweetAlert2 ======== --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Koordinat awal (Pusat Provinsi Jambi)
-    var map = L.map('map').setView([-1.610122, 103.613120], 7);
+    document.addEventListener("DOMContentLoaded", function() {
+        // Inisialisasi Peta
+        var map = L.map('map').setView([-1.610122, 103.613120], 7);
 
-    // Tambah tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
 
-    var marker;
+        var marker;
 
-    // Event klik peta
-    map.on('click', function (e) {
-        var lat = e.latlng.lat.toFixed(6);
-        var lng = e.latlng.lng.toFixed(6);
+        map.on('click', function(e) {
+            var lat = e.latlng.lat.toFixed(6);
+            var lng = e.latlng.lng.toFixed(6);
+            var koordinat = lat + ', ' + lng;
+            document.getElementById('koordinat').value = koordinat;
 
-        // Format koordinat menjadi "latitude, longitude"
-        var koordinat = lat + ', ' + lng;
+            if (marker) map.removeLayer(marker);
 
-        // Isi otomatis input koordinat
-        document.getElementById('koordinat').value = koordinat;
+            marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup("Koordinat:<br>" + koordinat).openPopup();
+        });
 
-        // Hapus marker lama jika ada
-        if (marker) {
-            map.removeLayer(marker);
-        }
+        // SweetAlert konfirmasi sebelum submit
+        const form = document.getElementById('bahasaForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Cegah submit langsung
 
-        // Tambah marker baru di lokasi yang diklik
-        marker = L.marker([lat, lng]).addTo(map)
-            .bindPopup("Koordinat:<br>" + koordinat).openPopup();
+            Swal.fire({
+                title: 'Simpan Data?',
+                text: "Pastikan data sudah benar sebelum disimpan.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
     });
-});
 </script>
+
+<!-- Froala CSS & JS CDN -->
+
+
 @endsection

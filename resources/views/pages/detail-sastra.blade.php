@@ -16,15 +16,6 @@
 
         <!-- Body -->
         <div class="card-body">
-
-            <!-- DESKRIPSI -->
-            <div class="mb-5" data-aos="fade-up" data-aos-duration="800">
-                <h5 class="text-muted">Deskripsi</h5>
-                <p class="text-justify fs-6">
-                    {{ $sastra->deskripsi ?? 'Tidak ada deskripsi.' }}
-                </p>
-            </div>
-
             <!-- STATUS -->
             <div class="mb-4" data-aos="fade-right" data-aos-duration="700">
                 <h6 class="text-muted">Jenis Sastra</h6>
@@ -40,25 +31,32 @@
 
             <!-- PETA SEBARAN -->
             <div class="mb-4" data-aos="zoom-in" data-aos-duration="1000">
-                <h5 class="text-muted">Peta Sebaran</h5>
+                <h5 class="text-muted">Peta</h5>
                 <div id="map" style="height: 400px; border-radius: 10px; border: 1px solid #ccc;"></div>
+            </div>
+            <!-- DESKRIPSI -->
+            <div class="mb-5" data-aos="fade-up" data-aos-duration="800">
+                <h5 class="text-muted">Deskripsi</h5>
+                <p class="text-justify fs-6">
+                    {!! $sastra->deskripsi ?? 'Tidak ada deskripsi.' !!}
+                </p>
             </div>
 
             <!-- DOKUMENTASI -->
             @if($sastra->gambar)
             <div class="mb-4 text-center" data-aos="fade-up" data-aos-duration="900">
                 <h5 class="text-muted mb-3">Dokumentasi</h5>
-                <img src="{{ asset('storage/' . $sastra->gambar) }}" 
-                     alt="{{ $sastra->nama_sastra }}" 
-                     class="img-fluid rounded shadow"
-                     style="max-height: 450px; width: auto; object-fit: cover;">
+                <img src="{{ asset('storage/' . $sastra->gambar) }}"
+                    alt="{{ $sastra->nama_sastra }}"
+                    class="img-fluid rounded shadow"
+                    style="max-height: 450px; width: auto; object-fit: cover;">
             </div>
             @endif
         </div>
 
         <!-- Footer -->
         <div class="card-footer text-end">
-            <a href="{{ url('/') }}" class="btn text-white" style="background-color: #1b81ae;">
+            <a href="{{ url('sastra') }}" class="btn text-white" style="background-color: #1b81ae;">
                 ← Kembali
             </a>
         </div>
@@ -66,7 +64,7 @@
 </div>
 
 <!-- Leaflet CSS & JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <!-- AOS Animation -->
@@ -74,7 +72,7 @@
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         AOS.init();
 
         // Ambil koordinat dari database
@@ -151,8 +149,15 @@
 <style>
     /* Animasi popup */
     @keyframes fadeInPopup {
-        from { opacity: 0; transform: translateY(-8px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     /* Efek card */
@@ -162,7 +167,7 @@
 
     .card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 </style>
 @endsection

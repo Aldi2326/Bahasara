@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'balaibahasa',            // login pakai ini
             'email' => 'pengaduankbpj@gmail.com', // masih wajib ada karena default table pakai email
             'password' => Hash::make('balaiadmin123'), // login pakai ini
-            'role' => Hash::make('superadmin'), // login pakai ini
+            'role' => 'superadmin', // login pakai ini
         ]);
     }
 }

@@ -14,10 +14,17 @@ use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\TentangKamiController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NamaAksaraController;
+use App\Http\Controllers\NamaBahasaController;
+use App\Http\Controllers\NamaSastraController;
+use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\UploadController;
 
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [AuthController::class, 'login'])->name('login');
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/upload-image', [UploadController::class, 'store']);
+
 
 // Bungkus beberapa route dengan middleware auth
 Route::middleware('auth')->group(function () {
@@ -25,6 +32,10 @@ Route::middleware('auth')->group(function () {
         return view('pages.admin.dashboard.index');
     });
     Route::resource('/admin/wilayah', WilayahController::class);
+    Route::resource('/admin/nama-bahasa', NamaBahasaController::class);
+    Route::resource('/admin/nama-sastra', NamaSastraController::class);
+    Route::resource('/admin/nama-aksara', NamaAksaraController::class);
+    Route::resource('/admin/pengumuman', PengumumanController::class);
     Route::resource('/admin/peta/bahasa', BahasaController::class);
     Route::resource('/admin/peta/aksara', AksaraController::class);
     Route::resource('/admin/peta/sastra', SastraController::class);
