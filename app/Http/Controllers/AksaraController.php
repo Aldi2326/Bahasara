@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Aksara;
 use App\Models\Wilayah;
+use App\Models\NamaAksara;
+use Illuminate\Http\Request;
 
 class AksaraController extends Controller
 {
@@ -12,80 +13,37 @@ class AksaraController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $query = Aksara::with('wilayah')
-        ->select('aksara.*', 'wilayah.nama_wilayah') // tambahkan nama_wilayah biar bisa ditampilkan
-        ->join('wilayah', 'aksara.wilayah_id', '=', 'wilayah.id');
-
-    // 🔍 Pencarian
-    if ($request->has('search') && $request->search != '') {
-        $query->where(function ($q) use ($request) {
-            $q->where('aksara.nama_aksara', 'like', '%' . $request->search . '%')
-              ->orWhere('wilayah.nama_wilayah', 'like', '%' . $request->search . '%');
-        });
-    }
-
-    // 🔽 Sorting
-    $sortBy = $request->get('sort_by', 'nama_aksara');
-    $order = $request->get('order', 'asc');
-
-    // Kolom yang boleh diurutkan
-    $allowedSorts = ['nama_aksara', 'status', 'nama_wilayah'];
-
-    if (in_array($sortBy, $allowedSorts)) {
-        if ($sortBy === 'nama_wilayah') {
-            $query->orderBy('wilayah.nama_wilayah', $order);
-        } else {
-            $query->orderBy('aksara.' . $sortBy, $order);
-        }
-    }
-
-    // 🔄 Ambil data
-    $aksara = $query->get();
-
-    return view('pages.admin.peta.aksara.index', compact('aksara', 'sortBy', 'order'));
-}
-
-public function petaAksara(Request $request)
-{
-    $selectedAksara = $request->input('aksara', []);
-    $selectedWilayah = $request->input('wilayah', []);
-
-    // Gunakan with() dan join agar nama wilayah ikut terbaca
-    $query = Aksara::with('wilayah')
-        ->leftJoin('wilayah', 'aksara.wilayah_id', '=', 'wilayah.id')
-        ->select('aksara.*', 'wilayah.nama_wilayah'); // ← penting
-
-    if (!in_array('Semua Aksara', $selectedAksara) && !empty($selectedAksara)) {
-        $query->whereIn('nama_aksara', $selectedAksara);
-    }
-
-    if (!in_array('Semua Wilayah', $selectedWilayah) && !empty($selectedWilayah)) {
-        $query->whereIn('wilayah.nama_wilayah', $selectedWilayah);
-    }
-
-    $aksaraList = $query->get();
-    $allAksara = Aksara::select('nama_aksara')->distinct()->get();
-    $allWilayah = \App\Models\Wilayah::all();
-
-    return view('pages.aksara', compact(
-        'aksaraList', 'allAksara', 'allWilayah', 'selectedAksara', 'selectedWilayah'
-    ));
-}
-
-
-    public function show($id)
     {
-        // Ambil data dari tabel akasara berdasarkan ID
-        $aksara = Aksara::find($id);
+        $query = Aksara::with('wilayah', 'namaAksara')
+            ->select('aksara.*')
+            ->join('wilayah', 'aksara.wilayah_id', '=', 'wilayah.id');
 
-        // Jika tidak ditemukan, tampilkan error 404
-        if (!$aksara) {
-            abort(404, 'Data aksara tidak ditemukan.');
+        // 🔍 Pencarian
+        if ($request->has('search') && $request->search != '') {
+            $query->whereHas('namaAksara', function ($q) use ($request) {
+                $q->where('nama_aksara', 'like', '%' . $request->search . '%');
+            })
+                ->orWhere('wilayah.nama_wilayah', 'like', '%' . $request->search . '%')
+                ->orWhere('aksara.deskripsi', 'like', '%' . $request->search . '%');
         }
 
-        // Kirim data ke view
-        return view('pages.admin.peta.aksara.show', compact('aksara'));
+        // 🔽 Sorting
+        $sortBy = $request->get('sort_by', 'deskripsi');
+        $order = $request->get('order', 'asc');
+
+        $allowedSorts = ['deskripsi', 'status', 'nama_wilayah'];
+        if (in_array($sortBy, $allowedSorts)) {
+            if ($sortBy === 'nama_wilayah') {
+                $query->orderBy('wilayah.nama_wilayah', $order);
+            } else {
+                $query->orderBy('aksara.' . $sortBy, $order);
+            }
+        }
+
+        // 🔄 Ambil data
+        $aksara = $query->get();
+
+        return view('pages.admin.peta.aksara.index', compact('aksara', 'sortBy', 'order'));
     }
 
     /**
@@ -94,7 +52,9 @@ public function petaAksara(Request $request)
     public function create()
     {
         $wilayahList = Wilayah::all();
-        return view('pages.admin.peta.aksara.create', compact('wilayahList'));
+        $namaAksaraList = NamaAksara::all();
+
+        return view('pages.admin.peta.aksara.create', compact('wilayahList', 'namaAksaraList'));
     }
 
     /**
@@ -102,33 +62,24 @@ public function petaAksara(Request $request)
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'wilayah_id' => 'required|exists:wilayah,id',
-            'nama_aksara' => 'required|string|max:255',
+            'nama_aksara_id' => 'required|exists:nama_aksara,id',
+            'alamat' => 'required|string',
             'status' => 'required|string',
             'deskripsi' => 'required|string',
-            'alamat' => 'required',
-            'koordinat' => 'required|string|max:255',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov|max:20480', // max 20MB
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov|max:20480',
+            'koordinat' => 'required|string',
         ]);
 
-        $filePath = null;
+        // Upload file dokumentasi jika ada
         if ($request->hasFile('dokumentasi')) {
-            $filePath = $request->file('dokumentasi')->store('dokumentasi/aksara', 'public');
+            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/aksara', 'public');
         }
 
-        Aksara::create([
-            'wilayah_id' => $request->wilayah_id,
-            'nama_aksara' => $request->nama_aksara,
-            'status' => $request->status,
-            'deskripsi' => $request->deskripsi,
-            'alamat' => $request->alamat,
-            'koordinat' => $request->koordinat,
-            'dokumentasi' => $filePath,
-        ]);
+        Aksara::create($data);
 
-        return redirect()->route('aksara.index')
-            ->with('success', 'Data aksara berhasil disimpan.');
+        return redirect()->route('aksara.index')->with('success', 'Data aksara berhasil disimpan.');
     }
 
     /**
@@ -137,8 +88,10 @@ public function petaAksara(Request $request)
     public function edit($id)
     {
         $aksara = Aksara::findOrFail($id);
-        $wilayahList = Wilayah::all();
-        return view('pages.admin.peta.aksara.edit', compact('aksara', 'wilayahList'));
+        $wilayahList = Wilayah::orderBy('nama_wilayah')->get();
+        $namaAksaraList = NamaAksara::orderBy('nama_aksara')->get();
+
+        return view('pages.admin.peta.aksara.edit', compact('aksara', 'wilayahList', 'namaAksaraList'));
     }
 
     /**
@@ -148,37 +101,35 @@ public function petaAksara(Request $request)
     {
         $request->validate([
             'wilayah_id' => 'required|exists:wilayah,id',
-            'nama_aksara' => 'required|string|max:255',
+            'nama_aksara_id' => 'required|exists:nama_aksara,id',
+            'alamat' => 'required|string',
             'status' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'alamat' => 'required|string',
-            'koordinat' => 'required|string|max:255',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov|max:20480',
+            'koordinat' => 'required|string|max:255',
         ]);
 
         $aksara = Aksara::findOrFail($id);
 
-        $filePath = $aksara->dokumentasi;
-        if ($request->hasFile('dokumentasi')) {
-            // Hapus file lama jika ada
-            if ($filePath && \Storage::disk('public')->exists($filePath)) {
-                \Storage::disk('public')->delete($filePath);
-            }
-            $filePath = $request->file('dokumentasi')->store('dokumentasi/aksara', 'public');
-        }
-
-        $aksara->update([
-            'wilayah_id' => $request->wilayah_id,
-            'nama_aksara' => $request->nama_aksara,
-            'status' => $request->status,
-            'deskripsi' => $request->deskripsi,
-            'alamat' => $request->alamat,
-            'koordinat' => $request->koordinat,
-            'dokumentasi' => $filePath,
+        $data = $request->only([
+            'wilayah_id',
+            'nama_aksara_id',
+            'alamat',
+            'status',
+            'deskripsi',
+            'koordinat'
         ]);
 
-        return redirect()->route('aksara.index', ['wilayah_id' => $aksara->wilayah_id])
-            ->with('success', 'Data aksara berhasil diperbarui.');
+        if ($request->hasFile(key: 'dokumentasi')) {
+            if ($aksara->dokumentasi && \Storage::disk('public')->exists($aksara->dokumentasi)) {
+                \Storage::disk('public')->delete($aksara->dokumentasi);
+            }
+            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/aksara', 'public');
+        }
+
+        $aksara->update($data);
+
+        return redirect()->route('aksara.index')->with('success', 'Data aksara berhasil diperbarui.');
     }
 
     /**
@@ -187,7 +138,6 @@ public function petaAksara(Request $request)
     public function destroy($id)
     {
         $aksara = Aksara::findOrFail($id);
-        $wilayahId = $aksara->wilayah_id;
 
         if ($aksara->dokumentasi && \Storage::disk('public')->exists($aksara->dokumentasi)) {
             \Storage::disk('public')->delete($aksara->dokumentasi);
@@ -195,7 +145,20 @@ public function petaAksara(Request $request)
 
         $aksara->delete();
 
-        return redirect()->route('aksara.index', ['wilayah_id' => $wilayahId])
-            ->with('success', 'Data aksara berhasil dihapus.');
+        return redirect()->route('aksara.index')->with('success', 'Data aksara berhasil dihapus.');
+    }
+
+    /**
+     * Show the specified resource.
+     */
+    public function show($id)
+    {
+        $aksara = Aksara::find($id);
+
+        if (!$aksara) {
+            abort(404, 'Data aksara tidak ditemukan.');
+        }
+
+        return view('pages.admin.peta.aksara.show', compact('aksara'));
     }
 }

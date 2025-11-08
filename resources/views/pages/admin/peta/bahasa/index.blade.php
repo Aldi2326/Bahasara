@@ -1,152 +1,135 @@
 @extends('layouts.admin.app')
 @section('title', 'Bahasa')
-@section('content')
 
+@section('content')
     @php
-        function nextOrder($currentOrder)
-        {
-            return $currentOrder === 'asc' ? 'desc' : 'asc';
-        }
+        $sortField = request('sort_by', 'nama_bahasa');
+        $sortOrder = request('order', 'asc');
+        $nextOrder = $sortOrder === 'asc' ? 'desc' : 'asc';
     @endphp
 
-    <div class="card overflow-hidden">
-        <div class="card-header flex justify-between items-center">
-            <h4 class="card-title">Daftar Bahasa</h4>
-            <a href="{{ route('bahasa.create') }}" class="btn bg-danger text-white">Tambah Data</a>
+    <div class="card overflow-hidden shadow-sm rounded-2xl border border-gray-200">
+        <div class="card-header flex justify-between items-center bg-gray-100 px-6 py-4">
+            <h4 class="card-title text-lg font-semibold text-gray-800">Daftar Bahasa</h4>
+            <a href="{{ route('bahasa.create') }}"
+                class="btn bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md flex items-center gap-2">
+                Tambah Data
+            </a>
         </div>
 
         <!-- Search Bar -->
-        <div class="px-6 py-4 flex justify-between items-center">
-            <form action="{{ route('bahasa.index') }}" method="GET" class="flex items-center space-x-2 w-full md:w-1/3">
+        <div
+            class="px-6 py-4 border-b border-gray-200 bg-white flex flex-col md:flex-row justify-between items-center gap-3">
+            <form action="{{ route('bahasa.index') }}" method="GET" class="flex items-center w-full md:w-1/3 gap-3">
                 <input type="text" name="search" value="{{ request('search') }}"
-                    class="form-input w-full border rounded-md px-3 py-2 text-sm"
-                    placeholder="Cari nama bahasa atau wilayah...">
-                <button type="submit" class="btn bg-blue-600 text-white text-sm px-3 py-2 rounded-md">Cari</button>
+                    class="form-input flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+                    placeholder="Cari nama bahasa atau wilayah">
+                <button type="submit"
+                    class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md h-[38px]">
+                    <i class="bi bi-search"></i>
+                </button>
             </form>
         </div>
 
-        <div>
-            <div class="overflow-x-auto">
-                <div class="min-w-full inline-block align-middle">
-                    <div class="overflow-hidden">
-                        <table class="min-w-full divide-y divide-default-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">No</th>
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">
-                                        <div class="flex items-center gap-1">
-                                            <span>Nama Wilayah</span>
-                                            <a href="?sort_by=nama_wilayah&order={{ nextOrder($order) }}"
-                                                class="text-gray-600 hover:text-blue-600">
-                                                @if ($sortBy === 'nama_wilayah' && $order === 'asc')
-                                                    <i class="bi bi-sort-alpha-up"></i>
-                                                @elseif ($sortBy === 'nama_wilayah' && $order === 'desc')
-                                                    <i class="bi bi-sort-alpha-down"></i>
-                                                @else
-                                                    <i class="bi bi-arrow-down-up"></i>
-                                                @endif
-                                            </a>
-                                        </div>
-                                    </th>
+        <div class="overflow-x-auto bg-white">
+            <table class="min-w-full divide-y divide-gray-200 text-sm text-center">
+                <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-semibold">
+                    <tr>
+                        <th class="px-4 py-3 w-[40px]">No</th>
+                        <th class="px-4 py-3 w-[160px]">
+                            <a href="{{ route('bahasa.index', ['sort_by' => 'nama_wilayah', 'order' => $sortField === 'nama_wilayah' ? $nextOrder : 'asc']) }}"
+                                class="flex justify-center items-center gap-1 hover:text-blue-600">
+                                <span>Nama Wilayah</span>
+                                {!! $sortField === 'nama_wilayah'
+                                    ? ($sortOrder === 'asc'
+                                        ? '<i class="bi bi-sort-alpha-up"></i>'
+                                        : '<i class="bi bi-sort-alpha-down"></i>')
+                                    : '<i class="bi bi-arrow-down-up"></i>' !!}
+                            </a>
+                        </th>
+                        <th class="px-4 py-3 w-[160px]">Nama Bahasa</th>
+                        <th class="px-4 py-3 w-[200px]">Alamat</th>
+                        <th class="px-4 py-3 w-[100px]">Status Bahasa</th>
+                        <th class="px-4 py-3 w-[140px]">Jumlah Penutur</th>
+                        <th class="px-4 py-3 w-[220px]">Deskripsi</th>
+                        <th class="px-4 py-3 w-[140px]">Koordinat</th>
+                        <th class="px-4 py-3 w-[100px]">Aksi</th>
+                    </tr>
+                </thead>
 
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">
-                                        <div class="flex items-center gap-1">
-                                            <span>Nama Bahasa</span>
-                                            <a href=""
-                                                class="text-gray-600 hover:text-blue-600">
-                                                @if ($sortBy === '' && $order === 'asc')
-                                                    <i class="bi bi-sort-alpha-up"></i>
-                                                @elseif ($sortBy === '' && $order === 'desc')
-                                                    <i class="bi bi-sort-alpha-down"></i>
-                                                @else
-                                                    <i class="bi bi-arrow-down-up"></i>
-                                                @endif
-                                            </a>
-                                        </div>
-                                    </th>
+                <tbody class="divide-y divide-gray-100">
+                    @forelse ($bahasa as $index => $item)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-4 py-3 text-gray-700 font-medium">{{ $index + 1 }}</td>
 
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">Alamat</th>
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">Status Bahasa</th>
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">Jumlah Penutur</th>
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">Deskripsi</th>
-                                    <th class="px-6 py-3 text-start text-sm text-default-500">Koordinat</th>
-                                    <th class="px-6 py-3 text-center text-sm text-default-500">Aksi</th>
-                                </tr>
-                            </thead>
+                            <td class="px-4 py-3 text-gray-800">{{ $item->wilayah->nama_wilayah ?? '-' }}</td>
 
-                            <tbody>
-                                @forelse ($bahasa as $key => $item)
-                                    <tr class="odd:bg-white even:bg-default-100 hover:bg-default-200/50 transition">
-                                        <td class="px-6 py-4 text-sm font-medium text-default-800">{{ $key + 1 }}</td>
-                                        <td class="px-6 py-4 text-sm text-default-800">
-                                            {{ $item->wilayah ? $item->wilayah->nama_wilayah : '-' }}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-default-800"></td>
-                                        <td class="px-6 py-4  text-default-800"><div class="prose">
-{!! $item->alamat !!}
-                                        </div> </td>
-                                        <td class="px-6 py-4 text-sm text-default-800">
-                                            @if ($item->status === 'aktif')
-                                                <span class="px-2 py-1 rounded bg-green-500 text-white text-xs">Aktif</span>
-                                            @else
-                                                <span class="px-2 py-1 rounded bg-red-500 text-white text-xs">Tidak Aktif</span>
-                                            @endif
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-default-800">
-                                            {{ number_format($item->jumlah_penutur) }}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-default-800"
-                                            style="white-space:normal;word-wrap:break-word;">
-                                            {{ Str::limit(strip_tags($item->deskripsi), 80) }}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-default-800">{{ $item->koordinat ?? '-' }}</td>
+                            <td class="px-4 py-3 text-gray-800">{{ $item->namaBahasa->nama_bahasa ?? '-' }}</td>
 
-                                        <!-- Kolom Aksi -->
-                                        <td class="px-6 py-4 text-sm text-center font-medium flex justify-center space-x-3">
-                                            <a href="{{ route('bahasa.show', $item->id) }}" class="text-green-600 hover:text-green-800" title="Lihat">
-                                                <i class="bi bi-eye fs-5"></i>
-                                            </a>
-                                            <a href="{{ route('bahasa.edit', $item->id) }}" class="text-blue-600 hover:text-blue-800" title="Edit">
-                                                <i class="bi bi-pencil-square fs-5"></i>
-                                            </a>
+                            <td class="px-4 py-3 text-gray-700 truncate max-w-[200px]" title="{{ $item->alamat }}">
+                                {{ Str::limit(strip_tags($item->alamat), 30) }}
+                            </td>
 
-                                            <!-- Tombol Hapus dengan SweetAlert -->
-                                            <form action="{{ route('bahasa.destroy', $item->id) }}" method="POST" class="delete-form inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="delete-btn text-red-600 hover:text-red-800" title="Hapus">
-                                                    <i class="bi bi-trash fs-5"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center py-4 text-gray-500">Tidak ada data bahasa.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                            <td class="px-4 py-3">
+                                <span
+                                    class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium {{ $item->status == 'aktif' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                                    {{ ucfirst($item->status) }}
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3 text-gray-700">{{ number_format($item->jumlah_penutur) }}</td>
+
+                            <td class="px-4 py-3 text-gray-700 truncate max-w-[220px]"
+                                title="{{ strip_tags($item->deskripsi) }}">
+                                {{ Str::limit(strip_tags($item->deskripsi), 40) }}
+                            </td>
+
+                            <td class="px-4 py-3 text-gray-700">{{ $item->koordinat ?? '-' }}</td>
+
+                            <td class="px-4 py-3">
+                                <div class="flex justify-center gap-2">
+                                    <a href="{{ route('bahasa.show', $item->id) }}"
+                                        class="text-green-600 hover:text-green-800" title="Lihat">
+                                        <i class="bi bi-eye fs-5"></i>
+                                    </a>
+                                    <a href="{{ route('bahasa.edit', $item->id) }}"
+                                        class="text-blue-600 hover:text-blue-800" title="Edit">
+                                        <i class="bi bi-pencil-square fs-5"></i>
+                                    </a>
+                                    <form action="{{ route('bahasa.destroy', $item->id) }}" method="POST"
+                                        class="inline delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="text-red-600 hover:text-red-800 btn-delete"
+                                            title="Hapus">
+                                            <i class="bi bi-trash fs-5"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="px-6 py-5 text-center text-gray-500 italic">
+                                Belum ada data bahasa yang tersedia.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 
-    {{-- SweetAlert2 --}}
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const deleteButtons = document.querySelectorAll('.delete-btn');
-
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const form = this.closest('.delete-form');
-                    
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const form = this.closest('form');
                     Swal.fire({
-                        title: 'Yakin hapus data ini?',
-                        text: "Data yang dihapus tidak dapat dikembalikan.",
+                        title: 'Yakin ingin menghapus data ini?',
+                        text: 'Data yang dihapus tidak bisa dikembalikan!',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
@@ -154,9 +137,7 @@
                         confirmButtonText: 'Ya, hapus!',
                         cancelButtonText: 'Batal'
                     }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
+                        if (result.isConfirmed) form.submit();
                     });
                 });
             });

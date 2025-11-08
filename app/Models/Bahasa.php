@@ -9,13 +9,13 @@ class Bahasa extends Model
     protected $table = 'bahasa';
 
     protected $fillable = [
-        'nama_bahasa_id', // foreign key
         'wilayah_id',
+        'nama_bahasa_id',
+        'alamat',
         'status',
         'jumlah_penutur',
         'deskripsi',
         'koordinat',
-        'alamat',
     ];
 
     // Relasi: Bahasa milik satu NamaBahasa

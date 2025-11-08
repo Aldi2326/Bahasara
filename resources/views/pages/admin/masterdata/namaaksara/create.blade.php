@@ -28,7 +28,7 @@
                 <label for="nama_aksara" class="text-default-800 text-sm font-medium">Nama aksara</label>
                 <div class="md:col-span-3">
                     <input type="text" name="nama_aksara" id="nama_aksara" class="form-input"
-                        placeholder="Contoh: aksara Melayu" required>
+                        placeholder="Contoh: Aksara Incung" required>
                 </div>
             </div>
 

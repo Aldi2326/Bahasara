@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
-@section('title', 'sastra')
+@section('title', 'Sastra')
 
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title mb-4">Input Nama sastra</h4>
+        <h4 class="card-title mb-4">Input Nama Sastra</h4>
     </div>
 
     <div class="p-6">
@@ -23,12 +23,12 @@
             </div>
             @endif
 
-            <!-- Nama sastra -->
+            <!-- Nama Sastra -->
             <div class="grid grid-cols-4 items-center gap-6">
-                <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama sastra</label>
+                <label for="nama_sastra" class="text-default-800 text-sm font-medium">Nama Sastra</label>
                 <div class="md:col-span-3">
                     <input type="text" name="nama_sastra" id="nama_sastra" class="form-input"
-                        placeholder="Contoh: sastra Melayu" required>
+                        placeholder="Contoh: Sastra Tulis" required>
                 </div>
             </div>
 

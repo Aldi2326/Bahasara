@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,13 +12,13 @@ return new class extends Migration
     {
         Schema::create('bahasa', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_bahasa_id')->constrained('nama_bahasa')->onDelete('cascade');
-            $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
+            $table->foreignId(column: 'wilayah_id')->constrained('wilayah')->onDelete('cascade');
+            $table->foreignId(column: 'nama_bahasa_id')->nullable()->constrained('nama_bahasa')->onDelete('cascade');
+            $table->text('alamat');
             $table->string('status');
             $table->integer('jumlah_penutur');
-            $table->string('koordinat');
-            $table->text('alamat');
             $table->text('deskripsi');
+            $table->string('koordinat');
             $table->timestamps();
         });
     }

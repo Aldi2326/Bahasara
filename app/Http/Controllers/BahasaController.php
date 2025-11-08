@@ -4,49 +4,54 @@ namespace App\Http\Controllers;
 
 use App\Models\Bahasa;
 use App\Models\Wilayah;
+use App\Models\NamaBahasa;
 use Illuminate\Http\Request;
 
 class BahasaController extends Controller
 {
     public function index(Request $request)
-{
-    $query = Bahasa::with('wilayah')
-        ->select('bahasa.*')
-        ->join('wilayah', 'bahasa.wilayah_id', '=', 'wilayah.id');
+    {
+        $query = Bahasa::with('wilayah', 'namaBahasa')
+            ->select('bahasa.*')
+            ->join('wilayah', 'bahasa.wilayah_id', '=', 'wilayah.id');
 
-    // 🔍 Pencarian (optional)
-    if ($request->has('search') && $request->search != '') {
-        $query->where('bahasa.deskripsi', 'like', '%' . $request->search . '%')
-            ->orWhere('wilayah.nama_wilayah', 'like', '%' . $request->search . '%');
-    }
-
-    // 🔽 Sorting
-    $sortBy = $request->get('sort_by', 'deskripsi');
-    $order = $request->get('order', 'asc');
-
-    $allowedSorts = ['deskripsi', 'status', 'nama_wilayah', 'jumlah_penutur'];
-    if (in_array($sortBy, $allowedSorts)) {
-        if ($sortBy === 'nama_wilayah') {
-            $query->orderBy('wilayah.nama_wilayah', $order);
-        } else {
-            $query->orderBy('bahasa.' . $sortBy, $order);
+        // 🔍 Pencarian (optional)
+        if ($request->has('search') && $request->search != '') {
+            $query->whereHas('namaBahasa', function ($q) use ($request) {
+                $q->where('nama_bahasa', 'like', '%' . $request->search . '%');
+            })
+                ->orWhere('wilayah.nama_wilayah', 'like', '%' . $request->search . '%')
+                ->orWhere('bahasa.deskripsi', 'like', '%' . $request->search . '%');
         }
+
+        // 🔽 Sorting
+        $sortBy = $request->get('sort_by', 'deskripsi');
+        $order = $request->get('order', 'asc');
+
+        $allowedSorts = ['deskripsi', 'status', 'nama_wilayah', 'jumlah_penutur'];
+        if (in_array($sortBy, $allowedSorts)) {
+            if ($sortBy === 'nama_wilayah') {
+                $query->orderBy('wilayah.nama_wilayah', $order);
+            } else {
+                $query->orderBy('bahasa.' . $sortBy, $order);
+            }
+        }
+
+        // 🔄 Ambil data
+        $bahasa = $query->get();
+
+        return view('pages.admin.peta.bahasa.index', compact('bahasa', 'sortBy', 'order'));
     }
-
-    // 🔄 Ambil data
-    $bahasa = $query->get();
-
-    return view('pages.admin.peta.bahasa.index', compact('bahasa', 'sortBy', 'order'));
-}
 
 
     public function create()
     {
         // Ambil semua data wilayah
         $wilayahList = Wilayah::all();
+        $namaBahasaList = NamaBahasa::all();
 
         // Kirim data ke view
-        return view('pages.admin.peta.bahasa.create', compact('wilayahList'));
+        return view('pages.admin.peta.bahasa.create', compact('wilayahList', 'namaBahasaList'));
     }
 
 
@@ -54,10 +59,10 @@ class BahasaController extends Controller
     {
         $data = $request->validate([
             'wilayah_id' => 'required|exists:wilayah,id',
-            'nama_bahasa' => 'required|string|max:255',
+            'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
+            'alamat' => 'required',
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer',
-            'alamat' => 'required',
             'deskripsi' => 'required|string',
             'koordinat' => 'required|string'
         ]);
@@ -71,8 +76,9 @@ class BahasaController extends Controller
     {
         $bahasa = Bahasa::findOrFail($id);
         $wilayahList = Wilayah::orderBy('nama_wilayah')->get();
+        $namaBahasaList = NamaBahasa::orderBy('nama_bahasa')->get();
 
-        return view('pages.admin.peta.bahasa.edit', compact('bahasa', 'wilayahList'));
+        return view('pages.admin.peta.bahasa.edit', compact('bahasa', 'wilayahList', 'namaBahasaList'));
     }
 
     /**
@@ -81,25 +87,25 @@ class BahasaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_bahasa' => 'required|string|max:255',
             'wilayah_id' => 'required|exists:wilayah,id',
+            'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
+            'alamat' => 'required|string',
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer|min:0',
-            'koordinat' => 'required|string',
-            'alamat' => 'required|string',
             'deskripsi' => 'nullable|string',
+            'koordinat' => 'required|string',
         ]);
 
         $bahasa = Bahasa::findOrFail($id);
 
         $bahasa->update([
-            'nama_bahasa' => $request->nama_bahasa,
             'wilayah_id' => $request->wilayah_id,
+            'nama_bahasa_id' => $request->nama_bahasa_id,
+            'alamat' => $request->alamat,
             'status' => $request->status,
             'jumlah_penutur' => $request->jumlah_penutur,
-            'koordinat' => $request->koordinat,
-            'alamat' => $request->alamat,
             'deskripsi' => $request->deskripsi,
+            'koordinat' => $request->koordinat,
         ]);
 
         return redirect()->route('bahasa.index')->with('success', 'Data bahasa berhasil diperbarui.');
@@ -116,15 +122,8 @@ class BahasaController extends Controller
 
     public function show($id)
     {
-        // Ambil data dari tabel bahasas berdasarkan ID
-        $bahasa = Bahasa::find($id);
-
-        // Jika tidak ditemukan, tampilkan error 404
-        if (!$bahasa) {
-            abort(404, 'Data bahasa tidak ditemukan.');
-        }
-
-        // Kirim data ke view
+        $bahasa = Bahasa::with('namaBahasa')->findOrFail($id);
         return view('pages.admin.peta.bahasa.show', compact('bahasa'));
     }
+
 }

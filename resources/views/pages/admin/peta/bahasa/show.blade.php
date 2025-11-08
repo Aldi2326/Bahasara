@@ -14,7 +14,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <h5 class="text-sm text-default-500">Nama Bahasa</h5>
-                <p class="text-base font-semibold text-default-800">{{ $bahasa['nama_bahasa'] }}</p>
+                <p class="text-base font-semibold text-default-800">{{ $bahasa->namaBahasa->nama_bahasa ?? '-' }}</p>
             </div>
 
             <div>

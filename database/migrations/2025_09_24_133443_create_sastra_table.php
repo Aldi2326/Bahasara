@@ -12,12 +12,13 @@ return new class extends Migration {
     {
         Schema::create('sastra', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_sastra');
+            $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
+            $table->foreignId(column: 'nama_sastra_id')->nullable()->constrained('nama_sastra')->onDelete('cascade');
             $table->text('alamat');
             $table->string('jenis');
             $table->text('deskripsi');
+            $table->string('dokumentasi');
             $table->string('koordinat');
-            $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
             $table->timestamps();
         });
     }

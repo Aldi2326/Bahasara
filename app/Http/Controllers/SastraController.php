@@ -2,158 +2,137 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Sastra;
 use App\Models\Wilayah;
-
-
+use App\Models\NamaSastra;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SastraController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
-{
-    $query = Sastra::with('wilayah')
-        ->select('sastra.*')
-        ->join('wilayah', 'sastra.wilayah_id', '=', 'wilayah.id');
+    {
+        $query = Sastra::with('wilayah', 'namaSastra')
+            ->select('sastra.*')
+            ->join('wilayah', 'sastra.wilayah_id', '=', 'wilayah.id');
 
-    // 🔍 Pencarian (opsional)
-    if ($request->has('search') && $request->search != '') {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('sastra.nama_sastra', 'like', '%' . $search . '%')
-              ->orWhere('wilayah.nama_wilayah', 'like', '%' . $search . '%');
-        });
-    }
-
-    // 🔽 Sorting
-    $sortBy = $request->get('sort_by', 'nama_sastra');
-    $order = $request->get('order', 'asc');
-
-    $allowedSorts = ['id', 'nama_wilayah', 'jenis', 'nama_sastra'];
-    if (in_array($sortBy, $allowedSorts)) {
-        if ($sortBy === 'nama_wilayah') {
-            $query->orderBy('wilayah.nama_wilayah', $order);
-        } else {
-            $query->orderBy('sastra.' . $sortBy, $order);
+        // 🔍 Pencarian
+        if ($request->has('search') && $request->search != '') {
+            $query->whereHas('namaSastra', function ($q) use ($request) {
+                $q->where('nama_sastra', 'like', '%' . $request->search . '%');
+            })
+                ->orWhere('wilayah.nama_wilayah', 'like', '%' . $request->search . '%')
+                ->orWhere('sastra.deskripsi', 'like', '%' . $request->search . '%');
         }
+
+        // 🔽 Sorting
+        $sortBy = $request->get('sort_by', 'deskripsi');
+        $order = $request->get('order', 'asc');
+        $allowedSorts = ['deskripsi', 'status', 'nama_wilayah', 'jumlah_penutur'];
+
+        if (in_array($sortBy, $allowedSorts)) {
+            if ($sortBy === 'nama_wilayah') {
+                $query->orderBy('wilayah.nama_wilayah', $order);
+            } else {
+                $query->orderBy('sastra.' . $sortBy, $order);
+            }
+        }
+
+        $sastra = $query->get();
+
+        return view('pages.admin.peta.sastra.index', compact('sastra', 'sortBy', 'order'));
     }
 
-    $sastra = $query->get();
-
-    return view('pages.admin.peta.sastra.index', compact('sastra', 'sortBy', 'order'));
-}
-
-public function petaSastra()
-{
-    // Ambil semua wilayah (beserta file geojson-nya)
-    $wilayah = \App\Models\Wilayah::select('id', 'nama_wilayah', 'file_geojson')->get();
-
-    // Ambil semua data sastra, pastikan koordinat dipisah jadi lat & lng
-    $sastraList = \App\Models\Sastra::with('wilayah')
-        ->get()
-        ->map(function ($item) {
-            if (!empty($item->koordinat)) {
-                $koordinat = explode(',', $item->koordinat);
-                $item->lat = (float) $koordinat[0];
-                $item->lng = (float) $koordinat[1];
-            } else {
-                $item->lat = null;
-                $item->lng = null;
-            }
-            return $item;
-        });
-
-    return view('pages.sastra', compact('wilayah', 'sastraList'));
-}
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $wilayahList = Wilayah::all();
-        return view('pages.admin.peta.sastra.create', compact('wilayahList'));
+        $namaSastraList = NamaSastra::all();
+        return view('pages.admin.peta.sastra.create', compact('wilayahList', 'namaSastraList'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
-{
-    $request->validate([
-        'nama_sastra' => 'required|string|max:255',
-        'alamat' => 'required|string|max:255',
-        'jenis' => 'required|string',
-        'deskripsi' => 'required|string',
-        'koordinat' => 'required|string',
-        'wilayah_id' => 'required|integer',
-    ]);
-
-    // Simpan data ke database
-    Sastra::create([
-        'nama_sastra' => $request->nama_sastra,
-        'alamat' => $request->alamat,
-        'jenis' => $request->jenis,
-        'deskripsi' => $request->deskripsi,
-        'koordinat' => $request->koordinat,
-        'wilayah_id' => $request->wilayah_id,
-    ]);
-
-    return redirect()->route('sastra.index')->with('success', 'Data sastra berhasil disimpan!');
-}
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
     {
-        // Ambil data dari tabel sastra berdasarkan ID
-        $sastra = sastra::find($id);
+        $data = $request->validate([
+            'wilayah_id' => 'required|exists:wilayah,id',
+            'nama_sastra_id' => 'required|exists:nama_sastra,id',
+            'alamat' => 'required|string',
+            'jenis' => 'required|string',
+            'deskripsi' => 'required|string',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov|max:20480',
+            'koordinat' => 'required|string',
+        ]);
 
-        // Jika tidak ditemukan, tampilkan error 404
-        if (!$sastra) {
-            abort(404, 'Data sastra tidak ditemukan.');
+        // Upload dokumentasi jika ada
+        if ($request->hasFile('dokumentasi')) {
+            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/sastra', 'public');
         }
 
-        // Kirim data ke view
-        return view('pages.admin.peta.sastra.show', compact('sastra'));
+        Sastra::create($data);
+
+        return redirect()->route('sastra.index')->with('success', 'Data sastra berhasil disimpan.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $sastra = Sastra::findOrFail($id);
-        $wilayahList = Wilayah::all();
-        return view('pages.admin.peta.sastra.edit', compact('sastra','wilayahList'));
+        $wilayahList = Wilayah::orderBy('nama_wilayah')->get();
+        $namaSastraList = NamaSastra::orderBy('nama_sastra')->get();
+
+        return view('pages.admin.peta.sastra.edit', compact('sastra', 'wilayahList', 'namaSastraList'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-        $sastra = Sastra::findOrFail($id);
-        $sastra->update($request->all());
+        $data = $request->validate([
+            'wilayah_id' => 'required|exists:wilayah,id',
+            'nama_sastra_id' => 'required|exists:nama_sastra,id',
+            'alamat' => 'required|string',
+            'jenis' => 'required|string',
+            'deskripsi' => 'required|string',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov|max:20480',
+            'koordinat' => 'required|string',
+        ]);
 
-        return redirect()->route('sastra.index', ['wilayah_id' => $sastra->wilayah_id])
-            ->with('success', 'Data sastra berhasil diperbarui.');
+        $sastra = Sastra::findOrFail($id);
+
+        $data = $request->only([
+            'wilayah_id',
+            'nama_sastra_id',
+            'alamat',
+            'status',
+            'deskripsi',
+            'koordinat'
+        ]);
+
+        if ($request->hasFile(key: 'dokumentasi')) {
+            if ($sastra->dokumentasi && \Storage::disk('public')->exists($sastra->dokumentasi)) {
+                \Storage::disk('public')->delete($sastra->dokumentasi);
+            }
+            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/sastra', 'public');
+        }
+
+        $sastra->update($data);
+
+        return redirect()->route('sastra.index')->with('success', 'Data sastra berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $sastra = Sastra::findOrFail($id);
-        $wilayahId = $sastra->wilayah_id;
+
+        // Hapus file dokumentasi jika ada
+        if ($sastra->dokumentasi && Storage::disk('public')->exists($sastra->dokumentasi)) {
+            Storage::disk('public')->delete($sastra->dokumentasi);
+        }
+
         $sastra->delete();
 
-        return redirect()->route('sastra.index', ['wilayah_id' => $wilayahId])
-            ->with('success', 'Data sastra berhasil dihapus.');
+        return redirect()->route('sastra.index')->with('success', 'Data sastra berhasil dihapus.');
+    }
+
+    public function show($id)
+    {
+        $sastra = Sastra::with('namaSastra')->findOrFail($id);
+        return view('pages.admin.peta.sastra.show', compact('sastra'));
     }
 }

@@ -9,13 +9,19 @@ class Sastra extends Model
     protected $table = 'sastra';
 
     protected $fillable = [
-        'nama_sastra',
+        'wilayah_id',
+        'nama_sastra_id',
         'alamat',
         'jenis',
         'deskripsi',
+        'dokumentasi',
         'koordinat',
-        'wilayah_id',
     ];
+
+    public function namaSastra()
+    {
+        return $this->belongsTo(NamaSastra::class, 'nama_sastra_id');
+    }
 
     public function wilayah()
     {

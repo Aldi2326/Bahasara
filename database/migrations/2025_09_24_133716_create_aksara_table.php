@@ -12,15 +12,16 @@ return new class extends Migration {
     {
         Schema::create('aksara', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_aksara');
+            $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
+            $table->foreignId('nama_aksara_id')->nullable()->constrained('nama_aksara')->onDelete('cascade');
+            $table->text('alamat');
             $table->string('status');
             $table->text('deskripsi');
-            $table->text('alamat');
             $table->string('dokumentasi');
-             $table->string('koordinat');
-            $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
+            $table->string('koordinat');
             $table->timestamps();
         });
+
     }
 
     /**

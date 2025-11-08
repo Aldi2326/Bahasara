@@ -10,9 +10,28 @@ class NamaAksaraController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('pages.admin.masterdata.namaaksara.index');
+        // Ambil nilai pencarian dan urutan sort dari request
+        $search = $request->input('search');
+        $sortOrder = $request->input('sort', 'asc'); // default: ascending
+
+        // Query dasar
+        $query = \App\Models\NamaAksara::query();
+
+        // Jika ada input pencarian, tambahkan filter berdasarkan nama_aksara
+        if ($search) {
+            $query->where('nama_aksara', 'LIKE', "%{$search}%");
+        }
+
+        // Urutkan data berdasarkan nama_aksara
+        $query->orderBy('nama_aksara', $sortOrder);
+
+        // Jalankan query dan ambil hasil
+        $namaAksara = $query->get();
+
+        // Kirim data ke view
+        return view('pages.admin.masterdata.namaaksara.index', compact('namaAksara'));
     }
 
     /**
@@ -28,7 +47,14 @@ class NamaAksaraController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'nama_aksara' => 'required|string|max:255',
+            'warna_pin' => 'nullable|string|max:20',
+        ]);
+
+        NamaAksara::create($data);
+
+        return redirect()->route('nama-aksara.index')->with('success', 'Data nama aksara berhasil disimpan.');
     }
 
     /**
@@ -42,24 +68,36 @@ class NamaAksaraController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit(NamaAksara $namaAksara)
     {
-        return view('pages.admin.masterdata.namaaksara.edit');
+        // Menampilkan halaman edit dengan data akasara yang dipilih
+        return view('pages.admin.masterdata.namaaksara.edit', compact('namaAksara'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, NamaAksara $namaAksara)
     {
-        //
+        // Validasi inputan
+        $validatedData = $request->validate([
+            'nama_aksara' => 'required|string|max:255',
+            'warna_pin' => 'required|string|max:7', 
+        ]);
+
+        // Update data akasara
+        $namaAksara->update($validatedData);
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('nama-aksara.index')->with('success', 'Data aksara berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(NamaAksara $namaAksara)
     {
-        //
+        $namaAksara->delete();
+
+        return redirect()->route('nama-aksara.index')
+            ->with('success', 'Nama aksara  berhasil dihapus.');
     }
 }
