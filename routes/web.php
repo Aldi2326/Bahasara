@@ -41,7 +41,7 @@ Route::get('/', [PetaController::class, 'index'])->name('peta.index');
 Route::get('/detail/bahasa/{id}', [PetaController::class, 'show'])->name('peta.bahasa.show');
 
 Route::get('/sastra', [PetaSastraController::class, 'index'])->name('peta.sastra');
-Route::get('/detail/sastra/{id}', [PetaSastraController::class, 'show'])->name('peta.aksara.show');
+Route::get('/detail/sastra/{id}', [PetaSastraController::class, 'show'])->name('peta.sastra.show');
 
 Route::get('/aksara', [PetaAksaraController::class, 'index'])->name('peta.aksara');
 Route::get('/detail/aksara/{id}', [PetaAksaraController::class, 'show'])->name('peta.aksara.show');
