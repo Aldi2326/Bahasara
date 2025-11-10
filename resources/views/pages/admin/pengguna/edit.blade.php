@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 @section('title', 'Edit Pengguna')
+
 @section('content')
 <div class="card">
     <div class="card-header">
@@ -7,22 +8,22 @@
     </div>
 
     <div class="p-6">
-        {{-- ✅ Notifikasi sukses --}}
-        @if(session('success'))
-            <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
-
         {{-- ⚠️ Notifikasi error validasi --}}
         @if($errors->any())
-            <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
-                <strong>Terjadi kesalahan:</strong>
+            <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
+                <strong class="font-semibold">Terjadi kesalahan:</strong>
                 <ul class="mt-2 list-disc list-inside text-sm">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+            </div>
+        @endif
+
+        {{-- ✅ Notifikasi sukses --}}
+        @if(session('success'))
+            <div class="bg-green-50 border border-green-800 text-green-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
+                {{ session('success') }}
             </div>
         @endif
 
@@ -40,7 +41,7 @@
                     <input type="text" name="name" id="name"
                            value="{{ old('name', $user->name) }}"
                            class="form-input @error('name') border-red-500 @enderror"
-                           required>
+                           placeholder="Masukkan nama pengguna" required>
                     @error('name')
                         <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -54,8 +55,25 @@
                     <input type="email" name="email" id="email"
                            value="{{ old('email', $user->email) }}"
                            class="form-input @error('email') border-red-500 @enderror"
-                           required>
+                           placeholder="Masukkan email pengguna" required>
                     @error('email')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Role -->
+            <div class="grid grid-cols-4 items-center gap-6">
+                <label for="role" class="text-default-800 text-sm font-medium">Role Pengguna</label>
+                <div class="md:col-span-3">
+                    <select name="role" id="role"
+                        class="form-select @error('role') border-red-500 @enderror" required>
+                        <option value="">-- Pilih Role --</option>
+                        <option value="superadmin" {{ old('role', $user->role) == 'superadmin' ? 'selected' : '' }}>Superadmin</option>
+                        <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="pegawai" {{ old('role', $user->role) == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+                    </select>
+                    @error('role')
                         <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -74,11 +92,12 @@
                 </div>
             </div>
 
-            <!-- Tombol Submit -->
-            <div class="grid grid-cols-4 items-center gap-6">
+            <!-- Tombol Aksi -->
+            <div class="grid grid-cols-4 items-center gap-6 mt-6">
                 <div class="md:col-start-2">
-                    <button type="button" id="btnUpdate" class="btn bg-info text-white">Perbarui Data</button>
-                    <a href="{{ route('pengguna.index') }}" class="btn bg-gray-300 text-black ml-2">Kembali</a>
+                    <button type="button" id="btnUpdate" class="btn bg-info text-white">
+                        Simpan Perubahan
+                    </button>
                 </div>
             </div>
         </form>

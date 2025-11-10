@@ -52,7 +52,7 @@
             <!-- Tombol Simpan -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <div class="md:col-start-2">
-                    <button type="submit" class="btn bg-success text-white">Perbarui Data</button>
+                    <button type="submit" class="btn bg-success text-white">Simpan Perubahan</button>
                 </div>
             </div>
         </form>

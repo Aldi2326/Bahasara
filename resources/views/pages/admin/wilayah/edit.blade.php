@@ -37,7 +37,7 @@
                 <!-- Tombol Submit -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <div class="md:col-start-2">
-                        <button type="button" id="btnSubmit" class="btn bg-info text-white">Simpan Data</button>
+                        <button type="button" id="btnSubmit" class="btn bg-info text-white">Simpan Perubahan</button>
                     </div>
                 </div>
             </form>

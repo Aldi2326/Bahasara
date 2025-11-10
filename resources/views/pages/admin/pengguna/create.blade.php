@@ -36,6 +36,7 @@
                 <div class="md:col-span-3">
                     <input type="text" name="name" id="name"
                            value="{{ old('name') }}"
+                           placeholder="Masukkan nama pengguna"
                            class="form-input @error('name') border-red-500 @enderror"
                            required>
                     @error('name')
@@ -50,6 +51,7 @@
                 <div class="md:col-span-3">
                     <input type="email" name="email" id="email"
                            value="{{ old('email') }}"
+                           placeholder="Masukkan email pengguna"
                            class="form-input @error('email') border-red-500 @enderror"
                            required>
                     @error('email')
@@ -63,6 +65,7 @@
                 <label for="password" class="text-default-800 text-sm font-medium">Password</label>
                 <div class="md:col-span-3">
                     <input type="password" name="password" id="password"
+                           placeholder="Masukkan password pengguna"
                            class="form-input @error('password') border-red-500 @enderror"
                            required>
                     @error('password')
@@ -71,10 +74,28 @@
                 </div>
             </div>
 
+            <!-- Role -->
+            <div class="grid grid-cols-4 items-center gap-6">
+                <label for="role" class="text-default-800 text-sm font-medium">Role Pengguna</label>
+                <div class="md:col-span-3">
+                    <select name="role" id="role" 
+                            class="form-input @error('role') border-red-500 @enderror"
+                            required>
+                        <option value="" disabled selected>-- Pilih Role --</option>
+                        <option value="superadmin" {{ old('role') == 'superadmin' ? 'selected' : '' }}>Super Admin</option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="pegawai" {{ old('role') == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+                    </select>
+                    @error('role')
+                        <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
             <!-- Tombol Submit -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <div class="md:col-start-2">
-                    <button type="button" id="btnSubmit" class="btn bg-info text-white">Simpan Data</button>
+                    <button type="submit" class="btn bg-info text-white">Simpan Data</button>
                 </div>
             </div>
         </form>
@@ -87,10 +108,9 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const btnSubmit = document.getElementById('btnSubmit');
         const form = document.getElementById('formPengguna');
 
-        btnSubmit.addEventListener('click', function(e) {
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
 
             Swal.fire({

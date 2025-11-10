@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'balaibahasa',            // login pakai ini
+            'name' => 'balaiadmin',            // login pakai ini
             'email' => 'pengaduankbpj@gmail.com', // masih wajib ada karena default table pakai email
             'password' => Hash::make('balaiadmin123'), // login pakai ini
             'role' => 'superadmin', // login pakai ini

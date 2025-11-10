@@ -117,7 +117,7 @@
                 <!-- Tombol -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <div class="md:col-start-2 flex gap-4">
-                        <button type="submit" class="btn bg-info text-white">Update Data</button>
+                        <button type="submit" class="btn bg-info text-white">Simpan Perubahan</button>
                         <a href="{{ route('bahasa.index') }}" class="btn bg-gray-400 text-white">Batal</a>
                     </div>
                 </div>

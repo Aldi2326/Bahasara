@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Pengumuman extends Model
 {
     use HasFactory;
-    protected $table = 'pengumuman';
+
+    protected $table = 'pengumuman'; // Nama tabel di database
+
+    protected $fillable = [
+        'judul',
+        'isi',
+    ];
 }

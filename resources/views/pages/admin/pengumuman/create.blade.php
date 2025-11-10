@@ -1,15 +1,14 @@
 @extends('layouts.admin.app')
-@section('title', 'pengumuman')
+@section('title', 'Tambah Pengumuman')
 
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title mb-4">Input Nama pengumuman</h4>
+        <h4 class="card-title mb-4">Tambah Pengumuman</h4>
     </div>
 
     <div class="p-6">
-        
-        <form class="flex flex-col gap-4" method="POST" action="{{ route('pengumuman.store') }}" enctype="multipart/form-data">
+        <form class="flex flex-col gap-4" method="POST" action="{{ route('pengumuman.store') }}">
             @csrf
 
             @if ($errors->any())
@@ -23,50 +22,26 @@
             </div>
             @endif
 
-            <!-- Nama pengumuman -->
             <div class="grid grid-cols-4 items-center gap-6">
-                <label for="nama_pengumuman" class="text-default-800 text-sm font-medium">Nama pengumuman</label>
+                <label for="judul" class="text-default-800 text-sm font-medium">Judul</label>
                 <div class="md:col-span-3">
-                    <input type="text" name="nama_pengumuman" id="nama_pengumuman" class="form-input"
-                        placeholder="Contoh: pengumuman Melayu" required>
+                    <input type="text" name="judul" id="judul" class="form-input" placeholder="Contoh: Pengumuman Penting" required>
                 </div>
             </div>
 
-            <!-- Warna Pinpoint -->
-            <div class="grid grid-cols-4 items-center gap-6">
-                <label for="warna_pin" class="text-default-800 text-sm font-medium">Warna Pinpoint</label>
-                <div class="md:col-span-3 flex items-center gap-4">
-                    <input type="color" name="warna_pin" id="warna_pin" class="w-16 h-10 cursor-pointer border rounded"
-                        value="#2563eb">
-
-                    <!-- Preview ikon pinpoint -->
-                    <div id="pin-preview" class="flex items-center gap-2">
-                        <svg id="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="#2563eb">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5
-                            c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
-                        </svg>
-                    </div>
+            <div class="grid grid-cols-4 items-start gap-6">
+                <label for="isi" class="text-default-800 text-sm font-medium">Isi Pengumuman</label>
+                <div class="md:col-span-3">
+                    <textarea name="isi" id="isi" rows="5" class="form-input" placeholder="Tulis isi pengumuman..." required></textarea>
                 </div>
             </div>
 
-            <!-- Tombol Submit -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <div class="md:col-start-2">
-                    <button type="submit" class="btn bg-info text-white">Simpan Data</button>
+                    <button type="submit" class="btn bg-info text-white">Simpan</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const colorInput = document.getElementById('warna_pin');
-        const pinIcon = document.getElementById('pin-icon');
-
-        colorInput.addEventListener('input', () => {
-            pinIcon.setAttribute('fill', colorInput.value);
-        });
-    });
-</script>
 @endsection

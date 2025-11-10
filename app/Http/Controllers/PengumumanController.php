@@ -8,15 +8,22 @@ use Illuminate\Http\Request;
 class PengumumanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar pengumuman dengan fitur pencarian.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('pages.admin.pengumuman.index');
+        $search = $request->input('search');
+
+        $pengumuman = Pengumuman::when($search, function ($query, $search) {
+            $query->where('judul', 'like', "%{$search}%")
+                  ->orWhere('isi', 'like', "%{$search}%");
+        })->latest()->get();
+
+        return view('pages.admin.pengumuman.index', compact('pengumuman', 'search'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah pengumuman.
      */
     public function create()
     {
@@ -24,43 +31,68 @@ class PengumumanController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data pengumuman baru.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'isi'   => 'required|string',
+        ]);
+
+        Pengumuman::create([
+            'judul' => $request->judul,
+            'isi'   => $request->isi,
+        ]);
+
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan.');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan form edit pengumuman.
      */
-    public function show(Pengumuman $pengumuman)
+    public function edit($id)
     {
-        //
+        $pengumuman = Pengumuman::findOrFail($id);
+        return view('pages.admin.pengumuman.edit', compact('pengumuman'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menyimpan perubahan pengumuman.
      */
-    public function edit()
+    public function update(Request $request, $id)
     {
-        return view('pages.admin.pengumuman.edit');
-        
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'isi'   => 'required|string',
+        ]);
+
+        $pengumuman = Pengumuman::findOrFail($id);
+        $pengumuman->update([
+            'judul' => $request->judul,
+            'isi'   => $request->isi,
+        ]);
+
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil diperbarui.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Menghapus pengumuman.
      */
-    public function update(Request $request, Pengumuman $pengumuman)
+    public function destroy($id)
     {
-        //
+        $pengumuman = Pengumuman::findOrFail($id);
+        $pengumuman->delete();
+
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Menampilkan detail pengumuman.
      */
-    public function destroy(Pengumuman $pengumuman)
+    public function show($id)
     {
-        //
+        $pengumuman = Pengumuman::findOrFail($id);
+        return view('pages.admin.pengumuman.show', compact('pengumuman'));
     }
 }
