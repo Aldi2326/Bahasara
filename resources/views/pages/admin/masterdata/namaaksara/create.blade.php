@@ -1,15 +1,14 @@
 @extends('layouts.admin.app')
-@section('title', 'aksara')
+@section('title', 'Aksara')
 
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title mb-4">Input Nama aksara</h4>
+        <h4 class="card-title mb-4">Input Nama Aksara</h4>
     </div>
 
     <div class="p-6">
-        
-        <form class="flex flex-col gap-4" method="POST" action="{{ route('nama-aksara.store') }}" enctype="multipart/form-data">
+        <form id="namaAksaraForm" class="flex flex-col gap-4" method="POST" action="{{ route('nama-aksara.store') }}" enctype="multipart/form-data">
             @csrf
 
             @if ($errors->any())
@@ -23,9 +22,9 @@
             </div>
             @endif
 
-            <!-- Nama aksara -->
+            <!-- Nama Aksara -->
             <div class="grid grid-cols-4 items-center gap-6">
-                <label for="nama_aksara" class="text-default-800 text-sm font-medium">Nama aksara</label>
+                <label for="nama_aksara" class="text-default-800 text-sm font-medium">Nama Aksara</label>
                 <div class="md:col-span-3">
                     <input type="text" name="nama_aksara" id="nama_aksara" class="form-input"
                         placeholder="Contoh: Aksara Incung" required>
@@ -52,20 +51,47 @@
             <!-- Tombol Submit -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <div class="md:col-start-2">
-                    <button type="submit" class="btn bg-info text-white">Simpan Data</button>
+                    <button type="submit" class="btn bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md flex items-center gap-2">
+                        Simpan Data
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
+<!-- ======== SweetAlert2 ======== -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const colorInput = document.getElementById('warna_pin');
         const pinIcon = document.getElementById('pin-icon');
+        const form = document.getElementById('namaAksaraForm');
 
+        // Preview warna pinpoint
         colorInput.addEventListener('input', () => {
             pinIcon.setAttribute('fill', colorInput.value);
+        });
+
+        // SweetAlert konfirmasi sebelum submit
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Cegah submit langsung
+
+            Swal.fire({
+                title: 'Simpan Data?',
+                text: "Pastikan data sudah benar sebelum disimpan.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB', 
+                cancelButtonColor: '#4B5563',  
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 </script>

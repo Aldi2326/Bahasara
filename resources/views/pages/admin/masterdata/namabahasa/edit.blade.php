@@ -8,7 +8,7 @@
     </div>
 
     <div class="p-6">
-        <form class="flex flex-col gap-4" method="POST" action="{{ route('nama-bahasa.update', $namaBahasa) }}" enctype="multipart/form-data">
+        <form id="editNamaBahasaForm" class="flex flex-col gap-4" method="POST" action="{{ route('nama-bahasa.update', $namaBahasa) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -52,12 +52,15 @@
             <!-- Tombol Simpan -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <div class="md:col-start-2">
-                    <button type="submit" class="btn bg-success text-white">Simpan Perubahan</button>
+                    <button type="submit" class="btn bg-blue-600 hover:bg-blue-700 text-white">Simpan Data</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<!-- ======== SweetAlert2 ======== -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -66,6 +69,27 @@
 
         colorInput.addEventListener('input', () => {
             pinIcon.setAttribute('fill', colorInput.value);
+        });
+
+        // SweetAlert konfirmasi sebelum submit
+        const form = document.getElementById('editNamaBahasaForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Cegah submit langsung
+
+            Swal.fire({
+                title: 'Simpan Perubahan?',
+                text: "Pastikan data yang diubah sudah benar sebelum disimpan.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#4B5563',
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 </script>

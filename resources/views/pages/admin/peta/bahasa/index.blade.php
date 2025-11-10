@@ -23,7 +23,7 @@
             <form action="{{ route('bahasa.index') }}" method="GET" class="flex items-center w-full md:w-1/3 gap-3">
                 <input type="text" name="search" value="{{ request('search') }}"
                     class="form-input flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-                    placeholder="Cari nama bahasa atau wilayah">
+                    placeholder="Cari nama bahasa atau wilayah...">
                 <button type="submit"
                     class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md h-[38px]">
                     <i class="bi bi-search"></i>
@@ -132,8 +132,8 @@
                         text: 'Data yang dihapus tidak bisa dikembalikan!',
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#6c757d',
+                        confirmButtonColor: '#DC2626',
+                        cancelButtonColor: '#4B5563',
                         confirmButtonText: 'Ya, hapus!',
                         cancelButtonText: 'Batal'
                     }).then((result) => {

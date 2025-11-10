@@ -8,8 +8,7 @@
     </div>
 
     <div class="p-6">
-        
-        <form class="flex flex-col gap-4" method="POST" action="{{ route('nama-bahasa.store') }}" enctype="multipart/form-data">
+        <form id="namaBahasaForm" class="flex flex-col gap-4" method="POST" action="{{ route('nama-bahasa.store') }}" enctype="multipart/form-data">
             @csrf
 
             @if ($errors->any())
@@ -52,12 +51,17 @@
             <!-- Tombol Submit -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <div class="md:col-start-2">
-                    <button type="submit" class="btn bg-info text-white">Simpan Data</button>
+                    <button type="submit" class="btn bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md flex items-center gap-2">
+                        Simpan Data
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<!-- ======== SweetAlert2 ======== -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -66,6 +70,27 @@
 
         colorInput.addEventListener('input', () => {
             pinIcon.setAttribute('fill', colorInput.value);
+        });
+
+        // SweetAlert konfirmasi sebelum submit
+        const form = document.getElementById('namaBahasaForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Cegah submit langsung
+
+            Swal.fire({
+                title: 'Simpan Data?',
+                text: "Pastikan data sudah benar sebelum disimpan.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#4B5563',
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 </script>

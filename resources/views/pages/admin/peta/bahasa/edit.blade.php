@@ -52,7 +52,6 @@
                                 </option>
                             @endforeach
                         </select>
-
                     </div>
                 </div>
 
@@ -71,8 +70,7 @@
                         <select name="status" id="status_bahasa" class="form-select" required>
                             <option value="">-- Pilih Status --</option>
                             <option value="aktif" {{ $bahasa->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="tidak_aktif" {{ $bahasa->status == 'tidak_aktif' ? 'selected' : '' }}>Tidak
-                                Aktif</option>
+                            <option value="tidak_aktif" {{ $bahasa->status == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                         </select>
                     </div>
                 </div>
@@ -93,7 +91,7 @@
                         <textarea id="froala-editor" name="deskripsi" required>{{ old('deskripsi', $bahasa->deskripsi) }}</textarea>
                     </div>
                 </div>
-                
+
                 <!-- Koordinat -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="koordinat" class="text-default-800 text-sm font-medium">Koordinat</label>
@@ -117,8 +115,8 @@
                 <!-- Tombol -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <div class="md:col-start-2 flex gap-4">
-                        <button type="submit" class="btn bg-info text-white">Simpan Perubahan</button>
-                        <a href="{{ route('bahasa.index') }}" class="btn bg-gray-400 text-white">Batal</a>
+                        <button type="submit" class="btn bg-blue-600 hover:bg-blue-700 text-white">Simpan Data</button>
+                        <a href="{{ route('bahasa.index') }}" class="btn bg-gray-500 hover:bg-gray-600 text-white">Batal</a>
                     </div>
                 </div>
             </form>
@@ -175,13 +173,13 @@
                 event.preventDefault();
 
                 Swal.fire({
-                    title: 'Perbarui Data?',
+                    title: 'Simpan Data?',
                     text: "Perubahan akan disimpan permanen.",
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, Update!',
+                    confirmButtonColor: '#2563EB',
+                    cancelButtonColor: '#4B5563',
+                    confirmButtonText: 'Ya, simpan!',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {

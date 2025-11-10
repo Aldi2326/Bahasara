@@ -37,7 +37,7 @@
                 <!-- Tombol Submit -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <div class="md:col-start-2">
-                        <button type="button" id="btnSubmit" class="btn bg-info text-white">Simpan Perubahan</button>
+                        <button type="button" id="btnSubmit" class="btn bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md flex items-center gap-2">Simpan Data</button>
                     </div>
                 </div>
             </form>
@@ -61,8 +61,8 @@
                     text: "Pastikan data wilayah sudah benar sebelum disimpan.",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: '#2563EB',
+                    cancelButtonColor: '#4B5563',
                     confirmButtonText: 'Ya, Simpan!',
                     cancelButtonText: 'Batal'
                 }).then((result) => {

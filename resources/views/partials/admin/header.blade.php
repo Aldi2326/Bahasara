@@ -33,7 +33,7 @@
             <div class="relative">
                 <div class="hs-dropdown relative inline-flex [--placement:bottom-right]">
                     <button type="button" class="hs-dropdown-toggle">
-                        <img src="{{ asset('assets/admin/images/users/avatar-8.jpg') }}" alt="user-image"
+                        <img src="{{ asset('assets/img/user-png-33842.png') }}" alt="user-image"
                             class="rounded-full h-10">
                     </button>
                     <div
