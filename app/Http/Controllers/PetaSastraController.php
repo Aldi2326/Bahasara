@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\NamaSastra;
 use App\Models\Wilayah;
 use App\Models\Sastra;
 
@@ -63,6 +65,8 @@ class PetaSastraController extends Controller
             return $s;
         });
 
+        $namaSastraAll = NamaSastra::all();
+
         // Kirim semua ke view
         return view('pages.sastra', compact(
             'wilayah',
@@ -70,7 +74,8 @@ class PetaSastraController extends Controller
             'allWilayah',
             'allSastra',
             'selectedSastra',
-            'selectedWilayah'
+            'selectedWilayah',
+            'namaSastraAll'
         ));
     }
 

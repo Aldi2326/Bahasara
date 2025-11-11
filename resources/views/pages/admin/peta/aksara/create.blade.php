@@ -79,8 +79,8 @@
                 <div class="md:col-span-3">
                     <select name="status" id="status" class="form-select" required>
                         <option value="">-- Pilih Status --</option>
-                        <option value="aktif">Aktif</option>
-                        <option value="tidak_aktif">Tidak Aktif</option>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Tidak Aktif">Tidak Aktif</option>
                     </select>
                 </div>
             </div>

@@ -68,8 +68,8 @@
                 <div class="md:col-span-3">
                     <select name="status" id="status" class="form-select" required>
                         <option value="">-- Pilih Status --</option>
-                        <option value="aktif" {{ $aksara->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="tidak_aktif" {{ $aksara->status == 'tidak_aktif' ? 'selected' : '' }}>Tidak
+                        <option value="Aktif" {{ $aksara->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="Tidak Aktif" {{ $aksara->status == 'Tidak Aktif' ? 'selected' : '' }}>Tidak
                             Aktif
                         </option>
                     </select>

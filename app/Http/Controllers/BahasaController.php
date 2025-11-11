@@ -64,8 +64,14 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer',
             'deskripsi' => 'required|string',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
             'koordinat' => 'required|string'
         ]);
+
+        // Upload dokumentasi jika ada
+        if ($request->hasFile('dokumentasi')) {
+            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/bahasa', 'public');
+        }
 
         Bahasa::create($data);
 
@@ -93,20 +99,30 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer|min:0',
             'deskripsi' => 'nullable|string',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
             'koordinat' => 'required|string',
         ]);
 
         $bahasa = Bahasa::findOrFail($id);
 
-        $bahasa->update([
-            'wilayah_id' => $request->wilayah_id,
-            'nama_bahasa_id' => $request->nama_bahasa_id,
-            'alamat' => $request->alamat,
-            'status' => $request->status,
-            'jumlah_penutur' => $request->jumlah_penutur,
-            'deskripsi' => $request->deskripsi,
-            'koordinat' => $request->koordinat,
+        $data = $request->only([
+            'wilayah_id',
+            'nama_bahasa_id',
+            'alamat',
+            'status',
+            'jumlah_penutur',
+            'deskripsi',
+            'koordinat'
         ]);
+
+        if ($request->hasFile(key: 'dokumentasi')) {
+            if ($bahasa->dokumentasi && \Storage::disk('public')->exists($bahasa->dokumentasi)) {
+                \Storage::disk('public')->delete($bahasa->dokumentasi);
+            }
+            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/bahasa', 'public');
+        }
+
+        $bahasa->update($data);
 
         return redirect()->route('bahasa.index')->with('success', 'Data bahasa berhasil diperbarui.');
     }

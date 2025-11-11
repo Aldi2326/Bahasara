@@ -38,7 +38,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user,email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8|confirmed',
             'role' => 'required|in:superadmin,admin,pegawai',
         ]);
 
@@ -65,7 +65,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user,email,' . $user->id,
-            'password' => 'nullable|min:6',
+            'password' => 'nullable|min:8|confirmed',
             'role' => 'required|in:superadmin,admin,pegawai',
         ]);
 

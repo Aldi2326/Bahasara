@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wilayah;
 use App\Models\Aksara;
+use App\Models\NamaAksara;
 use Illuminate\Http\Request;
 
 class PetaAksaraController extends Controller
@@ -63,6 +64,9 @@ class PetaAksaraController extends Controller
             return $a;
         });
 
+        $namaAksaraAll = NamaAksara::all();
+        
+
         // Kirim semua ke view
         return view('pages.aksara', compact(
             'wilayah',
@@ -70,7 +74,8 @@ class PetaAksaraController extends Controller
             'allWilayah',
             'allAksara',
             'selectedAksara',
-            'selectedWilayah'
+            'selectedWilayah',
+            'namaAksaraAll'
         ));
     }
 

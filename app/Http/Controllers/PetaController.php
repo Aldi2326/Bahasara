@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Wilayah;
 use App\Models\Bahasa;
-
-
+use App\Models\NamaBahasa;
 use Illuminate\Http\Request;
 
 class PetaController extends Controller
@@ -18,7 +17,7 @@ class PetaController extends Controller
         // Ambil semua data untuk dropdown
         $allWilayah = Wilayah::all();
         $allBahasa = Bahasa::all()->unique('nama_bahasa')->values();
-
+        
         // Mulai query dasar
         $wilayahQuery = Wilayah::with('bahasa');
         $bahasaQuery = Bahasa::query();
@@ -65,6 +64,8 @@ class PetaController extends Controller
             return $b;
         });
 
+        $namaBahasaAll = NamaBahasa::all();
+
 
         // Kirim semua ke view
         return view('pages.peta', compact(
@@ -73,7 +74,8 @@ class PetaController extends Controller
             'allWilayah',
             'allBahasa',
             'selectedBahasa',
-            'selectedWilayah'
+            'selectedWilayah',
+            'namaBahasaAll',
         ));
     }
 

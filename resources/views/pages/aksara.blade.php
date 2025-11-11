@@ -22,7 +22,7 @@
                                     <span>Semua Aksara</span>
                                 </label>
                             </li>
-                            @foreach ($aksaraList->unique('nama_aksara') as $a)
+                            @foreach ($namaAksaraAll as $a)
                                 <li>
                                     <label class="dropdown-item d-flex align-items-center gap-2">
                                         <input class="form-check-input aksara-checkbox" type="checkbox" name="aksara[]"
@@ -154,6 +154,16 @@
             border-radius: var(--radius-smooth);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
+        /* Saat legend-card dalam keadaan collapsed */
+    .legend-card.collapsed #legendContent {
+        display: none;
+        /* Sembunyikan isi legend */
+    }
+
+    /* Ubah tampilan tombol saat legend disembunyikan */
+    .legend-card.collapsed #toggleLegendBtn {
+        transform: rotate(180deg);
+    }
     </style>
 
     <!-- Script Leaflet -->
@@ -208,15 +218,11 @@
                     const customIcon = L.divIcon({
                         className: 'custom-marker',
                         html: `
-                            <div style="
-                                background-color: ${warna};
-                                width: 20px;
-                                height: 20px;
-                                border-radius: 50%;
-                                border: 2px solid white;
-                                box-shadow: 0 0 6px rgba(0,0,0,0.3);
-                            "></div>
-                        `,
+                <svg id="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="${warna}">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5
+                            c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+                        </svg>
+            `,
                         iconSize: [20, 20],
                         iconAnchor: [10, 10],
                         popupAnchor: [0, -10]
@@ -230,7 +236,7 @@
                                         box-shadow:0 4px 12px rgba(0,0,0,0.15);
                                         font-family:'Poppins',sans-serif; width:230px;">
                                 <div style="border-bottom:1px solid #eee; padding-bottom:6px; margin-bottom:6px;">
-                                    <strong style="font-size:16px; color:#1e40af;">${a.nama_aksara}</strong>
+                                    <strong style="font-size:16px; color:#1e40af;">${a.nama_aksara.nama_aksara}</strong>
                                 </div>
                                 <div style="font-size:13px; color:#374151; line-height:1.4;">
                                     📍 <b>Koordinat:</b> ${a.lat.toFixed(4)}, ${a.lng.toFixed(4)}<br>

@@ -7,7 +7,7 @@
     </div>
 
     <div class="p-6">
-        <form id="bahasaForm" class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST">
+        <form id="bahasaForm" class="flex flex-col gap-4" action="{{ route('bahasa.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             @if ($errors->any())
@@ -67,8 +67,8 @@
                 <div class="md:col-span-3">
                     <select name="status" id="status_bahasa" class="form-select" required>
                         <option value="">-- Pilih Status --</option>
-                        <option value="aktif">Aktif</option>
-                        <option value="tidak_aktif">Tidak Aktif</option>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Tidak Aktif">Tidak Aktif</option>
                     </select>
                 </div>
             </div>
@@ -87,6 +87,18 @@
                 <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                 <div class="md:col-span-3">
                     <textarea id="froala-editor" name="deskripsi" class="prose"></textarea>
+                </div>
+            </div>
+
+            <!-- Dokumentasi -->
+            <div class="grid grid-cols-4 items-start gap-6">
+                <label for="dokumentasi" class="text-default-800 text-sm font-medium">Dokumentasi</label>
+                <div class="md:col-span-3">
+                    <input type="file" name="dokumentasi" id="dokumentasi" class="form-input"
+                        accept="image/*,video/*,application/pdf" required>
+                    <p class="mt-1 text-xs text-default-500">
+                        Unggah file foto (.jpg, .png), video (.mp4, .mov), atau dokumen (.pdf). Maksimal 20MB.
+                    </p>
                 </div>
             </div>
 

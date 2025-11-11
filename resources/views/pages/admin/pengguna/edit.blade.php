@@ -69,7 +69,6 @@
                     <select name="role" id="role"
                         class="form-select @error('role') border-red-500 @enderror" required>
                         <option value="">-- Pilih Role --</option>
-                        <option value="superadmin" {{ old('role', $user->role) == 'superadmin' ? 'selected' : '' }}>Superadmin</option>
                         <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="pegawai" {{ old('role', $user->role) == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
                     </select>
@@ -92,11 +91,23 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-4 items-center gap-6">
+                <label for="password_confirmation" class="text-default-800 text-sm font-medium">Konfirmasi Password</label>
+                <div class="md:col-span-3">
+                    <input type="password" name="password_confirmation" id="password_confirmation"
+                        placeholder="Ulangi password pengguna"
+                        class="form-input @error('password_confirmation') border-red-500 @enderror">
+                    @error('password_confirmation')
+                    <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
             <!-- Tombol Aksi -->
             <div class="grid grid-cols-4 items-center gap-6 mt-6">
                 <div class="md:col-start-2">
-                    <button type="button" id="btnUpdate" class="btn bg-info text-white">
-                        Simpan Perubahan
+                    <button type="button" id="btnUpdate" class="btn bg-blue-600 hover:bg-blue-700 text-white">
+                        Simpan Data
                     </button>
                 </div>
             </div>
@@ -120,9 +131,9 @@
                 text: "Data lama akan diperbarui dengan informasi baru.",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Simpan',
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#4B5563',
+                confirmButtonText: 'Ya, simpan!',
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {

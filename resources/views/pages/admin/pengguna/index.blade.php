@@ -115,8 +115,8 @@
                         text: 'Data yang dihapus tidak bisa dikembalikan!',
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#6c757d',
+                        confirmButtonColor: '#DC2626',
+                        cancelButtonColor: '#4B5563',
                         confirmButtonText: 'Ya, hapus!',
                         cancelButtonText: 'Batal'
                     }).then((result) => {
