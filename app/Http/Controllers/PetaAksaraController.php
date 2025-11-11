@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Wilayah;
 use App\Models\Aksara;
+use Illuminate\Http\Request;
 
 class PetaAksaraController extends Controller
 {
@@ -25,9 +24,11 @@ class PetaAksaraController extends Controller
 
         // ======== LOGIKA FILTER DINAMIS ========
 
-        // 1️⃣ Jika filter aksara ada dan bukan “Semua Sastra”
+        // 1️⃣ Jika filter aksara ada dan bukan “Semua Aksara”
         if (!empty($selectedAksara) && !in_array('Semua Aksara', $selectedAksara)) {
-            $aksaraQuery->whereIn('nama_aksara', $selectedAksara);
+            $aksaraQuery->whereHas('namaAksara', function ($q) use ($selectedAksara) {
+                $q->whereIn('nama_aksara', $selectedAksara);
+            });
         }
 
         // 2️⃣ Jika filter wilayah ada dan bukan “Semua Wilayah”
@@ -44,16 +45,22 @@ class PetaAksaraController extends Controller
         $wilayah = $wilayahQuery->get();
 
         // Pisahkan koordinat menjadi lat/lng
-        $aksaraList = $aksaraQuery->get()->map(function ($b) {
-            if ($b->koordinat) {
-                [$lat, $lng] = explode(',', $b->koordinat);
-                $b->lat = (float) trim($lat);
-                $b->lng = (float) trim($lng);
+        $aksaraList = $aksaraQuery->with(['namaAksara', 'wilayah'])->get()->map(function ($a) {
+            if ($a->koordinat) {
+                [$lat, $lng] = explode(',', $a->koordinat);
+                $a->lat = (float) trim($lat);
+                $a->lng = (float) trim($lng);
             } else {
-                $b->lat = null;
-                $b->lng = null;
+                $a->lat = null;
+                $a->lng = null;
             }
-            return $b;
+
+            // Ambil nama aksara & wilayah dari relasi agar JS tidak menerima object
+            $a->nama_aksara = $a->namaAksara->nama_aksara ?? $a->nama_aksara ?? 'Tidak diketahui';
+            $a->wilayah = $a->wilayah->nama_wilayah ?? 'Tidak diketahui';
+            $a->alamat = $a->alamat ?? ($a->wilayah->alamat ?? 'Alamat tidak tersedia');
+            $a->warna_pin = $a->namaAksara->warna_pin ?? '#1E90FF';
+            return $a;
         });
 
         // Kirim semua ke view
@@ -67,23 +74,10 @@ class PetaAksaraController extends Controller
         ));
     }
 
-    // public function index()
-    // {
-    //     $wilayah = Wilayah::with('aksara')->get();
-
-    //     // Ambil daftar aksara unik berdasarkan nama_aksara
-    //     $aksaraList = Aksara::select('nama_aksara')
-    //         ->groupBy('nama_aksara')
-    //         ->get();
-
-    //     return view('pages.aksara', compact('wilayah', 'aksaraList'));
-    // }
-
     public function show($id)
     {
         $aksara = Aksara::with('wilayah')->findOrFail($id);
 
         return view('pages.detail-aksara', compact('aksara'));
     }
-
 }

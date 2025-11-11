@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Wilayah;
 use App\Models\Sastra;
+
+use Illuminate\Http\Request;
 
 class PetaSastraController extends Controller
 {
@@ -19,7 +18,6 @@ class PetaSastraController extends Controller
         $allWilayah = Wilayah::all();
         $allSastra = Sastra::all()->unique('nama_sastra')->values();
 
-
         // Mulai query dasar
         $wilayahQuery = Wilayah::with('sastra');
         $sastraQuery = Sastra::query();
@@ -28,7 +26,9 @@ class PetaSastraController extends Controller
 
         // 1️⃣ Jika filter sastra ada dan bukan “Semua Sastra”
         if (!empty($selectedSastra) && !in_array('Semua Sastra', $selectedSastra)) {
-            $sastraQuery->whereIn('nama_sastra', $selectedSastra);
+            $sastraQuery->whereHas('namaSastra', function ($q) use ($selectedSastra) {
+                $q->whereIn('nama_sastra', $selectedSastra);
+            });
         }
 
         // 2️⃣ Jika filter wilayah ada dan bukan “Semua Wilayah”
@@ -45,16 +45,22 @@ class PetaSastraController extends Controller
         $wilayah = $wilayahQuery->get();
 
         // Pisahkan koordinat menjadi lat/lng
-        $sastraList = $sastraQuery->get()->map(function ($b) {
-            if ($b->koordinat) {
-                [$lat, $lng] = explode(',', $b->koordinat);
-                $b->lat = (float) trim($lat);
-                $b->lng = (float) trim($lng);
+        $sastraList = $sastraQuery->with(['namaSastra', 'wilayah'])->get()->map(function ($s) {
+            if ($s->koordinat) {
+                [$lat, $lng] = explode(',', $s->koordinat);
+                $s->lat = (float) trim($lat);
+                $s->lng = (float) trim($lng);
             } else {
-                $b->lat = null;
-                $b->lng = null;
+                $s->lat = null;
+                $s->lng = null;
             }
-            return $b;
+
+            // Ambil nama sastra & wilayah dari relasi agar JS tidak menerima object
+            $s->nama_sastra = $s->namaSastra->nama_sastra ?? $s->nama_sastra ?? 'Tidak diketahui';
+            $s->wilayah = $s->wilayah->nama_wilayah ?? 'Tidak diketahui';
+            $s->alamat = $s->alamat ?? ($s->wilayah->alamat ?? 'Alamat tidak tersedia');
+            $s->warna_pin = $s->namaSastra->warna_pin ?? '#1E90FF';
+            return $s;
         });
 
         // Kirim semua ke view
@@ -67,19 +73,6 @@ class PetaSastraController extends Controller
             'selectedWilayah'
         ));
     }
-
-    // public function index()
-    // {
-    //     $wilayah = Wilayah::with('sastra')->get();
-
-    //     $sastraList = Sastra::select('nama_sastra')
-    //         ->groupBy('nama_sastra')
-    //         ->get();
-
-    //     return view('pages.sastra', compact('wilayah', 'sastraList'));
-    // }
-
-
 
     public function show($id)
     {

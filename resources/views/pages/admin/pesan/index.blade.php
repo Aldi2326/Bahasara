@@ -9,19 +9,19 @@
 
     <!-- Table -->
     <div class="overflow-x-auto bg-white">
-        <table class="min-w-full divide-y divide-gray-200 text-sm text-center">
-            <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-semibold">
+        <table class="min-w-full border border-gray-200 text-sm">
+            <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-semibold text-center">
                 <tr>
-                    <th class="px-4 py-3 w-[50px]">No</th>
-                    <th class="px-4 py-3">Nama</th>
-                    <th class="px-4 py-3">Email</th>
-                    <th class="px-4 py-3">Subjek</th>
+                    <th class="px-4 py-3 w-[60px]">No</th>
+                    <th class="px-4 py-3 w-[160px]">Nama</th>
+                    <th class="px-4 py-3 w-[220px]">Email</th>
+                    <th class="px-4 py-3 w-[180px]">Subjek</th>
                     <th class="px-4 py-3 w-[300px]">Pesan</th>
                     <th class="px-4 py-3 w-[100px]">Aksi</th>
                 </tr>
             </thead>
 
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-gray-100 text-center">
                 @forelse ($kontaks as $index => $kontak)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-4 py-3 text-gray-700 font-medium">{{ $index + 1 }}</td>
