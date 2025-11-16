@@ -29,11 +29,17 @@
             <div class="mb-4" data-aos="fade-left" data-aos-duration="700">
                 <h6 class="text-muted">Status Bahasa</h6>
                 <span
-                    class="badge 
-                @if (strtolower($bahasa->status) == 'aktif') bg-success text-white
-                @elseif (strtolower($bahasa->status) == 'terancam punah') bg-warning text-dark
-                @else bg-danger text-white @endif
-                fs-6 px-3 py-2 rounded-pill">
+                    class="badge text-white fs-6 px-3 py-2 rounded-pill"
+                    style="
+            @switch($bahasa->status)
+                @case('Aman') background-color: #22C55E; @break
+                @case('Rentan') background-color: #EAB308; @break
+                @case('Pasti Terancam Punah') background-color: #F59E0B; @break
+                @case('Sangat Terancam Punah') background-color: #EF4444; @break
+                @case('Kritis') background-color: #7F1D1D; @break
+                @default background-color: #94A3B8;
+            @endswitch
+        ">
                     {{ $bahasa->status }}
                 </span>
             </div>

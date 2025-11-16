@@ -44,6 +44,9 @@ Route::get('/kontak', function () {
 });
 Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
 
+Route::get('/pengumuman', [PengumumanController::class, 'indexUser'])->name('pengumuman-user.index');
+Route::get('/pengumuman/{id}', [PengumumanController::class, 'showPengumumanUser'])->name('pengumuman-user.show');
+
 // ADMIN AREA (Perlu Login)
 Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [DashboardAdminController::class, 'index'])->name('dashboard');

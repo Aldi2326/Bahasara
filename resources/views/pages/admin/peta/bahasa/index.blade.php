@@ -49,7 +49,7 @@ $nextOrder = $sortOrder === 'asc' ? 'desc' : 'asc';
                     </th>
                     <th class="px-4 py-3 w-[160px]">Nama Bahasa</th>
                     <th class="px-4 py-3 w-[200px]">Alamat</th>
-                    <th class="px-4 py-3 w-[100px]">Status Bahasa</th>
+                    <th class="px-4 py-3 w-[140px]">Status Bahasa</th>
                     <th class="px-4 py-3 w-[140px]">Jumlah Penutur</th>
                     <th class="px-4 py-3 w-[220px]">Deskripsi</th>
                     <th class="px-4 py-3 w-[220px]">Dokumentasi</th>
@@ -71,23 +71,24 @@ $nextOrder = $sortOrder === 'asc' ? 'desc' : 'asc';
                         {{ Str::limit(strip_tags($item->alamat), 30) }}
                     </td>
 
-                    <td class="px-4 py-3">
-                        <span
-                            class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium
-        @switch($item->status)
-            @case('Aktif') bg-green-500 text-white @break
-            @case('Tidak Aktif') bg-red-500 text-white @break
-            @case('menunggu') bg-yellow-500 text-white @break
-            @case('ditolak') bg-gray-500 text-white @break
-            @case('disetujui') bg-blue-500 text-white @break
-            @case('proses') bg-orange-500 text-white @break
-            @case('selesai') bg-emerald-500 text-white @break
-            @default bg-slate-400 text-white
-        @endswitch">
-                            {{ $item->status }}
-                        </span>
+                    <td class="px-4 py-3 whitespace-nowrap">
+    <span
+        class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium text-white"
+        style="
+            @switch($item->status)
+                @case('Aman') background-color: #22C55E; @break
+                @case('Rentan') background-color: #EAB308; @break
+                @case('Pasti Terancam Punah') background-color: #F59E0B; @break
+                @case('Sangat Terancam Punah') background-color: #EF4444; @break
+                @case('Kritis') background-color: #7F1D1D; @break
+                @default background-color: #94A3B8;
+            @endswitch
+        "
+    >
+        {{ $item->status }}
+    </span>
+</td>
 
-                    </td>
 
                     <td class="px-4 py-3 text-gray-700">{{ number_format($item->jumlah_penutur) }}</td>
 
@@ -97,18 +98,18 @@ $nextOrder = $sortOrder === 'asc' ? 'desc' : 'asc';
                     </td>
 
                     <td class="px-4 py-3 text-center">
-                            @if ($item->dokumentasi)
-                                @if (Str::endsWith($item->dokumentasi, ['.mp4', '.mov', '.avi']))
-                                    <video src="{{ asset('storage/' . $item->dokumentasi) }}" width="90" controls
-                                        class="rounded shadow mx-auto"></video>
-                                @else
-                                    <img src="{{ asset('storage/' . $item->dokumentasi) }}" alt="dokumentasi"
-                                        width="80" class="rounded shadow mx-auto">
-                                @endif
+                        @if ($item->dokumentasi)
+                            @if (Str::endsWith($item->dokumentasi, ['.mp4', '.mov', '.avi']))
+                                <video src="{{ asset('storage/' . $item->dokumentasi) }}" width="90" controls
+                                    class="rounded shadow mx-auto"></video>
                             @else
-                                <span class="text-gray-400">-</span>
+                                <img src="{{ asset('storage/' . $item->dokumentasi) }}" alt="dokumentasi"
+                                    width="80" class="rounded shadow mx-auto">
                             @endif
-                        </td>
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
 
                     <td class="px-4 py-3 text-gray-700">{{ $item->koordinat ?? '-' }}</td>
 

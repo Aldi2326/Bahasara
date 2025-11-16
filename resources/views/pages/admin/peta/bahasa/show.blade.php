@@ -29,12 +29,27 @@
             <!-- Status Bahasa -->
             <div>
                 <h5 class="text-sm text-default-500">Status Bahasa</h5>
-                @if ($bahasa->status === 'aktif')
-                <span class="px-3 py-1 rounded bg-green-500 text-white text-sm font-medium">Aktif</span>
-                @else
-                <span class="px-3 py-1 rounded bg-red-500 text-white text-sm font-medium">Tidak Aktif</span>
-                @endif
+                @switch($bahasa->status)
+                @case('Aman')
+                <span class="px-3 py-1 rounded text-white text-sm font-medium" style="background-color: #22C55E;">Aman</span>
+                @break
+                @case('Rentan')
+                <span class="px-3 py-1 rounded text-black text-sm font-medium" style="background-color: #EAB308;">Rentan</span>
+                @break
+                @case('Pasti Terancam Punah')
+                <span class="px-3 py-1 rounded text-white text-sm font-medium" style="background-color: #F59E0B;">Pasti Terancam Punah</span>
+                @break
+                @case('Sangat Terancam Punah')
+                <span class="px-3 py-1 rounded text-white text-sm font-medium" style="background-color: #EF4444;">Sangat Terancam Punah</span>
+                @break
+                @case('Kritis')
+                <span class="px-3 py-1 rounded text-white text-sm font-medium" style="background-color: #7F1D1D;">Kritis</span>
+                @break
+                @default
+                <span class="px-3 py-1 rounded text-black text-sm font-medium" style="background-color: #94A3B8;">Tidak Diketahui</span>
+                @endswitch
             </div>
+
 
             <!-- Jumlah Penutur -->
             <div>

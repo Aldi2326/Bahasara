@@ -111,7 +111,7 @@
             <ul class="admin-menu hs-accordion-group flex w-full flex-col gap-1">
                 <li class="px-3 py-2 text-xs uppercase font-medium text-default-500">Manajemen Sistem</li>
                 <li class="menu-item">
-                    <a class="group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5"
+                    <!-- <a class="group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5"
                         href="/admin/pengumuman">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-megaphone-icon lucide-megaphone">
                             <path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
@@ -119,7 +119,7 @@
                             <path d="M8 6v8" />
                         </svg>
                         Pengumuman
-                    </a>
+                    </a> -->
                 </li>
                 <li class="menu-item">
                     <a class="group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5"

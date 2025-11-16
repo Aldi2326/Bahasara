@@ -67,8 +67,11 @@
                 <div class="md:col-span-3">
                     <select name="status" id="status_bahasa" class="form-select" required>
                         <option value="">-- Pilih Status --</option>
-                        <option value="Aktif">Aktif</option>
-                        <option value="Tidak Aktif">Tidak Aktif</option>
+                        <option value="Aman">Aman</option>
+                        <option value="Rentan">Rentan</option>
+                        <option value="Pasti Terancam Punah">Pasti Terancam Punah</option>
+                        <option value="Sangat Terancam Punah">Sangat Terancam Punah</option>
+                        <option value="Kritis">Kritis</option>
                     </select>
                 </div>
             </div>

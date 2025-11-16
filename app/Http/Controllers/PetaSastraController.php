@@ -12,9 +12,10 @@ class PetaSastraController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil filter dari request (array)
+        // Ambil input filter & pencarian dari request
         $selectedSastra = $request->input('sastra', []);
         $selectedWilayah = $request->input('wilayah', []);
+        $search = $request->input('search'); // ← tambahkan variabel search
 
         // Ambil semua data untuk dropdown
         $allWilayah = Wilayah::all();
@@ -26,14 +27,14 @@ class PetaSastraController extends Controller
 
         // ======== LOGIKA FILTER DINAMIS ========
 
-        // 1️⃣ Jika filter sastra ada dan bukan “Semua Sastra”
+        // Filter Sastra
         if (!empty($selectedSastra) && !in_array('Semua Sastra', $selectedSastra)) {
             $sastraQuery->whereHas('namaSastra', function ($q) use ($selectedSastra) {
                 $q->whereIn('nama_sastra', $selectedSastra);
             });
         }
 
-        // 2️⃣ Jika filter wilayah ada dan bukan “Semua Wilayah”
+        // Filter Wilayah
         if (!empty($selectedWilayah) && !in_array('Semua Wilayah', $selectedWilayah)) {
             $wilayahQuery->whereIn('nama_wilayah', $selectedWilayah);
             $sastraQuery->whereHas('wilayah', function ($q) use ($selectedWilayah) {
@@ -41,12 +42,28 @@ class PetaSastraController extends Controller
             });
         }
 
-        // =======================================
+        // ======== FITUR PENCARIAN (SEARCH) ========
+        if (!empty($search)) {
+            $sastraQuery->where(function ($q) use ($search) {
+                // cari lewat relasi namaSastra
+                $q->whereHas('namaSastra', function ($ns) use ($search) {
+                    $ns->where('nama_sastra', 'like', "%{$search}%");
+                })
+                    // cari berdasarkan alamat di tabel sastra
+                    ->orWhere('alamat', 'like', "%{$search}%")
+                    // cari lewat relasi wilayah
+                    ->orWhereHas('wilayah', function ($w) use ($search) {
+                        $w->where('nama_wilayah', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // ===========================================
 
         // Ambil data hasil filter
         $wilayah = $wilayahQuery->get();
 
-        // Pisahkan koordinat menjadi lat/lng
+        // Mapping data sastra agar siap dipakai di peta
         $sastraList = $sastraQuery->with(['namaSastra', 'wilayah'])->get()->map(function ($s) {
             if ($s->koordinat) {
                 [$lat, $lng] = explode(',', $s->koordinat);
@@ -57,7 +74,6 @@ class PetaSastraController extends Controller
                 $s->lng = null;
             }
 
-            // Ambil nama sastra & wilayah dari relasi agar JS tidak menerima object
             $s->nama_sastra = $s->namaSastra->nama_sastra ?? $s->nama_sastra ?? 'Tidak diketahui';
             $s->wilayah = $s->wilayah->nama_wilayah ?? 'Tidak diketahui';
             $s->alamat = $s->alamat ?? ($s->wilayah->alamat ?? 'Alamat tidak tersedia');
@@ -78,6 +94,7 @@ class PetaSastraController extends Controller
             'namaSastraAll'
         ));
     }
+
 
     public function show($id)
     {

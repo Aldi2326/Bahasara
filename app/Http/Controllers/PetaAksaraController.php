@@ -11,28 +11,29 @@ class PetaAksaraController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil filter dari request (array)
+        // Ambil filter dari request
         $selectedAksara = $request->input('aksara', []);
         $selectedWilayah = $request->input('wilayah', []);
+        $search = $request->input('search'); // 🔍 ambil keyword search
 
         // Ambil semua data untuk dropdown
         $allWilayah = Wilayah::all();
         $allAksara = Aksara::all()->unique('nama_aksara')->values();
 
-        // Mulai query dasar
+        // Query dasar
         $wilayahQuery = Wilayah::with('aksara');
         $aksaraQuery = Aksara::query();
 
-        // ======== LOGIKA FILTER DINAMIS ========
+        // ========== FILTER ==========
 
-        // 1️⃣ Jika filter aksara ada dan bukan “Semua Aksara”
+        // Filter Aksara
         if (!empty($selectedAksara) && !in_array('Semua Aksara', $selectedAksara)) {
             $aksaraQuery->whereHas('namaAksara', function ($q) use ($selectedAksara) {
                 $q->whereIn('nama_aksara', $selectedAksara);
             });
         }
 
-        // 2️⃣ Jika filter wilayah ada dan bukan “Semua Wilayah”
+        // Filter Wilayah
         if (!empty($selectedWilayah) && !in_array('Semua Wilayah', $selectedWilayah)) {
             $wilayahQuery->whereIn('nama_wilayah', $selectedWilayah);
             $aksaraQuery->whereHas('wilayah', function ($q) use ($selectedWilayah) {
@@ -40,7 +41,20 @@ class PetaAksaraController extends Controller
             });
         }
 
-        // =======================================
+        // ========== SEARCH ==========
+        if (!empty($search)) {
+            $aksaraQuery->where(function ($q) use ($search) {
+                $q->whereHas('namaAksara', function ($na) use ($search) {
+                    $na->where('nama_aksara', 'like', "%{$search}%");
+                })
+                    ->orWhere('alamat', 'like', "%{$search}%")
+                    ->orWhereHas('wilayah', function ($w) use ($search) {
+                        $w->where('nama_wilayah', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // ============================
 
         // Ambil data hasil filter
         $wilayah = $wilayahQuery->get();
@@ -56,7 +70,7 @@ class PetaAksaraController extends Controller
                 $a->lng = null;
             }
 
-            // Ambil nama aksara & wilayah dari relasi agar JS tidak menerima object
+            // Format data untuk frontend
             $a->nama_aksara = $a->namaAksara->nama_aksara ?? $a->nama_aksara ?? 'Tidak diketahui';
             $a->wilayah = $a->wilayah->nama_wilayah ?? 'Tidak diketahui';
             $a->alamat = $a->alamat ?? ($a->wilayah->alamat ?? 'Alamat tidak tersedia');
@@ -65,9 +79,8 @@ class PetaAksaraController extends Controller
         });
 
         $namaAksaraAll = NamaAksara::all();
-        
 
-        // Kirim semua ke view
+        // Kirim ke view
         return view('pages.aksara', compact(
             'wilayah',
             'aksaraList',
@@ -78,6 +91,7 @@ class PetaAksaraController extends Controller
             'namaAksaraAll'
         ));
     }
+
 
     public function show($id)
     {

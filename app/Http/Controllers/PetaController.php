@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Wilayah;
 use App\Models\Bahasa;
 use App\Models\NamaBahasa;
@@ -13,26 +14,26 @@ class PetaController extends Controller
         // Ambil filter dari request (array)
         $selectedBahasa = $request->input('bahasa', []);
         $selectedWilayah = $request->input('wilayah', []);
+        $search = $request->input('search'); // ✅ ambil kata kunci pencarian
 
         // Ambil semua data untuk dropdown
         $allWilayah = Wilayah::all();
         $allBahasa = Bahasa::all()->unique('nama_bahasa')->values();
-        
+
         // Mulai query dasar
         $wilayahQuery = Wilayah::with('bahasa');
         $bahasaQuery = Bahasa::query();
 
         // ======== LOGIKA FILTER DINAMIS ========
 
-        // 1️⃣ Jika filter bahasa ada dan bukan “Semua Bahasa”
+        // 1️⃣ Filter bahasa
         if (!empty($selectedBahasa) && !in_array('Semua Bahasa', $selectedBahasa)) {
             $bahasaQuery->whereHas('namaBahasa', function ($q) use ($selectedBahasa) {
                 $q->whereIn('nama_bahasa', $selectedBahasa);
             });
-
         }
 
-        // 2️⃣ Jika filter wilayah ada dan bukan “Semua Wilayah”
+        // 2️⃣ Filter wilayah
         if (!empty($selectedWilayah) && !in_array('Semua Wilayah', $selectedWilayah)) {
             $wilayahQuery->whereIn('nama_wilayah', $selectedWilayah);
             $bahasaQuery->whereHas('wilayah', function ($q) use ($selectedWilayah) {
@@ -40,12 +41,25 @@ class PetaController extends Controller
             });
         }
 
+        // 3️⃣ Filter pencarian umum (nama bahasa atau wilayah)
+        if (!empty($search)) {
+            $bahasaQuery->where(function ($q) use ($search) {
+                // cari di relasi namaBahasa
+                $q->whereHas('namaBahasa', function ($q1) use ($search) {
+                    $q1->where('nama_bahasa', 'LIKE', "%{$search}%");
+                })
+                    // cari di relasi wilayah
+                    ->orWhereHas('wilayah', function ($q2) use ($search) {
+                        $q2->where('nama_wilayah', 'LIKE', "%{$search}%");
+                    });
+            });
+        }
+
+
         // =======================================
 
-        // Ambil data hasil filter
         $wilayah = $wilayahQuery->get();
 
-        // Pisahkan koordinat menjadi lat/lng
         $bahasaList = $bahasaQuery->with(['namaBahasa', 'wilayah'])->get()->map(function ($b) {
             if ($b->koordinat) {
                 [$lat, $lng] = explode(',', $b->koordinat);
@@ -56,7 +70,6 @@ class PetaController extends Controller
                 $b->lng = null;
             }
 
-            // Ambil nama bahasa & wilayah dari relasi agar JS tidak menerima object
             $b->nama_bahasa = $b->namaBahasa->nama_bahasa ?? $b->nama_bahasa ?? 'Tidak diketahui';
             $b->wilayah = $b->wilayah->nama_wilayah ?? 'Tidak diketahui';
             $b->alamat = $b->alamat ?? ($b->wilayah->alamat ?? 'Alamat tidak tersedia');
@@ -66,8 +79,6 @@ class PetaController extends Controller
 
         $namaBahasaAll = NamaBahasa::all();
 
-
-        // Kirim semua ke view
         return view('pages.peta', compact(
             'wilayah',
             'bahasaList',
@@ -76,8 +87,10 @@ class PetaController extends Controller
             'selectedBahasa',
             'selectedWilayah',
             'namaBahasaAll',
+            'search', // ✅ dikirim ke view biar bisa tetap tampil di input
         ));
     }
+
 
     public function show($id)
     {

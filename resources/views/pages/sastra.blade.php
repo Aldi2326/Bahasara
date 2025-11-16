@@ -7,6 +7,19 @@
     <div style="position: relative;">
 
         <!-- Filter -->
+        <form action="{{ route('peta.sastra') }}" method="GET" class="search-control-input flex gap-2">
+            <input
+                type="text"
+                name="search"
+                placeholder="Cari sastra atau wilayah..."
+                value="{{ request('search') }}"
+                style="width: 260px; padding: 6px; border-radius: 12px; border: 1px solid #ccc;">
+            <button type="submit" class="btn"
+                    style="background-color: #1b81ae; color: white; border: none; border-radius: 12px; padding: 6px 16px;">
+                    Cari
+                </button>
+        </form>
+
         <form action="{{ route('peta.sastra') }}" method="GET" id="filterForm">
             <div class="search-control d-flex flex-wrap gap-3">
 
@@ -100,9 +113,17 @@
 
     .search-control {
         position: absolute;
-        top: 15px;
+        top: 60px;
         left: calc(var(--bs-gutter-x, 1.5rem));
         z-index: 1000;
+        padding: 10px;
+    }
+
+    .search-control-input {
+        position: absolute;
+        top: 15px;
+        left: calc(var(--bs-gutter-x, 1.5rem));
+        z-index: 900;
         padding: 10px;
     }
 
@@ -154,6 +175,7 @@
         border-radius: var(--radius-smooth);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+
     /* Saat legend-card dalam keadaan collapsed */
     .legend-card.collapsed #legendContent {
         display: none;

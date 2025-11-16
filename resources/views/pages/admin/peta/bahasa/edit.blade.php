@@ -69,8 +69,11 @@
                 <div class="md:col-span-3">
                     <select name="status" id="status_bahasa" class="form-select" required>
                         <option value="">-- Pilih Status --</option>
-                        <option value="Aktif" {{ $bahasa->status == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="Tidak Aktif" {{ $bahasa->status == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                        <option value="Aman" {{ $bahasa->status == 'Aman' ? 'selected' : '' }}>Aman</option>
+                        <option value="Rentan" {{ $bahasa->status == 'Rentan' ? 'selected' : '' }}>Rentan</option>
+                        <option value="Pasti Terancam Punah" {{ $bahasa->status == 'Pasti Terancam Punah' ? 'selected' : '' }}>Pasti Terancam Punah</option>
+                        <option value="Sangat Terancam Punah" {{ $bahasa->status == 'Sangat Terancam Punah' ? 'selected' : '' }}>Sangat Terancam Punah</option>
+                        <option value="Kritis" {{ $bahasa->status == 'Kritis' ? 'selected' : '' }}>Kritis</option>
                     </select>
                 </div>
             </div>

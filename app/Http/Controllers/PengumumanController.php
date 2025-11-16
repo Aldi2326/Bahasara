@@ -10,6 +10,18 @@ class PengumumanController extends Controller
     /**
      * Menampilkan daftar pengumuman dengan fitur pencarian.
      */
+
+    public function indexUser() {
+        return view('pages.pengumuman.index');
+    }
+
+    public function showPengumumanUser($id)
+    {
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        return view('pages.pengumuman.show', compact('pengumuman'));
+    }
+
     public function index(Request $request)
     {
         $search = $request->input('search');

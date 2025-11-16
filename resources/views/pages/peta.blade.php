@@ -7,62 +7,78 @@
     <div style="position: relative;">
 
         <!-- Filter -->
-        <form action="{{ route('peta.index') }}" method="GET" id="filterForm">
-            <div class="search-control d-flex flex-wrap gap-3">
+        <div>
+            <form action="{{ route('peta.index') }}" method="GET" class="search-control-input flex gap-2">
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Cari bahasa atau wilayah..."
+                    value="{{ request('search') }}"
+                    style="width: 260px; padding: 6px; border-radius: 12px; border: 1px solid #ccc;">
+                <button type="submit" class="btn"
+                    style="background-color: #1b81ae; color: white; border: none; border-radius: 12px; padding: 6px 16px;">
+                    Cari
+                </button>
+            </form>
 
-                <!-- Multi-select Bahasa -->
-                <div class="dropdown" style="margin-right: 10px;">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownBahasa"
-                        data-bs-toggle="dropdown" aria-expanded="false">-- Pilih Bahasa --</button>
-                    <ul class="dropdown-menu p-2" style="max-height: 250px; overflow-y: auto;" id="bahasaListDropdown">
-                        <li>
-                            <label class="dropdown-item d-flex align-items-center gap-2">
-                                <input class="form-check-input bahasa-checkbox" type="checkbox" name="bahasa[]"
-                                    value="Semua Bahasa">
-                                <span>Semua Bahasa</span>
-                            </label>
-                        </li>
-                        @foreach ($namaBahasaAll as $b)
-                        <li>
-                            <label class="dropdown-item d-flex align-items-center gap-2">
-                                <input class="form-check-input bahasa-checkbox" type="checkbox" name="bahasa[]"
-                                    value="{{ $b->nama_bahasa }}"
-                                    {{ !empty($selectedBahasa) && in_array($b->nama_bahasa, $selectedBahasa) ? 'checked' : '' }}>
-                                <span>{{ $b->nama_bahasa }}</span>
-                            </label>
-                        </li>
-                        @endforeach
-                    </ul>
+            <form action="{{ route('peta.index') }}" method="GET" id="filterForm">
+                <div class="search-control d-flex flex-wrap gap-3">
+                    <!-- Multi-select Bahasa -->
+                    <div class="dropdown" style="margin-right: 10px;">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownBahasa"
+                            data-bs-toggle="dropdown" aria-expanded="false">-- Pilih Bahasa --</button>
+                        <ul class="dropdown-menu p-2" style="max-height: 250px; overflow-y: auto;" id="bahasaListDropdown">
+                            <li>
+                                <label class="dropdown-item d-flex align-items-center gap-2">
+                                    <input class="form-check-input bahasa-checkbox" type="checkbox" name="bahasa[]"
+                                        value="Semua Bahasa">
+                                    <span>Semua Bahasa</span>
+                                </label>
+                            </li>
+                            @foreach ($namaBahasaAll as $b)
+                            <li>
+                                <label class="dropdown-item d-flex align-items-center gap-2">
+                                    <input class="form-check-input bahasa-checkbox" type="checkbox" name="bahasa[]"
+                                        value="{{ $b->nama_bahasa }}"
+                                        {{ !empty($selectedBahasa) && in_array($b->nama_bahasa, $selectedBahasa) ? 'checked' : '' }}>
+                                    <span>{{ $b->nama_bahasa }}</span>
+                                </label>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <!-- Multi-select Wilayah -->
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownWilayah"
+                            data-bs-toggle="dropdown" aria-expanded="false">-- Pilih Wilayah --</button>
+                        <ul class="dropdown-menu p-2" style="max-height: 250px; overflow-y: auto;" id="wilayahListDropdown">
+                            <li>
+                                <label class="dropdown-item d-flex align-items-center gap-2">
+                                    <input class="form-check-input wilayah-checkbox" type="checkbox" name="wilayah[]"
+                                        value="Semua Wilayah"
+                                        {{ !empty($selectedWilayah) && in_array('Semua Wilayah', $selectedWilayah) ? 'checked' : '' }}>
+                                    <span>Semua Wilayah</span>
+                                </label>
+                            </li>
+                            @foreach ($allWilayah as $w)
+                            <li>
+                                <label class="dropdown-item d-flex align-items-center gap-2">
+                                    <input class="form-check-input wilayah-checkbox" type="checkbox" name="wilayah[]"
+                                        value="{{ $w->nama_wilayah }}"
+                                        {{ !empty($selectedWilayah) && in_array($w->nama_wilayah, $selectedWilayah) ? 'checked' : '' }}>
+                                    <span>{{ $w->nama_wilayah }}</span>
+                                </label>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
                 </div>
+            </form>
 
-                <!-- Multi-select Wilayah -->
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownWilayah"
-                        data-bs-toggle="dropdown" aria-expanded="false">-- Pilih Wilayah --</button>
-                    <ul class="dropdown-menu p-2" style="max-height: 250px; overflow-y: auto;" id="wilayahListDropdown">
-                        <li>
-                            <label class="dropdown-item d-flex align-items-center gap-2">
-                                <input class="form-check-input wilayah-checkbox" type="checkbox" name="wilayah[]"
-                                    value="Semua Wilayah"
-                                    {{ !empty($selectedWilayah) && in_array('Semua Wilayah', $selectedWilayah) ? 'checked' : '' }}>
-                                <span>Semua Wilayah</span>
-                            </label>
-                        </li>
-                        @foreach ($allWilayah as $w)
-                        <li>
-                            <label class="dropdown-item d-flex align-items-center gap-2">
-                                <input class="form-check-input wilayah-checkbox" type="checkbox" name="wilayah[]"
-                                    value="{{ $w->nama_wilayah }}"
-                                    {{ !empty($selectedWilayah) && in_array($w->nama_wilayah, $selectedWilayah) ? 'checked' : '' }}>
-                                <span>{{ $w->nama_wilayah }}</span>
-                            </label>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
+        </div>
 
-            </div>
-        </form>
 
         <!-- Peta -->
         <div id="map" style="height: 680px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border-radius:12px;"></div>
@@ -98,11 +114,19 @@
         border-radius: var(--radius-smooth) !important;
     }
 
-    .search-control {
+    .search-control-input {
         position: absolute;
         top: 15px;
         left: calc(var(--bs-gutter-x, 1.5rem));
-        z-index: 1000;
+        z-index: 900;
+        padding: 10px;
+    }
+
+    .search-control {
+        position: absolute;
+        top: 60px;
+        left: calc(var(--bs-gutter-x, 1.5rem));
+        z-index: 900;
         padding: 10px;
     }
 
