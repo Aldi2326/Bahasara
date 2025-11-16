@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->string('status');
             $table->integer('jumlah_penutur');
             $table->text('deskripsi');
-            $table->string('dokumentasi');
             $table->string('koordinat');
             $table->timestamps();
         });

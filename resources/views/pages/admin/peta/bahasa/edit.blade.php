@@ -95,15 +95,6 @@
                 </div>
             </div>
 
-            <!-- Dokumentasi -->
-            <div class="grid grid-cols-4 items-start gap-6">
-                <label for="dokumentasi" class="text-default-800 text-sm font-medium">Dokumentasi</label>
-                <div class="md:col-span-3">
-                    <input type="file" name="dokumentasi" id="dokumentasi" class="form-input" accept="image/*,video/*">
-                    <p class="mt-1 text-xs text-default-500">Unggah file foto (.jpg, .png) atau video (.mp4, .mov, dll). Maksimal 20MB.</p>
-                </div>
-            </div>
-
             <!-- Koordinat -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="koordinat" class="text-default-800 text-sm font-medium">Koordinat</label>

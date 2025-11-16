@@ -33,8 +33,50 @@
                 <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-semibold">
                     <tr>
                         <th class="px-4 py-3">No</th>
-                        <th class="px-4 py-3">Judul</th>
-                        <th class="px-4 py-3">Tanggal</th>
+                        <th class="px-4 py-3 w-[250px]">
+                            <div class="flex justify-center items-center gap-1">
+                                <span>Judul</span>
+                                @php
+                                    $nextOrder = $sortBy === 'judul' && $sortDir === 'asc' ? 'desc' : 'asc';
+                                @endphp
+                                <a href="{{ route('pengumuman.index', [
+                                    'search' => request('search'),
+                                    'sort_by' => 'judul',
+                                    'sort_dir' => $nextOrder,
+                                ]) }}"
+                                    class="text-gray-600 hover:text-blue-600">
+                                    @if ($sortBy === 'judul' && $sortDir === 'asc')
+                                        <i class="bi bi-sort-alpha-down"></i>
+                                    @elseif ($sortBy === 'judul' && $sortDir === 'desc')
+                                        <i class="bi bi-sort-alpha-up"></i>
+                                    @else
+                                        <i class="bi bi-arrow-down-up"></i>
+                                    @endif
+                                </a>
+                            </div>
+                        </th>
+                        <th class="px-4 py-3 w-[250px]">
+                            <div class="flex justify-center items-center gap-1">
+                                <span>Tanggal</span>
+                                @php
+                                    $nextOrder = $sortBy === 'tanggal' && $sortDir === 'asc' ? 'desc' : 'asc';
+                                @endphp
+                                <a href="{{ route('pengumuman.index', [
+                                    'search' => request('search'),
+                                    'sort_by' => 'tanggal',
+                                    'sort_dir' => $nextOrder,
+                                ]) }}"
+                                    class="text-gray-600 hover:text-blue-600">
+                                    @if ($sortBy === 'tanggal' && $sortDir === 'asc')
+                                        <i class="bi bi-sort-numeric-down"></i>
+                                    @elseif ($sortBy === 'tanggal' && $sortDir === 'desc')
+                                        <i class="bi bi-sort-numeric-up"></i>
+                                    @else
+                                        <i class="bi bi-arrow-down-up"></i>
+                                    @endif
+                                </a>
+                            </div>
+                        </th>
                         <th class="px-4 py-3 w-[350px]">Isi Pengumuman</th>
                         <th class="px-4 py-3 w-[200px]">Dokumentasi</th>
                         <th class="px-4 py-3">Aksi</th>

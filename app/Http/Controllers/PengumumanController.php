@@ -11,11 +11,10 @@ class PengumumanController extends Controller
     public function indexUser()
     {
         $pengumuman = Pengumuman::latest()->get();
-
         return view('pages.pengumuman.index', compact('pengumuman'));
     }
 
-
+    // Halaman detail pengumuman untuk user
     public function showPengumumanUser($id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
@@ -25,19 +24,39 @@ class PengumumanController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'tanggal');      // default: tanggal
+        $sortDir = $request->input('sort_dir', 'desc');        // default: desc
 
-        $pengumuman = Pengumuman::when($search, function ($query, $search) {
-            $query->where('judul', 'like', "%{$search}%")
-                ->orWhere('isi', 'like', "%{$search}%");
-        })->latest()->get();
+        $pengumuman = Pengumuman::query()
 
-        return view('pages.admin.pengumuman.index', compact('pengumuman', 'search'));
+            // Pencarian
+            ->when($search, function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                    ->orWhere('isi', 'like', "%{$search}%");
+            })
+
+            // Sorting
+            ->when($sortBy, function ($q) use ($sortBy, $sortDir) {
+
+                // Pastikan hanya kolom yang diperbolehkan yang bisa di-sort
+                $allowedSort = ['judul', 'tanggal', 'created_at'];
+
+                if (in_array($sortBy, $allowedSort)) {
+                    $q->orderBy($sortBy, $sortDir);
+                }
+            })
+
+            ->get();
+
+        return view('pages.admin.pengumuman.index', compact('pengumuman', 'search', 'sortBy', 'sortDir'));
     }
+
 
     public function create()
     {
         return view('pages.admin.pengumuman.create');
     }
+
 
     public function store(Request $request)
     {
@@ -45,14 +64,10 @@ class PengumumanController extends Controller
             'judul' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'isi' => 'required|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
         ]);
 
-        $data = [
-            'judul' => $request->judul,
-            'tanggal' => $request->tanggal,
-            'isi' => $request->isi,
-        ];
+        $data = $request->only(['judul', 'tanggal', 'isi']);
 
         if ($request->hasFile('dokumentasi')) {
             $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/pengumuman', 'public');
@@ -63,11 +78,13 @@ class PengumumanController extends Controller
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan.');
     }
 
+
     public function edit($id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
         return view('pages.admin.pengumuman.edit', compact('pengumuman'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -75,17 +92,14 @@ class PengumumanController extends Controller
             'judul' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'isi' => 'required|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
         ]);
 
         $pengumuman = Pengumuman::findOrFail($id);
 
-        $data = [
-            'judul' => $request->judul,
-            'tanggal' => $request->tanggal,
-            'isi' => $request->isi,
-        ];
+        $data = $request->only(['judul', 'tanggal', 'isi']);
 
+        // Replace file jika upload baru
         if ($request->hasFile('dokumentasi')) {
 
             if ($pengumuman->dokumentasi && Storage::disk('public')->exists($pengumuman->dokumentasi)) {
@@ -102,7 +116,6 @@ class PengumumanController extends Controller
     }
 
 
-
     public function destroy($id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
@@ -113,8 +126,7 @@ class PengumumanController extends Controller
 
         $pengumuman->delete();
 
-        return redirect()->route('pengumuman.index')
-            ->with('success', 'Pengumuman berhasil dihapus.');
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus.');
     }
 
     public function show($id)

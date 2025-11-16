@@ -51,7 +51,7 @@ class WilayahController extends Controller
     {
         $request->validate([
             'nama_wilayah' => 'required|string|max:255',
-            'file_geojson' => 'nullable|file|mimes:geojson,json',
+            'file_geojson' => 'nullable|file|mimes:geojson,json|max:2048',
         ]);
 
         $data = [
@@ -101,7 +101,7 @@ class WilayahController extends Controller
 
         $request->validate([
             'nama_wilayah' => 'required|string|max:255',
-            'file_geojson' => 'nullable|file|mimes:geojson,json',
+            'file_geojson' => 'nullable|file|mimes:geojson,json|max:2048',
         ]);
 
         $data = [

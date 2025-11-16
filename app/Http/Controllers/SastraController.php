@@ -58,7 +58,7 @@ class SastraController extends Controller
             'alamat' => 'required|string',
             'jenis' => 'required|string',
             'deskripsi' => 'required|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
             'koordinat' => 'required|string',
         ]);
 
@@ -89,7 +89,7 @@ class SastraController extends Controller
             'alamat' => 'required|string',
             'jenis' => 'required|string',
             'deskripsi' => 'required|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
             'koordinat' => 'required|string',
         ]);
 

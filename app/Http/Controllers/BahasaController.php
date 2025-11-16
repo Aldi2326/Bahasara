@@ -64,14 +64,8 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer',
             'deskripsi' => 'required|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
             'koordinat' => 'required|string'
         ]);
-
-        // Upload dokumentasi jika ada
-        if ($request->hasFile('dokumentasi')) {
-            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/bahasa', 'public');
-        }
 
         Bahasa::create($data);
 
@@ -99,7 +93,6 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer|min:0',
             'deskripsi' => 'nullable|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
             'koordinat' => 'required|string',
         ]);
 
@@ -114,13 +107,6 @@ class BahasaController extends Controller
             'deskripsi',
             'koordinat'
         ]);
-
-        if ($request->hasFile(key: 'dokumentasi')) {
-            if ($bahasa->dokumentasi && \Storage::disk('public')->exists($bahasa->dokumentasi)) {
-                \Storage::disk('public')->delete($bahasa->dokumentasi);
-            }
-            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/bahasa', 'public');
-        }
 
         $bahasa->update($data);
 
