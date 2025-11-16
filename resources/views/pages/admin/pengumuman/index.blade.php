@@ -3,6 +3,7 @@
 
 @section('content')
     <div class="card overflow-hidden shadow-sm rounded-2xl border border-gray-200">
+
         <!-- Header -->
         <div class="card-header flex justify-between items-center bg-gray-100 px-6 py-4">
             <h4 class="card-title text-lg font-semibold text-gray-800">Daftar Pengumuman</h4>
@@ -26,35 +27,63 @@
             </form>
         </div>
 
-        <!-- Table -->
+        <!-- Tabel -->
         <div class="overflow-x-auto bg-white">
             <table class="min-w-full divide-y divide-gray-200 text-sm text-center">
                 <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-semibold">
                     <tr>
-                        <th class="px-4 py-3 w-[50px] text-center">No</th>
-                        <th class="px-4 py-3 text-center">Judul</th>
-                        <th class="px-4 py-3 w-[400px] text-center">Isi Pengumuman</th>
-                        <th class="px-4 py-3 w-[100px] text-center">Aksi</th>
+                        <th class="px-4 py-3">No</th>
+                        <th class="px-4 py-3">Judul</th>
+                        <th class="px-4 py-3">Tanggal</th>
+                        <th class="px-4 py-3 w-[350px]">Isi Pengumuman</th>
+                        <th class="px-4 py-3 w-[200px]">Dokumentasi</th>
+                        <th class="px-4 py-3">Aksi</th>
                     </tr>
                 </thead>
 
                 <tbody class="divide-y divide-gray-100">
                     @forelse ($pengumuman as $index => $item)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-4 py-3 text-gray-700 font-medium text-center">{{ $index + 1 }}</td>
-                            <td class="px-4 py-3 text-gray-800 text-center">{{ $item->judul }}</td>
-                            <td class="px-4 py-3 text-gray-700 text-center whitespace-normal break-words">
-                                {{ $item->isi }}</td>
+                            <td class="px-4 py-3 font-medium">{{ $index + 1 }}</td>
+
+                            <td class="px-4 py-3 text-gray-800">
+                                {{ $item->judul }}
+                            </td>
+
+                            <td class="px-4 py-3 text-gray-700">
+                                {{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}
+                            </td>
+
+                            <td class="px-4 py-3 text-gray-700 truncate max-w-[220px]" title="{{ strip_tags($item->isi) }}">
+                                {{ Str::limit(strip_tags($item->isi), 40) }}
+                            </td>
+
                             <td class="px-4 py-3 text-center">
-                                <div class="flex justify-center gap-2">
+                                @if ($item->dokumentasi)
+                                    @if (Str::endsWith($item->dokumentasi, ['.mp4', '.mov', '.avi']))
+                                        <video src="{{ asset('storage/' . $item->dokumentasi) }}" width="90" controls
+                                            class="rounded shadow mx-auto"></video>
+                                    @else
+                                        <img src="{{ asset('storage/' . $item->dokumentasi) }}" alt="dokumentasi"
+                                            width="80" class="rounded shadow mx-auto">
+                                    @endif
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <div class="flex justify-center gap-3">
                                     <a href="{{ route('pengumuman.show', $item->id) }}"
                                         class="text-green-600 hover:text-green-800" title="Lihat">
                                         <i class="bi bi-eye fs-5"></i>
                                     </a>
+
                                     <a href="{{ route('pengumuman.edit', $item->id) }}"
                                         class="text-blue-600 hover:text-blue-800" title="Edit">
                                         <i class="bi bi-pencil-square fs-5"></i>
                                     </a>
+
                                     <form action="{{ route('pengumuman.destroy', $item->id) }}" method="POST"
                                         class="inline delete-form">
                                         @csrf
@@ -69,7 +98,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-5 text-center text-gray-500 italic">
+                            <td colspan="6" class="px-6 py-5 text-center text-gray-500 italic">
                                 Belum ada pengumuman yang tersedia.
                             </td>
                         </tr>
@@ -84,6 +113,7 @@
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.btn-delete').forEach(btn => {

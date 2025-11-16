@@ -8,7 +8,7 @@
     </div>
 
     <div class="p-6">
-        <form id="pengumumanForm" class="flex flex-col gap-4" method="POST" action="{{ route('pengumuman.store') }}">
+        <form id="pengumumanForm" class="flex flex-col gap-4" method="POST" action="{{ route('pengumuman.store') }}" enctype="multipart/form-data">
             @csrf
 
             @if ($errors->any())
@@ -31,12 +31,30 @@
                 </div>
             </div>
 
+            <!-- Tanggal Pengumuman -->
+            <div class="grid grid-cols-4 items-center gap-6">
+                <label for="tanggal" class="text-default-800 text-sm font-medium">Tanggal</label>
+                <div class="md:col-span-3">
+                    <input type="date" name="tanggal" id="tanggal" class="form-input" required>
+                </div>
+            </div>
+
+            <!-- Dokumentasi -->
+            <div class="grid grid-cols-4 items-start gap-6">
+                <label for="dokumentasi" class="text-default-800 text-sm font-medium">Dokumentasi</label>
+                <div class="md:col-span-3">
+                    <input type="file" name="dokumentasi" id="dokumentasi" class="form-input"
+                        accept="image/*,video/*" required>
+                    <p class="mt-1 text-xs text-default-500">Unggah file foto (.jpg, .png) atau video (.mp4, .mov, dll).
+                        Maksimal 2MB.</p>
+                </div>
+            </div>
+
             <!-- Isi Pengumuman -->
             <div class="grid grid-cols-4 items-start gap-6">
                 <label for="isi" class="text-default-800 text-sm font-medium">Isi Pengumuman</label>
                 <div class="md:col-span-3">
-                    <textarea name="isi" id="isi" rows="5" class="form-input"
-                        placeholder="Tulis isi pengumuman..." required></textarea>
+                    <textarea id="froala-editor" name="isi" class="prose"></textarea>
                 </div>
             </div>
 
@@ -58,6 +76,15 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        // AUTO OPEN DATE PICKER
+        const dateInput = document.getElementById("tanggal");
+        if (dateInput && dateInput.showPicker) {
+            dateInput.addEventListener("focus", () => dateInput.showPicker());
+            dateInput.addEventListener("click", () => dateInput.showPicker());
+        }
+
+        // SWEETALERT UNTUK SUBMIT
         const form = document.getElementById('pengumumanForm');
 
         form.addEventListener('submit', function (event) {
@@ -68,8 +95,8 @@
                 text: "Pastikan data sudah benar sebelum disimpan.",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#2563EB', // biru utama
-                cancelButtonColor: '#4B5563',  // abu-abu
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#4B5563',
                 confirmButtonText: 'Ya, simpan!',
                 cancelButtonText: 'Batal'
             }).then((result) => {
@@ -80,4 +107,5 @@
         });
     });
 </script>
+
 @endsection
