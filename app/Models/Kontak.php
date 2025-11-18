@@ -6,5 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kontak extends Model
 {
-    protected $fillable = ['nama', 'email', 'subjek', 'pesan'];
+    protected $fillable = [
+        'nama',
+        'email',
+        'subjek',
+        'pesan',
+        'status',
+        'reply_message',
+        'replied_at'
+    ];
+    protected $casts = [
+        'replied_at' => 'datetime',
+        'status' => 'boolean'
+    ];
 }

@@ -16,6 +16,7 @@ class Sastra extends Model
         'deskripsi',
         'dokumentasi',
         'koordinat',
+        'lokasi',
     ];
 
     public function namaSastra()

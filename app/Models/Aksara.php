@@ -15,6 +15,7 @@ class Aksara extends Model
         'deskripsi',
         'dokumentasi',
         'koordinat',
+        'lokasi',
     ];
 
     public function namaAksara()

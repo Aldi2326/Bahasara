@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('pengumuman', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');      // judul pengumuman
-            $table->text('isi');          // isi atau konten pengumuman
+            $table->string('judul');            // judul pengumuman
+            $table->date('tanggal');            // tanggal pengumuman
+            $table->text('isi');                // isi atau konten pengumuman
+            $table->string('dokumentasi');  // dokumentasi pengumuman
             $table->timestamps();         // created_at & updated_at
         });
     }

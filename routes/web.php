@@ -64,6 +64,11 @@ Route::middleware('auth')->group(function () {
     // Pesan masuk dari kontak
     Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
     Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
+
+    // Balasan admin
+    Route::get('/admin/pesan/{id}/reply', [KontakController::class, 'replyForm'])->name('kontak.reply.form');
+    Route::post('/admin/pesan/{id}/reply', [KontakController::class, 'reply'])->name('kontak.reply');
+
 });
 
 // SUPERADMIN AREA

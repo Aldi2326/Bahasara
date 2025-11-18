@@ -52,7 +52,6 @@ $nextOrder = $sortOrder === 'asc' ? 'desc' : 'asc';
                     <th class="px-4 py-3 w-[140px]">Status Bahasa</th>
                     <th class="px-4 py-3 w-[140px]">Jumlah Penutur</th>
                     <th class="px-4 py-3 w-[220px]">Deskripsi</th>
-                    <th class="px-4 py-3 w-[220px]">Dokumentasi</th>
                     <th class="px-4 py-3 w-[140px]">Koordinat</th>
                     <th class="px-4 py-3 w-[100px]">Aksi</th>
                 </tr>
@@ -95,20 +94,6 @@ $nextOrder = $sortOrder === 'asc' ? 'desc' : 'asc';
                     <td class="px-4 py-3 text-gray-700 truncate max-w-[220px]"
                         title="{{ strip_tags($item->deskripsi) }}">
                         {{ Str::limit(strip_tags($item->deskripsi), 40) }}
-                    </td>
-
-                    <td class="px-4 py-3 text-center">
-                        @if ($item->dokumentasi)
-                            @if (Str::endsWith($item->dokumentasi, ['.mp4', '.mov', '.avi']))
-                                <video src="{{ asset('storage/' . $item->dokumentasi) }}" width="90" controls
-                                    class="rounded shadow mx-auto"></video>
-                            @else
-                                <img src="{{ asset('storage/' . $item->dokumentasi) }}" alt="dokumentasi"
-                                    width="80" class="rounded shadow mx-auto">
-                            @endif
-                        @else
-                            <span class="text-gray-400">-</span>
-                        @endif
                     </td>
 
                     <td class="px-4 py-3 text-gray-700">{{ $item->koordinat ?? '-' }}</td>

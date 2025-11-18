@@ -64,14 +64,9 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer',
             'deskripsi' => 'required|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
-            'koordinat' => 'required|string'
+            'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
-
-        // Upload dokumentasi jika ada
-        if ($request->hasFile('dokumentasi')) {
-            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/bahasa', 'public');
-        }
 
         Bahasa::create($data);
 
@@ -97,10 +92,10 @@ class BahasaController extends Controller
             'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
             'alamat' => 'required|string',
             'status' => 'required|string',
-            'jumlah_penutur' => 'required|integer|min:0',
+            'jumlah_penutur' => 'required|integer|min:1',
             'deskripsi' => 'nullable|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mov',
             'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
 
         $bahasa = Bahasa::findOrFail($id);
@@ -112,15 +107,9 @@ class BahasaController extends Controller
             'status',
             'jumlah_penutur',
             'deskripsi',
-            'koordinat'
+            'koordinat',
+            'lokasi',
         ]);
-
-        if ($request->hasFile(key: 'dokumentasi')) {
-            if ($bahasa->dokumentasi && \Storage::disk('public')->exists($bahasa->dokumentasi)) {
-                \Storage::disk('public')->delete($bahasa->dokumentasi);
-            }
-            $data['dokumentasi'] = $request->file('dokumentasi')->store('dokumentasi/bahasa', 'public');
-        }
 
         $bahasa->update($data);
 

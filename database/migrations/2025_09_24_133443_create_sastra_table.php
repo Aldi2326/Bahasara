@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->text('deskripsi');
             $table->string('dokumentasi');
             $table->string('koordinat');
+            $table->string('lokasi');
             $table->timestamps();
         });
     }
