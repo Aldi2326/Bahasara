@@ -94,7 +94,7 @@
 
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-5 text-center text-gray-500 italic">
+                            <td colspan="8" class="px-6 py-5 text-center text-gray-500 italic">
                                 Belum ada pesan yang tersedia.
                             </td>
                         </tr>

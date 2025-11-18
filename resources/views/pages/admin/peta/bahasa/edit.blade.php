@@ -106,6 +106,7 @@
                     <div class="md:col-span-3">
                         <input type="text" name="koordinat" id="koordinat" class="form-input"
                             value="{{ $bahasa->koordinat }}" required>
+                        <input type="hidden" name="lokasi" id="lokasi" value="{{ $bahasa->lokasi }}">
                     </div>
                 </div>
 
@@ -134,105 +135,69 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            // -------------------------------
-            // Ambil Koordinat Awal
-            // -------------------------------
-            let koordinatString = "{{ $bahasa->koordinat }}";
-            let defaultLat = -1.610122,
-                defaultLng = 103.613120;
-            let lat = defaultLat,
-                lng = defaultLng;
-
-            if (koordinatString && koordinatString.includes(',')) {
-                let parts = koordinatString.split(',');
-                lat = parseFloat(parts[0]);
-                lng = parseFloat(parts[1]);
-            }
-
-            // -------------------------------
-            // Inisialisasi Peta
-            // -------------------------------
-            var map = L.map('map').setView([lat, lng], 8);
-
+            var map = L.map('map').setView([-1.610122, 103.613120], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
+                attribution: '&copy; OpenStreetMap'
             }).addTo(map);
 
-            // -------------------------------
-            // Tambahkan Geocoder (Search Bar)
-            // -------------------------------
+            var marker;
             var geocoder = L.Control.geocoder({
-                    defaultMarkGeocode: false
-                })
-                .on('markgeocode', function(e) {
-                    var g = e.geocode.center;
-                    var newLat = g.lat.toFixed(6);
-                    var newLng = g.lng.toFixed(6);
-                    var newCoord = newLat + ', ' + newLng;
+                defaultMarkGeocode: false
+            }).addTo(map);
 
-                    // Isi nilai input koordinat
-                    document.getElementById('koordinat').value = newCoord;
-
-                    // Hapus marker lama
-                    if (marker) map.removeLayer(marker);
-
-                    // Tambah marker baru
-                    marker = L.marker([newLat, newLng]).addTo(map)
-                        .bindPopup("Hasil Pencarian:<br>" + newCoord)
-                        .openPopup();
-
-                    // Fokus ke lokasi
-                    map.setView([newLat, newLng], 13);
-                })
-                .addTo(map);
-
-            // -------------------------------
-            // Marker Awal
-            // -------------------------------
-            var marker = L.marker([lat, lng]).addTo(map)
-                .bindPopup("Koordinat Awal:<br>" + lat + ", " + lng)
-                .openPopup();
-
-            // -------------------------------
-            // Klik pada Peta → Update Marker & Input
-            // -------------------------------
-            map.on('click', function(e) {
-                let newLat = e.latlng.lat.toFixed(6);
-                let newLng = e.latlng.lng.toFixed(6);
-                let newCoord = newLat + ', ' + newLng;
-
-                document.getElementById('koordinat').value = newCoord;
-
+            function setMarker(lat, lng, popupText) {
                 if (marker) map.removeLayer(marker);
-                marker = L.marker([newLat, newLng]).addTo(map)
-                    .bindPopup("Koordinat Baru:<br>" + newCoord)
+                marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup(popupText)
                     .openPopup();
+                map.setView([lat, lng], 15);
+                document.getElementById('koordinat').value = lat + ', ' + lng;
+                document.getElementById('lokasi').value = popupText;
+            }
+
+            // Marker awal dari database
+            var koordinatValue = "{{ $bahasa->koordinat }}";
+            var lokasiValue = "{{ $bahasa->lokasi }}";
+            if (koordinatValue) {
+                var latlngArr = koordinatValue.split(',').map(Number);
+                setMarker(latlngArr[0], latlngArr[1], lokasiValue || "Lokasi tidak diketahui");
+            }
+
+            geocoder.on('markgeocode', function(e) {
+                var lat = e.geocode.center.lat.toFixed(6);
+                var lng = e.geocode.center.lng.toFixed(6);
+                setMarker(lat, lng, e.geocode.name);
             });
 
-            // -------------------------------
-            // SweetAlert Konfirmasi Submit
-            // -------------------------------
-            const form = document.getElementById('editBahasaForm');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                Swal.fire({
-                    title: 'Simpan Data?',
-                    text: "Perubahan akan disimpan permanen.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#2563EB',
-                    cancelButtonColor: '#4B5563',
-                    confirmButtonText: 'Ya, simpan!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
+            map.on('click', function(e) {
+                var lat = e.latlng.lat.toFixed(6);
+                var lng = e.latlng.lng.toFixed(6);
+                // Langsung gunakan koordinat sebagai "lokasi" sementara
+                setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
             });
+        });
 
+        // -------------------------------
+        // SweetAlert Konfirmasi Submit
+        // -------------------------------
+        const form = document.getElementById('editBahasaForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Simpan Data?',
+                text: "Perubahan akan disimpan permanen.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#4B5563',
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     </script>
 

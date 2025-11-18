@@ -103,6 +103,8 @@
                         <input type="text" name="koordinat" id="koordinat" class="form-input"
                             placeholder="Klik peta atau isi manual, contoh: -1.234567, 103.123456" step="0.0000001"
                             required>
+                        <input type="hidden" name="lokasi" id="lokasi">
+
                     </div>
                 </div>
 
@@ -130,59 +132,37 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            // Inisialisasi Peta
             var map = L.map('map').setView([-1.610122, 103.613120], 7);
-
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                attribution: '&copy; OpenStreetMap'
             }).addTo(map);
 
-            // ================================
-            // Tambahkan Search (Leaflet Geocoder)
-            // ================================
-            var geocoder = L.Control.geocoder({
-                    defaultMarkGeocode: false
-                })
-                .on('markgeocode', function(e) {
-
-                    let g = e.geocode.center;
-                    let newLat = g.lat.toFixed(6);
-                    let newLng = g.lng.toFixed(6);
-                    let newCoord = newLat + ', ' + newLng;
-
-                    // Masukkan ke input text
-                    document.getElementById('koordinat').value = newCoord;
-
-                    // Hapus marker sebelumnya
-                    if (marker) map.removeLayer(marker);
-
-                    // Tambah marker baru
-                    marker = L.marker([newLat, newLng]).addTo(map)
-                        .bindPopup("Hasil Pencarian:<br>" + newCoord)
-                        .openPopup();
-
-                    // Fokus ke lokasi baru
-                    map.setView([newLat, newLng], 13);
-                })
-                .addTo(map);
-
             var marker;
+            var geocoder = L.Control.geocoder({
+                defaultMarkGeocode: false
+            }).addTo(map);
 
-            // ================================
-            // Klik Peta → Update Marker & Input
-            // ================================
+            function setMarker(lat, lng, popupText) {
+                if (marker) map.removeLayer(marker);
+                marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup(popupText)
+                    .openPopup();
+                map.setView([lat, lng], 15);
+                document.getElementById('koordinat').value = lat + ', ' + lng;
+                document.getElementById('lokasi').value = popupText;
+            }
+
+            geocoder.on('markgeocode', function(e) {
+                var lat = e.geocode.center.lat.toFixed(6);
+                var lng = e.geocode.center.lng.toFixed(6);
+                setMarker(lat, lng, e.geocode.name);
+            });
+
             map.on('click', function(e) {
                 var lat = e.latlng.lat.toFixed(6);
                 var lng = e.latlng.lng.toFixed(6);
-                var koordinat = lat + ', ' + lng;
-
-                document.getElementById('koordinat').value = koordinat;
-
-                if (marker) map.removeLayer(marker);
-
-                marker = L.marker([lat, lng]).addTo(map)
-                    .bindPopup("Koordinat:<br>" + koordinat).openPopup();
+                // Langsung gunakan koordinat sebagai "lokasi" sementara
+                setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
             });
 
             // ================================
@@ -207,8 +187,6 @@
                     }
                 });
             });
-
         });
     </script>
-
 @endsection

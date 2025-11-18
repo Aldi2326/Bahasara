@@ -90,8 +90,24 @@
                     <div class="md:col-span-3">
                         <input type="file" name="dokumentasi" id="dokumentasi" class="form-input"
                             accept="image/*,video/*">
-                        <p class="mt-1 text-xs text-default-500"> Unggah file jpg, jpeg, png, webp, pdf. Maksimal 2MB.
+                        <p class="mt-1 text-xs text-default-500">
+                            Unggah file jpg, jpeg, png, webp, pdf. Maksimal 2MB.
+
+                            <br>Biarkan kosong jika tidak ingin mengubah dokumentasi.
                         </p>
+
+                        @if ($sastra->dokumentasi)
+                            <div class="mt-3">
+                                <p class="text-sm font-medium mb-1">Dokumentasi saat ini:</p>
+                                @if (Str::endsWith($sastra->dokumentasi, ['.mp4', '.mov', '.avi']))
+                                    <video src="{{ asset('storage/' . $sastra->dokumentasi) }}" width="200" controls
+                                        class="rounded-md shadow"></video>
+                                @else
+                                    <img src="{{ asset('storage/' . $sastra->dokumentasi) }}" alt="Dokumentasi"
+                                        width="150" class="rounded-md shadow">
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -101,6 +117,8 @@
                     <div class="md:col-span-3">
                         <input type="text" name="koordinat" id="koordinat" class="form-input"
                             value="{{ $sastra->koordinat }}" required>
+                        <input type="hidden" name="lokasi" id="lokasi" value="{{ $sastra->lokasi }}">
+
                     </div>
                 </div>
 
@@ -129,109 +147,69 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            // ============================
-            //  Ambil Koordinat Awal
-            // ============================
-            let koordinatString = "{{ $sastra->koordinat }}";
-            let defaultLat = -1.610122,
-                defaultLng = 103.613120;
-            let lat = defaultLat,
-                lng = defaultLng;
-
-            if (koordinatString && koordinatString.includes(',')) {
-                let parts = koordinatString.split(',');
-                lat = parseFloat(parts[0]);
-                lng = parseFloat(parts[1]);
-            }
-
-            // ============================
-            //  Inisialisasi Peta
-            // ============================
-            var map = L.map('map').setView([lat, lng], 8);
-
+            var map = L.map('map').setView([-1.610122, 103.613120], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
+                attribution: '&copy; OpenStreetMap'
             }).addTo(map);
 
-            // Marker awal
-            var marker = L.marker([lat, lng]).addTo(map)
-                .bindPopup("Koordinat Awal:<br>" + lat + ", " + lng)
-                .openPopup();
-
-            // ============================
-            //  Tambahkan Search Geocoder
-            // ============================
+            var marker;
             var geocoder = L.Control.geocoder({
-                    defaultMarkGeocode: false
-                })
-                .on('markgeocode', function(e) {
+                defaultMarkGeocode: false
+            }).addTo(map);
 
-                    let g = e.geocode.center;
-                    let newLat = g.lat.toFixed(6);
-                    let newLng = g.lng.toFixed(6);
-                    let newCoord = newLat + ', ' + newLng;
-
-                    // Update input koordinat
-                    document.getElementById('koordinat').value = newCoord;
-
-                    // Hapus marker sebelumnya
-                    if (marker) map.removeLayer(marker);
-
-                    // Tambahkan marker baru
-                    marker = L.marker([newLat, newLng]).addTo(map)
-                        .bindPopup("Hasil Pencarian:<br>" + newCoord)
-                        .openPopup();
-
-                    // Geser map ke lokasi hasil pencarian
-                    map.setView([newLat, newLng], 13);
-                })
-                .addTo(map);
-
-            // ============================
-            //  Klik Peta → Update Marker
-            // ============================
-            map.on('click', function(e) {
-                let newLat = e.latlng.lat.toFixed(6);
-                let newLng = e.latlng.lng.toFixed(6);
-                let newCoord = newLat + ', ' + newLng;
-
-                // Update input
-                document.getElementById('koordinat').value = newCoord;
-
-                // Hapus marker lama
+            function setMarker(lat, lng, popupText) {
                 if (marker) map.removeLayer(marker);
-
-                // Buat marker baru
-                marker = L.marker([newLat, newLng]).addTo(map)
-                    .bindPopup("Koordinat Baru:<br>" + newCoord)
+                marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup(popupText)
                     .openPopup();
+                map.setView([lat, lng], 15);
+                document.getElementById('koordinat').value = lat + ', ' + lng;
+                document.getElementById('lokasi').value = popupText;
+            }
+
+            // Marker awal dari database
+            var koordinatValue = "{{ $sastra->koordinat }}";
+            var lokasiValue = "{{ $sastra->lokasi }}";
+            if (koordinatValue) {
+                var latlngArr = koordinatValue.split(',').map(Number);
+                setMarker(latlngArr[0], latlngArr[1], lokasiValue || "Lokasi tidak diketahui");
+            }
+
+            geocoder.on('markgeocode', function(e) {
+                var lat = e.geocode.center.lat.toFixed(6);
+                var lng = e.geocode.center.lng.toFixed(6);
+                setMarker(lat, lng, e.geocode.name);
             });
 
-            // ============================
-            //  SweetAlert konfirmasi submit
-            // ============================
-            const form = document.getElementById('editSastraForm');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                Swal.fire({
-                    title: 'Simpan Data?',
-                    text: "Perubahan akan disimpan permanen.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#2563EB',
-                    cancelButtonColor: '#4B5563',
-                    confirmButtonText: 'Ya, simpan!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
+            map.on('click', function(e) {
+                var lat = e.latlng.lat.toFixed(6);
+                var lng = e.latlng.lng.toFixed(6);
+                // Langsung gunakan koordinat sebagai "lokasi" sementara
+                setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
             });
+        });
 
+        // ============================
+        //  SweetAlert konfirmasi submit
+        // ============================
+        const form = document.getElementById('editSastraForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Simpan Data?',
+                text: "Perubahan akan disimpan permanen.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#4B5563',
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     </script>
-
 @endsection

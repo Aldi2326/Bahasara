@@ -60,6 +60,7 @@ class SastraController extends Controller
             'deskripsi' => 'required|string',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
             'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
 
         // Upload dokumentasi jika ada
@@ -91,6 +92,7 @@ class SastraController extends Controller
             'deskripsi' => 'required|string',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
             'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
 
         $sastra = Sastra::findOrFail($id);
@@ -101,7 +103,8 @@ class SastraController extends Controller
             'alamat',
             'status',
             'deskripsi',
-            'koordinat'
+            'koordinat',
+            'lokasi',
         ]);
 
         if ($request->hasFile(key: 'dokumentasi')) {

@@ -64,7 +64,8 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer',
             'deskripsi' => 'required|string',
-            'koordinat' => 'required|string'
+            'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
 
         Bahasa::create($data);
@@ -94,6 +95,7 @@ class BahasaController extends Controller
             'jumlah_penutur' => 'required|integer|min:1',
             'deskripsi' => 'nullable|string',
             'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
 
         $bahasa = Bahasa::findOrFail($id);
@@ -105,7 +107,8 @@ class BahasaController extends Controller
             'status',
             'jumlah_penutur',
             'deskripsi',
-            'koordinat'
+            'koordinat',
+            'lokasi',
         ]);
 
         $bahasa->update($data);

@@ -70,6 +70,7 @@ class AksaraController extends Controller
             'deskripsi' => 'required|string',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
             'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
 
         // Upload file dokumentasi jika ada
@@ -103,10 +104,11 @@ class AksaraController extends Controller
             'wilayah_id' => 'required|exists:wilayah,id',
             'nama_aksara_id' => 'required|exists:nama_aksara,id',
             'alamat' => 'required|string',
-            'status' => 'required|string|max:255',
+            'status' => 'required|string',
             'deskripsi' => 'required|string',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
-            'koordinat' => 'required|string|max:255',
+            'koordinat' => 'required|string',
+            'lokasi' => 'required|string',
         ]);
 
         $aksara = Aksara::findOrFail($id);
@@ -117,7 +119,8 @@ class AksaraController extends Controller
             'alamat',
             'status',
             'deskripsi',
-            'koordinat'
+            'koordinat',
+            'lokasi',
         ]);
 
         if ($request->hasFile(key: 'dokumentasi')) {

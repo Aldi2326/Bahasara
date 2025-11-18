@@ -120,6 +120,9 @@
                         <input type="text" name="koordinat" id="koordinat" class="form-input"
                             value="{{ old('koordinat', $aksara->koordinat) }}"
                             placeholder="Klik peta atau isi manual, contoh: -1.234567, 103.123456" required>
+                        <input type="hidden" name="lokasi" id="lokasi" value="{{ $aksara->lokasi }}">
+
+
                     </div>
                 </div>
 
@@ -147,94 +150,66 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            // ==========================
-            // Ambil Koordinat Lama
-            // ==========================
-            let initial = "{{ $aksara->koordinat }}";
-            let lat = -1.610122,
-                lng = 103.613120; // default Jambi
-
-            if (initial && initial.includes(',')) {
-                let parts = initial.split(',');
-                lat = parseFloat(parts[0]);
-                lng = parseFloat(parts[1]);
-            }
-
-            // ==========================
-            // Inisialisasi Map
-            // ==========================
-            var map = L.map('map').setView([lat, lng], 8);
-
+            var map = L.map('map').setView([-1.610122, 103.613120], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
+                attribution: '&copy; OpenStreetMap'
             }).addTo(map);
 
-            // ========== Search (Geocoder) ==========
+            var marker;
             var geocoder = L.Control.geocoder({
-                    defaultMarkGeocode: false
-                })
-                .on('markgeocode', function(e) {
-                    var latlng = e.geocode.center;
+                defaultMarkGeocode: false
+            }).addTo(map);
 
-                    // remove marker lama
-                    if (marker) map.removeLayer(marker);
-
-                    // pasang marker baru
-                    marker = L.marker(latlng).addTo(map)
-                        .bindPopup("Koordinat Baru:<br>" + latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6))
-                        .openPopup();
-
-                    // update input koordinat
-                    document.getElementById('koordinat').value =
-                        latlng.lat.toFixed(6) + ", " + latlng.lng.toFixed(6);
-
-                    map.setView(latlng, 12);
-                })
-                .addTo(map);
-
-
-            // Marker awal
-            var marker = L.marker([lat, lng]).addTo(map)
-                .bindPopup("Koordinat:<br>" + lat.toFixed(6) + ", " + lng.toFixed(6))
-                .openPopup();
-
-            // ==========================
-            // Klik Map → Update Koordinat
-            // ==========================
-            map.on('click', function(e) {
-                let newLat = e.latlng.lat.toFixed(6);
-                let newLng = e.latlng.lng.toFixed(6);
-                let koordinatBaru = newLat + ", " + newLng;
-
-                document.getElementById('koordinat').value = koordinatBaru;
-
+            function setMarker(lat, lng, popupText) {
                 if (marker) map.removeLayer(marker);
-
-                marker = L.marker([newLat, newLng]).addTo(map)
-                    .bindPopup("Koordinat Baru:<br>" + koordinatBaru)
+                marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup(popupText)
                     .openPopup();
+                map.setView([lat, lng], 15);
+                document.getElementById('koordinat').value = lat + ', ' + lng;
+                document.getElementById('lokasi').value = popupText;
+            }
+
+            // Marker awal dari database
+            var koordinatValue = "{{ $aksara->koordinat }}";
+            var lokasiValue = "{{ $aksara->lokasi }}";
+            if (koordinatValue) {
+                var latlngArr = koordinatValue.split(',').map(Number);
+                setMarker(latlngArr[0], latlngArr[1], lokasiValue || "Lokasi tidak diketahui");
+            }
+
+            geocoder.on('markgeocode', function(e) {
+                var lat = e.geocode.center.lat.toFixed(6);
+                var lng = e.geocode.center.lng.toFixed(6);
+                setMarker(lat, lng, e.geocode.name);
             });
 
-            // ==========================
-            // SweetAlert Konfirmasi Edit
-            // ==========================
-            document.getElementById('btnSimpan').addEventListener('click', function(e) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Simpan Perubahan?',
-                    text: 'Data aksara akan diperbarui di database.',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#2563EB',
-                    cancelButtonColor: '#4B5563',
-                    confirmButtonText: 'Ya, simpan!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('formEditAksara').submit();
-                    }
-                });
+            map.on('click', function(e) {
+                var lat = e.latlng.lat.toFixed(6);
+                var lng = e.latlng.lng.toFixed(6);
+                // Langsung gunakan koordinat sebagai "lokasi" sementara
+                setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
+            });
+        });
+
+        // ==========================
+        // SweetAlert Konfirmasi Edit
+        // ==========================
+        document.getElementById('btnSimpan').addEventListener('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Simpan Perubahan?',
+                text: 'Data aksara akan diperbarui di database.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563EB',
+                cancelButtonColor: '#4B5563',
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formEditAksara').submit();
+                }
             });
 
         });
