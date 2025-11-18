@@ -44,7 +44,7 @@
 
             {{-- Tombol Kembali di bawah card --}}
             <div class="text-center">
-                <a href="{{ route('pengumuman.index') }}" 
+                <a href="{{ route('pengumuman-user.index') }}" 
                    class="btn px-4"
                    style="background-color: #1b81ae; color: white; border-radius: 8px;">
                     <i class="bi bi-arrow-left"></i> Kembali
