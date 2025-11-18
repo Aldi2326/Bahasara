@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->string('email');
             $table->string('subjek');
             $table->text('pesan');
-            $table->boolean('status')->default(false);
             $table->text('reply_message')->nullable();
+            $table->boolean('status')->default(false);
             $table->timestamp('replied_at')->nullable();
             $table->timestamps();
         });

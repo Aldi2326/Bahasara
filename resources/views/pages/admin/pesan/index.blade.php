@@ -19,6 +19,7 @@
                         <th class="px-4 py-3 w-[220px]">Email</th>
                         <th class="px-4 py-3 w-[180px]">Subjek</th>
                         <th class="px-4 py-3 w-[320px]">Pesan</th>
+                        <th class="px-4 py-3 w-[320px]">Balasan Admin</th>
                         <th class="px-4 py-3 w-[320px]">Status</th>
                         <th class="px-4 py-3 w-[120px]">Aksi</th>
                     </tr>
@@ -43,6 +44,17 @@
 
                             <td class="px-4 py-3 text-gray-700 text-left whitespace-normal break-words">
                                 {{ $kontak->pesan }}
+                            </td>
+
+                            <td class="text-sm text-gray-700">
+                                @if ($kontak->reply_message)
+                                    {!! nl2br(e(strip_tags($kontak->reply_message))) !!}
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        Dibalas: {{ $kontak->replied_at ? $kontak->replied_at->format('d M Y H:i') : '-' }}
+                                    </div>
+                                @else
+                                    <span class="text-gray-400 italic">Belum ada balasan</span>
+                                @endif
                             </td>
 
                             <td class="px-4 py-3">
@@ -87,7 +99,7 @@
                             </td>
                         </tr>
                     @endforelse
-                    
+
                 </tbody>
             </table>
         </div>

@@ -15,4 +15,8 @@ class Kontak extends Model
         'reply_message',
         'replied_at'
     ];
+    protected $casts = [
+        'replied_at' => 'datetime',
+        'status' => 'boolean'
+    ];
 }

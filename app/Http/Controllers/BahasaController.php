@@ -91,7 +91,7 @@ class BahasaController extends Controller
             'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
             'alamat' => 'required|string',
             'status' => 'required|string',
-            'jumlah_penutur' => 'required|integer|min:0',
+            'jumlah_penutur' => 'required|integer|min:1',
             'deskripsi' => 'nullable|string',
             'koordinat' => 'required|string',
         ]);

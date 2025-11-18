@@ -57,7 +57,8 @@
                         <input type="file" name="dokumentasi" id="dokumentasi" class="form-input"
                             accept="image/*,video/*">
                         <p class="mt-1 text-xs text-default-500">
-                            Unggah file foto (.jpg, .png) atau video (.mp4, .mov, dll). Maksimal 2MB.
+                            Unggah file jpg, jpeg, png, webp, pdf. Maksimal 2MB.
+
                             <br>Biarkan kosong jika tidak ingin mengubah dokumentasi.
                         </p>
 
