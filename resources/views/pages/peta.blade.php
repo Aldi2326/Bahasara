@@ -3,7 +3,7 @@
 @section('title', 'Peta Bahasa')
 
 @section('content')
-<div class="mt-5 pt-5">
+<div class="mt-5 pt-4">
     <div style="position: relative;">
 
         <!-- Filter -->
@@ -81,7 +81,7 @@
 
 
         <!-- Peta -->
-        <div id="map" style="height: 680px; box-shadow:0 4px 10px rgba(0,0,0,0.2); border-radius:12px;"></div>
+        <div id="map" style="height: 790px; box-shadow:0 4px 10px rgba(0,0,0,0.2);"></div>
 
         <!-- Legend -->
         <div id="legendCard" class="legend-card shadow">
