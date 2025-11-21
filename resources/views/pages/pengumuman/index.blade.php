@@ -13,8 +13,11 @@
     </div>
 
     <div class="row g-4">
-        @foreach ($pengumuman as $item)
-            <a href="{{ route('pengumuman-user.show', $item->id) }}" class="col-md-6 col-lg-4 mt-4">
+        @foreach ($pengumuman as $index => $item)
+            <a href="{{ route('pengumuman-user.show', $item->id) }}" 
+               class="col-md-6 col-lg-4 mt-4 pengumuman-item"
+               style="{{ $index >= 6 ? 'display:none;' : '' }}">
+               
                 <div class="card h-100 shadow-sm" style="border-radius: 12px; overflow: hidden;">
 
                     <img src="{{ asset('storage/' . $item->dokumentasi) }}" class="card-img-top"
@@ -35,6 +38,8 @@
             </a>
         @endforeach
     </div>
+
+
     {{-- Tombol Tampilkan Lebih Banyak --}}
     <div class="text-center mt-4">
         <button id="loadMoreBtn" class="px-4 py-2"
@@ -43,4 +48,33 @@
         </button>
     </div>
 </div>
+
+{{-- Script Load More --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const items = document.querySelectorAll(".pengumuman-item");
+        const loadBtn = document.getElementById("loadMoreBtn");
+        let visibleCount = 6;
+
+        loadBtn.addEventListener("click", function () {
+            let nextCount = visibleCount + 6;
+
+            for (let i = visibleCount; i < nextCount && i < items.length; i++) {
+                items[i].style.display = "block";
+            }
+
+            visibleCount = nextCount;
+
+            if (visibleCount >= items.length) {
+                loadBtn.style.display = "none";
+            }
+        });
+
+        if (items.length <= 6) {
+            loadBtn.style.display = "none";
+        }
+    });
+</script>
+
 @endsection

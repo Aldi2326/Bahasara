@@ -28,7 +28,7 @@
                     <h4 class="fw-semibold mb-3">Navigasi</h4>
                     <nav class="nav flex-column footer-nav">
                         <a href="{{ url('/') }}" class="nav-link-footer">Beranda</a>
-                        <a href="{{ url('peta') }}" class="nav-link-footer">Pemetaan</a>
+                        <a href="{{ url('sastra') }}" class="nav-link-footer">Pemetaan</a>
                         <a href="{{ url('pengumuman') }}" class="nav-link-footer">Pengumuman</a>
                         <a href="{{ url('tentang-kami') }}" class="nav-link-footer">Tentang Kami</a>
                         <a href="{{ url('kontak') }}" class="nav-link-footer">Hubungi Kami</a>

@@ -11,7 +11,7 @@
 
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/img/bahasara-logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/img/logo-icon.png') }}">
 
     <!-- Icons css  (Mandatory in All Pages) -->
     <link href="{{ asset('assets/admin/css/icons.min.css') }}" rel="stylesheet" type="text/css">

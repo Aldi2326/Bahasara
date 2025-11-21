@@ -107,12 +107,15 @@
             </div>
             @endif
             <!-- DESKRIPSI -->
+            <!-- DESKRIPSI -->
             <div class="mb-5" data-aos="fade-up" data-aos-duration="800">
-                <h5 class="text-muted">Deskripsi</h5>
-                <div class="text-justify fs-6 prose">
+                <h5 class="text-muted mb-3">Deskripsi</h5>
+
+                <div class="deskripsi-konten">
                     {!! $bahasa->deskripsi ?? 'Tidak ada deskripsi.' !!}
                 </div>
             </div>
+
         </div>
 
 
@@ -229,6 +232,40 @@
     .text-justify {
         text-align: justify;
         line-height: 1.7;
+    }
+
+    /* Layout deskripsi yang lebih enak dibaca */
+    .deskripsi-konten {
+        font-size: 1rem;
+        line-height: 1.9;
+        text-align: justify;
+        color: #333;
+        padding: 18px 20px;
+        background-color: #fafafa;
+        border-radius: 10px;
+        border-left: 4px solid #1b81ae;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Atur jarak antar paragraf */
+    .deskripsi-konten p {
+        margin-bottom: 14px;
+    }
+
+    /* Atur list jika ada */
+    .deskripsi-konten ul,
+    .deskripsi-konten ol {
+        padding-left: 22px;
+        margin-bottom: 14px;
+    }
+
+    .deskripsi-konten li {
+        margin-bottom: 6px;
+    }
+
+    .card-body {
+        padding-left: 45px !important;
+        padding-right: 45px !important;
     }
 </style>
 @endsection

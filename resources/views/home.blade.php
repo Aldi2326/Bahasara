@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="assets/css/jquery.scrollbar.css">
     <link rel="stylesheet" href="assets/css/leaflet.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    
 
     <title>MyHouse - Advanced Real Estate HTML Template by ThemeStarz</title>
 

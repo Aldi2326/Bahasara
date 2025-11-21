@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery.scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/leaflet.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/img/bahasara-logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/img/logo-icon.png') }}">
 
     <!-- AOS CSS -->
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">

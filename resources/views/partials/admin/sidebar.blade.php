@@ -5,7 +5,7 @@
         <!-- Sidenav Logo -->
         <div class="sticky top-0 flex h-topbar items-center justify-center px-6">
             <a href="/">
-                <img src="{{ asset('assets/img/logo-sibaraja2.png') }}" alt="logo" class="flex h-10">
+                <img src="{{ asset('assets/img/logo-sibaraja-light.png') }}" alt="logo" class="flex h-10">
             </a>
         </div>
 
