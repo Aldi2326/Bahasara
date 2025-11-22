@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Peta Bahasa')
+@section('title', 'Peta Bahasa Jambi')
 
 @section('content')
 <div class="mt-5 pt-4">
