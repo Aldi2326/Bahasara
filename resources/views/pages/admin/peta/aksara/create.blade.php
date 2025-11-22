@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 @section('title', 'Aksara')
+
 @section('content')
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -22,17 +23,6 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @if ($errors->any())
-                    <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
-                        <strong class="font-semibold">Terjadi kesalahan:</strong>
-                        <ul class="mt-2 list-disc list-inside text-sm">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <!-- Nama Wilayah -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
@@ -41,7 +31,7 @@
                             <option value="">-- Pilih Wilayah --</option>
                             @foreach ($wilayahList as $wilayah)
                                 <option value="{{ $wilayah->id }}"
-                                    {{ isset($wilayahId) && $wilayahId == $wilayah->id ? 'selected' : '' }}>
+                                    {{ old('wilayah_id') == $wilayah->id ? 'selected' : '' }}>
                                     {{ $wilayah->nama_wilayah }}
                                 </option>
                             @endforeach
@@ -51,13 +41,13 @@
 
                 <!-- Nama Aksara -->
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="nama_aksara" class="text-default-800 text-sm font-medium">Nama Aksara</label>
+                    <label for="nama_aksara_id" class="text-default-800 text-sm font-medium">Nama Aksara</label>
                     <div class="md:col-span-3">
                         <select name="nama_aksara_id" id="nama_aksara_id" class="form-select" required>
                             <option value="">-- Pilih Aksara --</option>
                             @foreach ($namaAksaraList as $na)
                                 <option value="{{ $na->id }}"
-                                    {{ old('nama_aksara_id', $aksara->nama_aksara_id ?? '') == $na->id ? 'selected' : '' }}>
+                                    {{ old('nama_aksara_id') == $na->id ? 'selected' : '' }}>
                                     {{ $na->nama_aksara }}
                                 </option>
                             @endforeach
@@ -69,7 +59,7 @@
                 <div class="grid grid-cols-4 items-start gap-6">
                     <label for="alamat" class="text-default-800 text-sm font-medium">Alamat</label>
                     <div class="md:col-span-3">
-                        <textarea id="froala-editor" name="alamat" class="proses"></textarea>
+                        <textarea id="alamat" name="alamat" class="form-textarea" required>{{ old('alamat') }}</textarea>
                     </div>
                 </div>
 
@@ -79,8 +69,9 @@
                     <div class="md:col-span-3">
                         <select name="status" id="status" class="form-select" required>
                             <option value="">-- Pilih Status --</option>
-                            <option value="Aktif">Aktif</option>
-                            <option value="Tidak Aktif">Tidak Aktif</option>
+                            <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="Tidak Aktif" {{ old('status') == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -89,7 +80,7 @@
                 <div class="grid grid-cols-4 items-start gap-6">
                     <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                     <div class="md:col-span-3">
-                        <textarea id="froala-editor" name="deskripsi" class="prose"></textarea>
+                        <textarea id="deskripsi" name="deskripsi" class="form-textarea" required>{{ old('deskripsi') }}</textarea>
                         <p class="mt-1 text-xs text-default-500">Isi dengan penjelasan sejarah, fungsi, dan karakteristik
                             aksara</p>
                     </div>
@@ -100,9 +91,8 @@
                     <label for="dokumentasi" class="text-default-800 text-sm font-medium">Dokumentasi</label>
                     <div class="md:col-span-3">
                         <input type="file" name="dokumentasi" id="dokumentasi" class="form-input"
-                            accept="image/*,video/*" required>
-                        <p class="mt-1 text-xs text-default-500"> Unggah file jpg, jpeg, png, webp, pdf. Maksimal 2MB.
-                        </p>
+                            accept=".jpg,.jpeg,.png,.webp,.pdf">
+                        <p class="mt-1 text-xs text-default-500">Unggah file jpg, jpeg, png, webp, pdf. Maksimal 2MB.</p>
                     </div>
                 </div>
 
@@ -113,7 +103,6 @@
                         <input type="text" name="koordinat" id="koordinat" class="form-input"
                             placeholder="Klik peta atau isi manual, contoh: -1.234567, 103.123456" required>
                         <input type="hidden" name="lokasi" id="lokasi">
-
                     </div>
                 </div>
 
@@ -121,7 +110,7 @@
                 <div class="grid grid-cols-4 items-start gap-6">
                     <label class="text-default-800 text-sm font-medium">Peta Lokasi</label>
                     <div class="md:col-span-3">
-                        <div id="map" style="height: 400px; border-radius: 8px; z-index: 1;"></div>
+                        <div id="map" style="height: 400px; border-radius: 8px;"></div>
                         <p class="mt-2 text-xs text-default-500">
                             Klik pada peta untuk memilih lokasi. Koordinat akan otomatis terisi.
                         </p>
@@ -139,7 +128,6 @@
         </div>
     </div>
 
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var map = L.map('map').setView([-1.610122, 103.613120], 7);
@@ -148,9 +136,6 @@
             }).addTo(map);
 
             var marker;
-            var geocoder = L.Control.geocoder({
-                defaultMarkGeocode: false
-            }).addTo(map);
 
             function setMarker(lat, lng, popupText) {
                 if (marker) map.removeLayer(marker);
@@ -162,22 +147,13 @@
                 document.getElementById('lokasi').value = popupText;
             }
 
-            geocoder.on('markgeocode', function(e) {
-                var lat = e.geocode.center.lat.toFixed(6);
-                var lng = e.geocode.center.lng.toFixed(6);
-                setMarker(lat, lng, e.geocode.name);
-            });
-
             map.on('click', function(e) {
                 var lat = e.latlng.lat.toFixed(6);
                 var lng = e.latlng.lng.toFixed(6);
-                // Langsung gunakan koordinat sebagai "lokasi" sementara
                 setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
             });
 
-            // ============================
-            //  SweetAlert Konfirmasi Submit
-            // ============================
+            // SweetAlert Konfirmasi Submit
             document.getElementById('btnSubmit').addEventListener('click', function(e) {
                 e.preventDefault();
                 Swal.fire({
