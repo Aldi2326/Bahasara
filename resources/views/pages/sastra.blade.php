@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Peta Sastra')
+@section('title', 'Peta Sastra Provinsi Jambi')
+<meta name="description" content="Website SIBARAJA memetakan bahasa, sastra, dan aksara di Provinsi Jambi untuk pelestarian budaya lokal.">
 
 @section('content')
 <div class="mt-5 pt-4">
