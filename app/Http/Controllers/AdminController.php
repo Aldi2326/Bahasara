@@ -49,7 +49,7 @@ class AdminController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
+        return redirect()->route('pengguna.index')->with('success');
     }
 
     public function edit($id)

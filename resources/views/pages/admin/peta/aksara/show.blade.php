@@ -3,14 +3,16 @@
 
 @section('content')
     <div class="card overflow-hidden print:border-0 print:shadow-none">
+
         <div class="card-header flex justify-between items-center print:hidden">
             <h4 class="card-title">Detail Data Aksara</h4>
         </div>
 
         <div class="p-6 space-y-5">
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- Nama Wilayah -->
+                {{-- Nama Wilayah --}}
                 <div>
                     <h5 class="text-sm text-default-500">Nama Wilayah</h5>
                     <p class="text-base font-semibold text-default-800">
@@ -18,7 +20,7 @@
                     </p>
                 </div>
 
-                <!-- Nama Aksara -->
+                {{-- Nama Aksara --}}
                 <div>
                     <h5 class="text-sm text-default-500">Nama Aksara</h5>
                     <p class="text-base font-semibold text-default-800">
@@ -26,17 +28,17 @@
                     </p>
                 </div>
 
-                <!-- Status -->
+                {{-- Status --}}
                 <div>
                     <h5 class="text-sm text-default-500">Status</h5>
-                    @if (strtolower($aksara->status) === 'aktif')
+                    @if ($aksara->status === 'aktif')
                         <span class="px-3 py-1 rounded bg-green-500 text-white text-sm font-medium">Aktif</span>
                     @else
                         <span class="px-3 py-1 rounded bg-red-500 text-white text-sm font-medium">Tidak Aktif</span>
                     @endif
                 </div>
 
-                <!-- Alamat -->
+                {{-- Alamat --}}
                 <div>
                     <h5 class="text-sm text-default-500">Alamat</h5>
                     <p class="text-base font-bold text-default-800 leading-relaxed">
@@ -44,7 +46,7 @@
                     </p>
                 </div>
 
-                <!-- Koordinat -->
+                {{-- Koordinat --}}
                 <div>
                     <h5 class="text-sm text-default-500">Koordinat</h5>
                     <p class="text-base font-semibold text-default-800">
@@ -54,11 +56,13 @@
 
             </div>
 
-            <!-- Dokumentasi -->
+            {{-- Dokumentasi --}}
             <div class="md:col-span-1">
                 <h5 class="text-sm text-default-500">Dokumentasi</h5>
+
                 @if ($aksara->dokumentasi)
-                    @if (Str::endsWith($aksara->dokumentasi, ['.jpg', '.jpeg', '.png', '.webp', '.gif']))
+
+                    @if (Str::endsWith($aksara->dokumentasi, ['.jpg', '.jpeg', '.png', '.gif']))
                         <a href="{{ asset('storage/' . $aksara->dokumentasi) }}" target="_blank">
                             <img src="{{ asset('storage/' . $aksara->dokumentasi) }}" alt="Dokumentasi Aksara"
                                 class="mt-2 rounded-md shadow-sm w-48 h-48 object-cover border border-gray-300 hover:opacity-80 transition">
@@ -66,7 +70,7 @@
                     @elseif (Str::endsWith($aksara->dokumentasi, '.pdf'))
                         <a href="{{ asset('storage/' . $aksara->dokumentasi) }}" target="_blank"
                             class="mt-2 inline-block text-blue-600 hover:underline">
-                            📄 Lihat Dokumen PDF
+                            Lihat Dokumentasi
                         </a>
                     @else
                         <p class="mt-2 text-gray-600">Format file tidak dapat dipratinjau.</p>
@@ -76,7 +80,7 @@
                 @endif
             </div>
 
-            <!-- Deskripsi -->
+            {{-- Deskripsi --}}
             <div class="mt-6">
                 <h5 class="text-sm text-default-500 mb-2">Deskripsi</h5>
                 <p class="text-base text-default-800 leading-relaxed">
@@ -84,41 +88,57 @@
                 </p>
             </div>
 
-            <!-- Tombol Aksi -->
+            {{-- Tombol Aksi --}}
             <div class="pt-6 border-t border-default-200 flex flex-wrap justify-between items-center gap-3">
+
+                {{-- Kembali --}}
                 <div>
                     <a href="{{ route('aksara.index') }}" class="btn bg-blue-600 text-white flex items-center gap-2">
-                        <i class="bi bi-arrow-left"></i> Kembali
+                        <i class="bi bi-arrow-left"></i>
+                        Kembali
                     </a>
                 </div>
 
+                {{-- Edit & Hapus --}}
                 <div class="flex flex-wrap gap-3">
+
                     <a href="{{ route('aksara.edit', $aksara->id) }}"
                         class="btn bg-blue-600 text-white flex items-center gap-2">
-                        <i class="bi bi-pencil-square"></i> Edit
+                        <i class="bi bi-pencil-square"></i>
+                        Edit
                     </a>
 
                     <form id="deleteForm" action="{{ route('aksara.destroy', $aksara->id) }}" method="POST" class="inline">
+
                         @csrf
                         @method('DELETE')
+
                         <button type="button" id="btnDelete" class="btn bg-red-600 text-white flex items-center gap-2">
-                            <i class="bi bi-trash3"></i> Hapus
+                            <i class="bi bi-trash3"></i>
+                            Hapus
                         </button>
                     </form>
+
                 </div>
             </div>
 
         </div>
     </div>
 
+    {{-- Bootstrap Icons --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    {{-- SweetAlert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const deleteBtn = document.getElementById('btnDelete');
+
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', function(e) {
                     e.preventDefault();
+
                     Swal.fire({
                         title: 'Yakin ingin menghapus data ini?',
                         text: "Data yang dihapus tidak dapat dikembalikan!",
@@ -137,4 +157,5 @@
             }
         });
     </script>
+
 @endsection
