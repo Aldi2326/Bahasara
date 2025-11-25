@@ -6,6 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="ThemeStarz">
 
+    <!-- Maze Snippet -->
+    <script>
+        (function(m, a, z, e) {
+            var s, t, u, v;
+            try {
+                t = m.sessionStorage.getItem('maze-us');
+            } catch (err) {}
+
+            if (!t) {
+                t = new Date().getTime();
+                try {
+                    m.sessionStorage.setItem('maze-us', t);
+                } catch (err) {}
+            }
+
+            u = document.currentScript || (function() {
+                var w = document.getElementsByTagName('script');
+                return w[w.length - 1];
+            })();
+            v = u && u.nonce;
+
+            s = a.createElement('script');
+            s.src = z + '?apiKey=' + e;
+            s.async = true;
+            if (v) s.setAttribute('nonce', v);
+            a.getElementsByTagName('head')[0].appendChild(s);
+            m.mazeUniversalSnippetApiKey = e;
+        })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '15a0861b-8335-467b-bcf4-582ecfdc3a15');
+    </script>
+
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/font-awesome/css/fontawesome-all.min.css') }}">
@@ -49,9 +79,6 @@
         .prose li {
             all: revert;
         }
-
-        
-        
     </style>
 </head>
 
