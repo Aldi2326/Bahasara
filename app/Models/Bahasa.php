@@ -19,15 +19,19 @@ class Bahasa extends Model
         'lokasi',
     ];
 
-    // Relasi: Bahasa milik satu NamaBahasa
+    /**
+     * Setiap bahasa dimiliki oleh satu nama bahasa
+     */
     public function namaBahasa()
     {
         return $this->belongsTo(NamaBahasa::class, 'nama_bahasa_id');
     }
 
-    // Relasi: Bahasa milik satu Wilayah
+    /**
+     * Setiap bahasa berada pada satu wilayah
+     */
     public function wilayah()
     {
-        return $this->belongsTo(Wilayah::class, 'wilayah_id');
+        return $this->belongsTo(Wilayah::class);
     }
 }

@@ -91,7 +91,7 @@
                 <div class="grid grid-cols-4 items-start gap-6">
                     <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                     <div class="md:col-span-3">
-                        <textarea id="froala-editor" name="deskripsi" class="prose"></textarea>
+                        <textarea id="froala-editor" name="deskripsi" class="prose" required></textarea>
                     </div>
                 </div>
 
@@ -120,7 +120,8 @@
                 <!-- Tombol Submit -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <div class="md:col-start-2">
-                        <button id="btnSubmit" type="submit" class="btn bg-blue-600 hover:bg-blue-700 text-white">Simpan Data</button>
+                        <button id="btnSubmit" type="submit" class="btn bg-blue-600 hover:bg-blue-700 text-white">Simpan
+                            Data</button>
                     </div>
                 </div>
             </form>

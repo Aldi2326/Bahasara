@@ -9,14 +9,17 @@ use Illuminate\Http\Request;
 
 class BahasaController extends Controller
 {
+    // =========================================================
+    //  Tampilkan data bahasa
+    // =========================================================
     public function index(Request $request)
     {
         $query = Bahasa::with('wilayah', 'namaBahasa')
-            ->select('bahasa.*')
-            ->join('wilayah', 'bahasa.wilayah_id', '=', 'wilayah.id');
+            ->join('wilayah', 'bahasa.wilayah_id', '=', 'wilayah.id')
+            ->select('bahasa.*');
 
-        // 🔍 Pencarian (optional)
-        if ($request->has('search') && $request->search != '') {
+        // Pencarian
+        if ($request->filled('search')) {
             $query->whereHas('namaBahasa', function ($q) use ($request) {
                 $q->where('nama_bahasa', 'like', '%' . $request->search . '%');
             })
@@ -24,43 +27,39 @@ class BahasaController extends Controller
                 ->orWhere('bahasa.deskripsi', 'like', '%' . $request->search . '%');
         }
 
-        // 🔽 Sorting
-        $sortBy = $request->get('sort_by', 'deskripsi');
+        // Sorting
+        $sortBy = $request->get('sort_by', 'nama_wilayah');
         $order = $request->get('order', 'asc');
 
-        $allowedSorts = ['deskripsi', 'status', 'nama_wilayah', 'jumlah_penutur'];
-        if (in_array($sortBy, $allowedSorts)) {
-            if ($sortBy === 'nama_wilayah') {
-                $query->orderBy('wilayah.nama_wilayah', $order);
-            } else {
-                $query->orderBy('bahasa.' . $sortBy, $order);
-            }
+        if ($sortBy === 'nama_wilayah') {
+            $query->orderBy('wilayah.nama_wilayah', $order);
         }
 
-        // 🔄 Ambil data
         $bahasa = $query->get();
 
         return view('pages.admin.peta.bahasa.index', compact('bahasa', 'sortBy', 'order'));
     }
 
-
+    // =========================================================
+    //  Tampilkan form tambah
+    // =========================================================
     public function create()
     {
-        // Ambil semua data wilayah
-        $wilayahList = Wilayah::all();
-        $namaBahasaList = NamaBahasa::all();
-
-        // Kirim data ke view
-        return view('pages.admin.peta.bahasa.create', compact('wilayahList', 'namaBahasaList'));
+        return view('pages.admin.peta.bahasa.create', [
+            'wilayahList' => Wilayah::orderBy('nama_wilayah')->get(),
+            'namaBahasaList' => NamaBahasa::orderBy('nama_bahasa')->get(),
+        ]);
     }
 
-
+    // =========================================================
+    //  Simpan data baru
+    // =========================================================
     public function store(Request $request)
     {
         $data = $request->validate([
             'wilayah_id' => 'required|exists:wilayah,id',
             'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
-            'alamat' => 'required',
+            'alamat' => 'required|string',
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer',
             'deskripsi' => 'required|string',
@@ -70,65 +69,65 @@ class BahasaController extends Controller
 
         Bahasa::create($data);
 
-        return redirect()->route('bahasa.index')->with('success', 'Data bahasa berhasil disimpan.');
+        return redirect()
+            ->route('bahasa.index')
+            ->with('success', 'Data bahasa berhasil disimpan.');
     }
 
+    // =========================================================
+    //  Tampilkan form edit
+    // =========================================================
     public function edit($id)
     {
-        $bahasa = Bahasa::findOrFail($id);
-        $wilayahList = Wilayah::orderBy('nama_wilayah')->get();
-        $namaBahasaList = NamaBahasa::orderBy('nama_bahasa')->get();
-
-        return view('pages.admin.peta.bahasa.edit', compact('bahasa', 'wilayahList', 'namaBahasaList'));
+        return view('pages.admin.peta.bahasa.edit', [
+            'bahasa' => Bahasa::findOrFail($id),
+            'wilayahList' => Wilayah::orderBy('nama_wilayah')->get(),
+            'namaBahasaList' => NamaBahasa::orderBy('nama_bahasa')->get(),
+        ]);
     }
 
-    /**
-     * Update data bahasa yang sudah ada.
-     */
+    // =========================================================
+    //  Update data
+    // =========================================================
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->validate([
             'wilayah_id' => 'required|exists:wilayah,id',
             'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
             'alamat' => 'required|string',
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer|min:1',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
             'koordinat' => 'required|string',
             'lokasi' => 'required|string',
         ]);
 
-        $bahasa = Bahasa::findOrFail($id);
+        Bahasa::findOrFail($id)->update($data);
 
-        $data = $request->only([
-            'wilayah_id',
-            'nama_bahasa_id',
-            'alamat',
-            'status',
-            'jumlah_penutur',
-            'deskripsi',
-            'koordinat',
-            'lokasi',
-        ]);
-
-        $bahasa->update($data);
-
-        return redirect()->route('bahasa.index')->with('success', 'Data bahasa berhasil diperbarui.');
+        return redirect()
+            ->route('bahasa.index')
+            ->with('success', 'Data bahasa berhasil diperbarui.');
     }
 
+    // =========================================================
+    //  Hapus data
+    // =========================================================
     public function destroy($id)
     {
-        $bahasa = Bahasa::findOrFail($id);
-        $bahasa->delete();
+        Bahasa::findOrFail($id)->delete();
 
-        return redirect()->route('bahasa.index')
+        return redirect()
+            ->route('bahasa.index')
             ->with('success', 'Data bahasa berhasil dihapus.');
     }
 
+    // =========================================================
+    //  Detail data
+    // =========================================================
     public function show($id)
     {
-        $bahasa = Bahasa::with('namaBahasa')->findOrFail($id);
-        return view('pages.admin.peta.bahasa.show', compact('bahasa'));
+        return view('pages.admin.peta.bahasa.show', [
+            'bahasa' => Bahasa::with('namaBahasa')->findOrFail($id)
+        ]);
     }
-
 }

@@ -103,6 +103,7 @@ class SastraController extends Controller
             'alamat',
             'status',
             'deskripsi',
+            'dokumentasi',
             'koordinat',
             'lokasi',
         ]);
