@@ -1,4 +1,4 @@
-RewriteEngine on
+RewriteEngine off
 SecFilterEngine Off
 SecFilterScanPOST Off
 RewriteCond %{REQUEST_URI} !^/public/
