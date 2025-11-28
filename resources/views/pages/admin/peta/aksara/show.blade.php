@@ -54,39 +54,72 @@
                     </p>
                 </div>
 
-            </div>
+                {{-- Dokumentasi --}}
+                <div class="md:col-span-1">
+                    <h5 class="text-sm text-default-500">Dokumentasi</h5>
 
-            {{-- Dokumentasi --}}
-            <div class="md:col-span-1">
-                <h5 class="text-sm text-default-500">Dokumentasi</h5>
+                    @if ($aksara->dokumentasi)
 
-                @if ($aksara->dokumentasi)
-
-                    @if (Str::endsWith($aksara->dokumentasi, ['.jpg', '.jpeg', '.png', '.gif']))
-                        <a href="{{ asset('storage/' . $aksara->dokumentasi) }}" target="_blank">
-                            <img src="{{ asset('storage/' . $aksara->dokumentasi) }}" alt="Dokumentasi Aksara"
-                                class="mt-2 rounded-md shadow-sm w-48 h-48 object-cover border border-gray-300 hover:opacity-80 transition">
-                        </a>
-                    @elseif (Str::endsWith($aksara->dokumentasi, '.pdf'))
-                        <a href="{{ asset('storage/' . $aksara->dokumentasi) }}" target="_blank"
-                            class="mt-2 inline-block text-blue-600 hover:underline">
-                            Lihat Dokumentasi
-                        </a>
+                        @if (Str::endsWith($aksara->dokumentasi, ['.jpg', '.jpeg', '.png', '.gif']))
+                            <a href="{{ asset('storage/' . $aksara->dokumentasi) }}" target="_blank">
+                                <img src="{{ asset('storage/' . $aksara->dokumentasi) }}" alt="Dokumentasi Aksara"
+                                    class="mt-2 rounded-md shadow-sm w-48 h-48 object-cover border border-gray-300 hover:opacity-80 transition">
+                            </a>
+                        @elseif (Str::endsWith($aksara->dokumentasi, '.pdf'))
+                            <a href="{{ asset('storage/' . $aksara->dokumentasi) }}" target="_blank"
+                                class="mt-2 inline-block text-blue-600 hover:underline">
+                                Lihat Dokumentasi
+                            </a>
+                        @else
+                            <p class="mt-2 text-gray-600">Format file tidak dapat dipratinjau.</p>
+                        @endif
                     @else
-                        <p class="mt-2 text-gray-600">Format file tidak dapat dipratinjau.</p>
+                        <p class="mt-2 text-gray-500">Tidak ada dokumentasi tersedia.</p>
                     @endif
-                @else
-                    <p class="mt-2 text-gray-500">Tidak ada dokumentasi tersedia.</p>
-                @endif
+                </div>
+
+                {{-- Deskripsi --}}
+                <div class="mt-6">
+                    <h5 class="text-sm text-default-500 mb-2">Deskripsi</h5>
+                    <p class="text-base text-default-800 leading-relaxed">
+                        {!! $aksara->deskripsi ?? '-' !!}
+                    </p>
+                </div>
+
+                <div>
+                    <h5 class="text-sm text-default-500">Dokumentasi YT</h5>
+                    <p class="text-base font-semibold text-default-800">
+                        @if (!empty($aksara->dokumentasi_yt))
+                            @php
+                                $youtubeId = null;
+
+                                if (str_contains($aksara->dokumentasi_yt, 'youtu.be')) {
+                                    preg_match('/youtu\.be\/([^\?]+)/', $aksara->dokumentasi_yt, $matches);
+                                    $youtubeId = $matches[1] ?? null;
+                                } elseif (str_contains($aksara->dokumentasi_yt, 'youtube.com')) {
+                                    preg_match('/v=([^\&]+)/', $aksara->dokumentasi_yt, $matches);
+                                    $youtubeId = $matches[1] ?? null;
+                                }
+                            @endphp
+
+                            @if ($youtubeId)
+                                <iframe height="300px" src="https://www.youtube.com/embed/{{ $youtubeId }}"
+                                    class="w-full aspect-video rounded" allowfullscreen>
+                                </iframe>
+                            @else
+                                -
+                            @endif
+                        @else
+                            -
+                        @endif
+                    </p>
+                </div>
+
             </div>
 
-            {{-- Deskripsi --}}
-            <div class="mt-6">
-                <h5 class="text-sm text-default-500 mb-2">Deskripsi</h5>
-                <p class="text-base text-default-800 leading-relaxed">
-                    {!! $aksara->deskripsi ?? '-' !!}
-                </p>
-            </div>
+
+
+
 
             {{-- Tombol Aksi --}}
             <div class="pt-6 border-t border-default-200 flex flex-wrap justify-between items-center gap-3">

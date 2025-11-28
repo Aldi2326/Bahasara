@@ -69,6 +69,7 @@ class AksaraController extends Controller
             'status' => 'required|string',
             'deskripsi' => 'required|string',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
+            'dokumentasi_yt' => 'nullable|string',
             'koordinat' => 'required|string',
             'lokasi' => 'required|string',
         ]);
@@ -107,6 +108,7 @@ class AksaraController extends Controller
             'status' => 'required|string',
             'deskripsi' => 'required|string',
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:2048',
+            'dokumentasi_yt' => 'nullable|string',
             'koordinat' => 'required|string',
             'lokasi' => 'required|string',
         ]);
@@ -119,6 +121,8 @@ class AksaraController extends Controller
             'alamat',
             'status',
             'deskripsi',
+            'dokumentasi',
+            'dokumentasi_yt',
             'koordinat',
             'lokasi',
         ]);

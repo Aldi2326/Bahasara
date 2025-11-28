@@ -23,22 +23,28 @@
         <table class="min-w-full divide-y divide-gray-200 text-sm text-center">
             <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-semibold">
                 <tr>
-                    <th class="px-4 py-3 w-[40px]">No</th>
-                    <th class="px-4 py-3 w-[160px]"> <a
-                            href="{{ route('aksara.index', ['sort_by' => 'nama_wilayah', 'order' => $sortField === 'nama_wilayah' ? $nextOrder : 'asc']) }}"
-                            class="flex justify-center items-center gap-1 hover:text-blue-600"> <span>Nama
-                                Wilayah</span> {!! $sortField === 'nama_wilayah'
-                                    ? ($sortOrder === 'asc'
-                                        ? '<i class="bi bi-sort-alpha-up"></i>'
-                                        : '<i class="bi bi-sort-alpha-down"></i>')
-                                    : '<i class="bi bi-arrow-down-up"></i>' !!} </a> </th>
-                    <th class="px-4 py-3 w-[160px]">Nama Aksara</th>
-                    <th class="px-4 py-3 w-[200px]">Alamat</th>
-                    <th class="px-4 py-3 w-[100px]">Status Aksara</th>
-                    <th class="px-4 py-3 w-[220px]">Deskripsi</th>
-                    <th class="px-4 py-3 w-[120px]">Dokumentasi</th>
-                    <th class="px-4 py-3 w-[140px]">Koordinat</th>
-                    <th class="px-4 py-3 w-[100px]">Aksi</th>
+                    <th class="px-4 py-3 w-[40px] whitespace-nowrap">No</th>
+
+                    <th class="px-4 py-3 w-[160px] whitespace-nowrap">
+                        <a href="{{ route('aksara.index', ['sort_by' => 'nama_wilayah', 'order' => $sortField === 'nama_wilayah' ? $nextOrder : 'asc']) }}"
+                            class="flex justify-center items-center gap-1 hover:text-blue-600 whitespace-nowrap">
+                            <span>Nama Wilayah</span>
+                            {!! $sortField === 'nama_wilayah'
+                                ? ($sortOrder === 'asc'
+                                    ? '<i class="bi bi-sort-alpha-up"></i>'
+                                    : '<i class="bi bi-sort-alpha-down"></i>')
+                                : '<i class="bi bi-arrow-down-up"></i>' !!}
+                        </a>
+                    </th>
+
+                    <th class="px-4 py-3 w-[160px] whitespace-nowrap">Nama Aksara</th>
+                    <th class="px-4 py-3 w-[200px] whitespace-nowrap">Alamat</th>
+                    <th class="px-4 py-3 w-[100px] whitespace-nowrap">Status Aksara</th>
+                    <th class="px-4 py-3 w-[220px] whitespace-nowrap">Deskripsi</th>
+                    <th class="px-4 py-3 w-[120px] whitespace-nowrap">Dokumentasi</th>
+                    <th class="px-4 py-3 w-[120px] whitespace-nowrap">Dokumentasi YT</th>
+                    <th class="px-4 py-3 w-[140px] whitespace-nowrap">Koordinat</th>
+                    <th class="px-4 py-3 w-[100px] whitespace-nowrap">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -55,12 +61,39 @@
                         <td class="px-4 py-3 text-gray-700 truncate max-w-[220px]"
                             title="{{ strip_tags($item->deskripsi) }}">
                             {{ Str::limit(strip_tags($item->deskripsi), 40) }} </td>
+
                         <td class="px-4 py-3 text-center">
                             @if ($item->dokumentasi)
                                 <img src="{{ asset('storage/' . $item->dokumentasi) }}" alt="dokumentasi"
                                     width="80" class="rounded shadow mx-auto">
                             @else
                                 <span class="text-gray-400">-</span>
+                            @endif
+                        </td>
+
+                        <td class="px-4 py-3 text-center">
+                            @if (!empty($item->dokumentasi_yt))
+                                @php
+                                    $youtubeId = null;
+
+                                    if (str_contains($item->dokumentasi_yt, 'youtu.be')) {
+                                        preg_match('/youtu\.be\/([^\?]+)/', $item->dokumentasi_yt, $matches);
+                                        $youtubeId = $matches[1] ?? null;
+                                    } elseif (str_contains($item->dokumentasi_yt, 'youtube.com')) {
+                                        preg_match('/v=([^\&]+)/', $item->dokumentasi_yt, $matches);
+                                        $youtubeId = $matches[1] ?? null;
+                                    }
+                                @endphp
+
+                                @if ($youtubeId)
+                                    <iframe src="https://www.youtube.com/embed/{{ $youtubeId }}"
+                                        class="w-full aspect-video rounded" allowfullscreen>
+                                    </iframe>
+                                @else
+                                    -
+                                @endif
+                            @else
+                                -
                             @endif
                         </td>
 

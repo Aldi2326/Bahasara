@@ -14,6 +14,7 @@ class Aksara extends Model
         'status',
         'deskripsi',
         'dokumentasi',
+        'dokumentasi_yt',
         'koordinat',
         'lokasi',
     ];

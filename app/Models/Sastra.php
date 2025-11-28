@@ -15,6 +15,7 @@ class Sastra extends Model
         'jenis',
         'deskripsi',
         'dokumentasi',
+        'dokumentasi_yt',
         'koordinat',
         'lokasi',
     ];

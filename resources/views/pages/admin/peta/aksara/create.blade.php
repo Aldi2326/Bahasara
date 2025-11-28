@@ -101,6 +101,14 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-4 items-center gap-6">
+                    <label for="dokumentasi_yt" class="text-default-800 text-sm font-medium">Dokumentasi Youtube (Opsional)</label>
+                    <div class="md:col-span-3">
+                        <input type="text" name="dokumentasi_yt" id="dokumentasi_yt" class="form-input"
+                            placeholder="Masukkan Link Video Youtube">
+                    </div>
+                </div>
+
                 {{-- Koordinat --}}
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="koordinat" class="text-default-800 text-sm font-medium">Koordinat</label>
@@ -174,6 +182,23 @@
                 var lat = e.latlng.lat.toFixed(6);
                 var lng = e.latlng.lng.toFixed(6);
                 setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
+            });
+
+            document.getElementById('koordinat').addEventListener('input', function() {
+                let nilai = this.value.trim();
+
+                // Format yang diharapkan: "-1.234567, 103.123456"
+                let parts = nilai.split(',');
+
+                if (parts.length === 2) {
+                    let lat = parseFloat(parts[0]);
+                    let lng = parseFloat(parts[1]);
+
+                    // Validasi sederhana
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
+                    }
+                }
             });
 
             // Tombol konfirmasi

@@ -16,6 +16,7 @@ class Bahasa extends Model
         'jumlah_penutur',
         'deskripsi',
         'koordinat',
+        'dokumentasi_yt',
         'lokasi',
     ];
 

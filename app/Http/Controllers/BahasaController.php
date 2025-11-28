@@ -63,6 +63,7 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer',
             'deskripsi' => 'required|string',
+            'dokumentasi_yt' => 'nullable|string',
             'koordinat' => 'required|string',
             'lokasi' => 'required|string',
         ]);
@@ -98,6 +99,7 @@ class BahasaController extends Controller
             'status' => 'required|string',
             'jumlah_penutur' => 'required|integer|min:1',
             'deskripsi' => 'required|string',
+            'dokumentasi_yt' => 'nullable|string',
             'koordinat' => 'required|string',
             'lokasi' => 'required|string',
         ]);

@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('status');
             $table->text('deskripsi');
             $table->string('dokumentasi');
+            $table->string('dokumentasi_yt')->nullable();
             $table->string('koordinat');
             $table->string('lokasi');
             $table->timestamps();
