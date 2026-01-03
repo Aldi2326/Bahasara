@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-
 
 class AdminController extends Controller
 {
@@ -87,29 +85,22 @@ class AdminController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        if (
-            $user->id === Auth::id() &&
-            $user->role === 'super_admin'
-        ) {
-            return redirect()
-                ->route('pengguna.index')
-                ->with('error', 'Super admin tidak dapat menghapus akunnya sendiri.');
+
+        if ($user->id === auth()->id() && $user->role === 'super_admin') {
+            abort(403, 'Super admin tidak boleh menghapus dirinya sendiri');
         }
 
-        if ($user->role === 'super_admin') {
-            $superAdminCount = User::where('role', 'super_admin')->count();
-
-            if ($superAdminCount <= 1) {
-                return redirect()
-                    ->route('pengguna.index')
-                    ->with('error', 'Minimal harus ada satu super admin dalam sistem.');
-            }
+        if (
+            $user->role === 'super_admin' &&
+            User::where('role', 'super_admin')->count() <= 1
+        ) {
+            abort(403, 'Minimal harus ada satu super admin');
         }
 
         $user->delete();
 
-        return redirect()
-            ->route('pengguna.index')
+        return redirect()->route('pengguna.index')
             ->with('success', 'Pengguna berhasil dihapus.');
     }
+
 }

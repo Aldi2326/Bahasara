@@ -77,16 +77,13 @@
                                     </a>
 
                                     <!-- Delete -->
-                                    <form action="{{ route('pengguna.destroy', $admin->id) }}" method="POST"
-                                        class="inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button"
-                                            class="text-red-600 hover:text-red-800 btn-delete"
-                                            title="Hapus" data-name="{{ $admin->name }}">
-                                            <i class="bi bi-trash fs-5"></i>
-                                        </button>
-                                    </form>
+                                    @if (!($user->id === auth()->id() && $user->role === 'super_admin'))
+                                        <form method="POST" action="{{ route('pengguna.destroy', $user->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit">Hapus</button>
+                                        </form>
+                                        @endi
                                 </div>
                             </td>
                         </tr>
