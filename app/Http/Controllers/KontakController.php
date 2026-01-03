@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kontak;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class KontakController extends Controller
 {
@@ -23,16 +24,44 @@ class KontakController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama'   => 'required',
-            'email'  => 'required|email',
+            'nama' => 'required',
+            'email' => 'required|email',
             'subjek' => 'required',
-            'pesan'  => 'required',
+            'pesan' => 'required',
+            'g-recaptcha-response' => 'required'
         ]);
 
-        Kontak::create($request->all());
+        // Validasi ke Google reCAPTCHA
+        $response = Http::asForm()->post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            [
+                'secret' => env('RECAPTCHA_SECRET_KEY'),
+                'response' => $request->input('g-recaptcha-response'),
+                'remoteip' => $request->ip()
+            ]
+        );
+
+        $result = $response->json();
+
+        if (!isset($result['success']) || $result['success'] !== true) {
+            return back()
+                ->withErrors([
+                    'g-recaptcha-response' => 'Silakan verifikasi bahwa Anda bukan robot.'
+                ])
+                ->with('focus_captcha', true)
+                ->withInput();
+        }
+
+        Kontak::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'subjek' => $request->subjek,
+            'pesan' => $request->pesan,
+        ]);
 
         return redirect('/kontak')->with('success', 'Pesan berhasil dikirim!');
     }
+
 
     /**
      * Form balasan admin
@@ -63,8 +92,8 @@ class KontakController extends Controller
         // Update status di database
         $kontak->update([
             'reply_message' => $request->reply_message,
-            'status'    => true,
-            'replied_at'    => now(),
+            'status' => true,
+            'replied_at' => now(),
         ]);
 
         return redirect()->route('kontak.index')->with('success', 'Balasan berhasil dikirim!');

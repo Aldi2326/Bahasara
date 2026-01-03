@@ -85,22 +85,21 @@ class AdminController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-
-        if ($user->id === auth()->id() && $user->role === 'super_admin') {
+        if ($user->id === auth()->id() && $user->role === 'superadmin') {
             abort(403, 'Super admin tidak boleh menghapus dirinya sendiri');
         }
 
         if (
-            $user->role === 'super_admin' &&
-            User::where('role', 'super_admin')->count() <= 1
+            $user->role === 'superadmin' &&
+            User::where('role', 'superadmin')->count() <= 1
         ) {
             abort(403, 'Minimal harus ada satu super admin');
         }
 
         $user->delete();
 
-        return redirect()->route('pengguna.index')
+        return redirect()
+            ->route('pengguna.index')
             ->with('success', 'Pengguna berhasil dihapus.');
     }
-
 }
