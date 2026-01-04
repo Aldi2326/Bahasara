@@ -96,7 +96,8 @@
                 </div>
 
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="dokumentasi_yt" class="text-default-800 text-sm font-medium">Dokumentasi Youtube (Opsional)</label>
+                    <label for="dokumentasi_yt" class="text-default-800 text-sm font-medium">Dokumentasi Youtube
+                        (Opsional)</label>
                     <div class="md:col-span-3">
                         <input type="text" name="dokumentasi_yt" id="dokumentasi_yt" class="form-input"
                             placeholder="Masukkan Link Video Youtube">
@@ -190,14 +191,16 @@
             });
 
 
-            // ============================
-            //  SweetAlert Konfirmasi Submit
-            // ============================
-            document.getElementById('btnSubmit').addEventListener('click', function(e) {
-                e.preventDefault();
+            // ================================
+            // SweetAlert konfirmasi sebelum submit
+            // ================================
+            const form = document.getElementById('bahasaForm');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
                 Swal.fire({
-                    title: 'Simpan Data Bahasa?',
-                    text: "Pastikan semua data sudah benar sebelum menyimpan.",
+                    title: 'Simpan Data?',
+                    text: "Pastikan data sudah benar sebelum disimpan.",
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#2563EB',
@@ -206,7 +209,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        document.getElementById('bahasaForm').submit();
+                        form.submit();
                     }
                 });
             });

@@ -5,18 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil query pencarian dari input (jika ada)
         $search = $request->input('search');
 
-        // Query dasar: hanya tampilkan superadmin, admin, dan pegawai
         $user = User::whereIn('role', ['superadmin', 'admin', 'pegawai'])
             ->when($search, function ($query, $search) {
-                // Tambahkan filter pencarian berdasarkan nama, email, atau role
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
@@ -37,8 +35,15 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user,email',
-            'password' => 'required|min:8|confirmed',
+            'email' => 'required|email|unique:users,email',
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
             'role' => 'required|in:superadmin,admin,pegawai',
         ]);
 
@@ -49,7 +54,9 @@ class AdminController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('pengguna.index')->with('success');
+        return redirect()
+            ->route('pengguna.index')
+            ->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -64,36 +71,48 @@ class AdminController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user,email,' . $user->id,
-            'password' => 'nullable|min:8|confirmed',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => [
+                'nullable',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
             'role' => 'required|in:superadmin,admin,pegawai',
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+        ]);
 
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
         }
 
-        $user->save();
-
-        return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil diperbarui.');
+        return redirect()
+            ->route('pengguna.index')
+            ->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+
         if ($user->id === auth()->id() && $user->role === 'superadmin') {
-            abort(403, 'Super admin tidak boleh menghapus dirinya sendiri');
+            abort(403, 'Super admin tidak boleh menghapus dirinya sendiri.');
         }
 
         if (
             $user->role === 'superadmin' &&
             User::where('role', 'superadmin')->count() <= 1
         ) {
-            abort(403, 'Minimal harus ada satu super admin');
+            abort(403, 'Minimal harus ada satu super admin.');
         }
 
         $user->delete();

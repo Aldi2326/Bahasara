@@ -102,7 +102,8 @@
                 </div>
 
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="dokumentasi_yt" class="text-default-800 text-sm font-medium">Dokumentasi Youtube (Opsional)</label>
+                    <label for="dokumentasi_yt" class="text-default-800 text-sm font-medium">Dokumentasi Youtube
+                        (Opsional)</label>
                     <div class="md:col-span-3">
                         <input type="text" name="dokumentasi_yt" id="dokumentasi_yt" class="form-input"
                             placeholder="Masukkan Link Video Youtube">
@@ -201,22 +202,33 @@
                 }
             });
 
-            // Tombol konfirmasi
-            document.getElementById('btnSubmit').addEventListener('click', function(e) {
-                e.preventDefault();
+            // ============================
+            // SUBMIT + VALIDASI (FIX)
+            // ============================
+            const form = document.getElementById('formAksara');
+            const btnSubmit = document.getElementById('btnSubmit');
 
+            btnSubmit.addEventListener('click', function() {
+
+                // 1️⃣ Trigger validasi HTML5
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // popup "Isi bidang ini"
+                    return;
+                }
+
+                // 2️⃣ Kalau valid, konfirmasi
                 Swal.fire({
                     title: 'Simpan Data Aksara?',
-                    text: "Pastikan semua data sudah benar sebelum menyimpan.",
+                    text: 'Pastikan semua data sudah benar sebelum disimpan.',
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#2563EB',
-                    cancelButtonColor: '#4B5563',
+                    cancelButtonColor: '#6B7280',
                     confirmButtonText: 'Ya, simpan!',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        document.getElementById('formAksara').submit();
+                        form.submit();
                     }
                 });
             });
