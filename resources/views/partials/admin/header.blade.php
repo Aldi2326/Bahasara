@@ -1,15 +1,13 @@
-<!-- Topbar Start -->
 <header class="app-header sticky top-0 z-50 min-h-topbar flex items-center bg-white">
     <div class="px-6 w-full flex items-center justify-between gap-4">
         <div class="flex items-center gap-5">
-            <!-- Sidenav Menu Toggle Button -->
             <button
                 class="flex items-center text-default-500 rounded-full cursor-pointer p-2 bg-white border border-default-200 hover:bg-primary/15 hover:text-primary hover:border-primary/5 transition-all"
                 data-hs-overlay="#app-menu" aria-label="Toggle navigation">
                 <i class="i-lucide-align-left text-2xl"></i>
             </button>
 
-            <!-- Topbar Brand Logo -->
+            
             <a href="index.html" class="md:hidden flex">
                 <img src="{{ asset('assets/img/logo-sibaraja-light.png') }}" class="h-5" alt="Small logo">
             </a>
@@ -17,7 +15,6 @@
         </div>
 
         <div class="flex items-center gap-5">
-            <!-- Fullscreen Toggle Button -->
             <div class="md:flex hidden">
                 <button data-toggle="fullscreen" type="button"
                     class="p-2 rounded-full bg-white border border-default-200 hover:bg-primary/15 hover:text-primary transition-all">
@@ -29,7 +26,6 @@
                 </button>
             </div>
 
-            <!-- Profile Dropdown Button -->
             <div class="relative">
                 <div class="hs-dropdown relative inline-flex [--placement:bottom-right]">
                     <button type="button" class="hs-dropdown-toggle">
@@ -55,4 +51,3 @@
         </div>
     </div>
 </header>
-<!-- Topbar End -->

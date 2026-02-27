@@ -2,6 +2,11 @@
 @section('title', 'Detail Aksara')
 
 @section('content')
+<div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <a href="{{ route('aksara.index') }}" class="text-sm font-medium text-default-700">Data Aksara</a>
+        <i class="i-tabler-chevron-right text-lg flex-shrink-0 text-default-500 rtl:rotate-180"></i>
+        <p class="text-sm font-bold text-default-900">Detail Data Aksara</p>
+    </div>
     <div class="card overflow-hidden print:border-0 print:shadow-none">
 
         <div class="card-header flex justify-between items-center print:hidden">

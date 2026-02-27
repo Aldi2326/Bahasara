@@ -3,6 +3,11 @@
 @section('title', 'Balas Pesan')
 
 @section('content')
+<div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <a href="{{ route('kontak.index') }}" class="text-sm font-medium text-default-700">Pengumuman</a>
+        <i class="i-tabler-chevron-right text-lg flex-shrink-0 text-default-500 rtl:rotate-180"></i>
+        <p class="text-sm font-bold text-default-900">Balas Pesan Pengguna</p>
+    </div>
 <div class="max-w-3xl mx-auto">
 
     <div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">

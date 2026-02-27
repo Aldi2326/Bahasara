@@ -2,6 +2,11 @@
 @section('title', 'Aksara')
 
 @section('content')
+<div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <a href="{{ route('nama-aksara.index') }}" class="text-sm font-medium text-default-700">Aksara</a>
+        <i class="i-tabler-chevron-right text-lg flex-shrink-0 text-default-500 rtl:rotate-180"></i>
+        <p class="text-sm font-bold text-default-900">Input Nama Aksara</p>
+    </div>
 <div class="card">
     <div class="card-header">
         <h4 class="card-title mb-4">Input Nama Aksara</h4>

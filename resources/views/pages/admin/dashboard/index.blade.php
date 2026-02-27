@@ -1,10 +1,10 @@
 @extends('layouts.admin.app')
 @section('title', 'Dashboard')
 @section('content')
-    <div class="flex items-center md:justify-between flex-wrap gap-2 mb-5">
-        <h4 class="text-default-900 text-lg font-semibold">Dashboard</h4>
-        
+    <div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <p class="text-sm font-bold text-default-900">Dashboard</p>
     </div>
+
 
     <div class="grid xl:grid-cols-4 md:grid-cols-2 gap-6 mb-6">
         <!-- Card Bahasa -->

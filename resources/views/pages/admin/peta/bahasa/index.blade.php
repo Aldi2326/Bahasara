@@ -7,6 +7,10 @@
         $sortOrder = request('order', 'asc');
         $nextOrder = $sortOrder === 'asc' ? 'desc' : 'asc';
     @endphp
+    <div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <p class="text-sm font-bold text-default-900">Data Bahasa</p>
+        
+    </div>
     <div class="card overflow-hidden shadow-sm rounded-2xl border border-gray-200">
         <div class="card-header flex justify-between items-center bg-gray-100 px-6 py-4">
             <h4 class="card-title text-lg font-semibold text-gray-800">Daftar Bahasa</h4>

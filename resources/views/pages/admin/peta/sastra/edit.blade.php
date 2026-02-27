@@ -1,6 +1,11 @@
 @extends('layouts.admin.app')
 @section('title', 'Edit Sastra')
 @section('content')
+    <div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <a href="{{ route('sastra.index') }}" class="text-sm font-medium text-default-700">Data Sastra</a>
+        <i class="i-tabler-chevron-right text-lg flex-shrink-0 text-default-500 rtl:rotate-180"></i>
+        <p class="text-sm font-bold text-default-900">Edit Data Sastra</p>
+    </div>
     <div class="card">
         <div class="card-header">
             <h4 class="card-title mb-4">Edit Data Sastra</h4>
@@ -112,10 +117,12 @@
                 </div>
 
                 <div class="grid grid-cols-4 items-center gap-6">
-                    <label for="dokumentasi_yt" class="text-default-800 text-sm font-medium">Dokumentasi Youtube (Opsional)</label>
+                    <label for="dokumentasi_yt" class="text-default-800 text-sm font-medium">Dokumentasi Youtube
+                        (Opsional)</label>
                     <div class="md:col-span-3">
                         <input type="text" name="dokumentasi_yt" id="dokumentasi_yt" class="form-input"
-                            placeholder="Masukkan Link Video Youtube" value="{{ old('dokumentasi_yt', $sastra->dokumentasi_yt) }}">
+                            placeholder="Masukkan Link Video Youtube"
+                            value="{{ old('dokumentasi_yt', $sastra->dokumentasi_yt) }}">
                     </div>
                 </div>
 

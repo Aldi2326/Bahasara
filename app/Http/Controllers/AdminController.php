@@ -33,20 +33,49 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        // 1. Definisikan Rules (Aturan)
+        $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user,email',
+            'email' => 'required|email|unique:user,email', // Pastikan nama tabel di database 'user' atau 'users'
             'password' => [
                 'required',
-                'confirmed',
+                'confirmed', // Membutuhkan field 'password_confirmation' di form
                 Password::min(8)
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols(),
+                    ->letters()    // Harus ada huruf
+                    ->mixedCase()  // Harus ada huruf besar & kecil
+                    ->numbers()    // Harus ada angka
+                    ->symbols(),   // Harus ada simbol (@$!%*#?&)
             ],
             'role' => 'required|in:superadmin,admin,pegawai',
-        ]);
+        ];
 
+        // 2. Definisikan Pesan Error (Bahasa Indonesia)
+        $messages = [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.string' => 'Nama harus berupa teks.',
+            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+            
+            'email.required' => 'Alamat email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar, gunakan email lain.',
+            
+            'password.required' => 'Password wajib diisi.',
+            'password.confirmed' => 'Konfirmasi password tidak sesuai.',
+            'password.min' => 'Password minimal harus 8 karakter.',
+            'password.letters'   => 'Kata sandi harus mengandung huruf.',
+            'password.mixed'     => 'Kata sandi harus gabungan huruf besar dan kecil.',
+            'password.numbers'   => 'Kata sandi harus mengandung angka.',
+            'password.symbols'   => 'Kata sandi harus mengandung simbol (misal: @, #, !).',
+            
+            // Pesan untuk role
+            'role.required' => 'Role (Peran) wajib dipilih.',
+            'role.in' => 'Pilihan role tidak valid.',
+        ];
+
+        // 3. Jalankan Validasi
+        $request->validate($rules, $messages);
+
+        // 4. Simpan Data
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -54,6 +83,7 @@ class AdminController extends Controller
             'role' => $request->role,
         ]);
 
+        // 5. Redirect
         return redirect()
             ->route('pengguna.index')
             ->with('success', 'Pengguna berhasil ditambahkan.');

@@ -2,6 +2,10 @@
 @section('title', 'Pesan Masuk')
 
 @section('content')
+<div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <p class="text-sm font-bold text-default-900">Umpan Balik</p>
+
+    </div>
     <div class="card overflow-hidden shadow-sm rounded-2xl border border-gray-200">
 
         <!-- Header -->

@@ -2,6 +2,9 @@
 @section('title', 'Nama Sastra')
 
 @section('content')
+<div class="flex items-center gap-3 text-sm font-semibold mb-5">
+    <p class="text-sm font-bold text-default-900">Sastra</p>
+</div>
     <div class="card overflow-hidden shadow-sm rounded-2xl border border-gray-200">
         <!-- Header -->
         <div class="card-header flex justify-between items-center bg-gray-100 px-6 py-4">

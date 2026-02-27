@@ -1,18 +1,19 @@
-@extends('layouts.admin.app') @section('title', 'Pengguna') @section('content') <div class="card">
+@extends('layouts.admin.app') 
+@section('title', 'Pengguna') 
+@section('content') 
+<div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <a href="{{ route('pengguna.index') }}" class="text-sm font-medium text-default-700">Pengguna</a>
+        <i class="i-tabler-chevron-right text-lg flex-shrink-0 text-default-500 rtl:rotate-180"></i>
+        <p class="text-sm font-bold text-default-900">Input Data Pengguna</p>
+    </div>
+<div class="card">
     <div class="card-header">
         <h4 class="card-title mb-4">Input Data Pengguna</h4>
     </div>
     <div class="p-6"> {{-- ✅ Notifikasi sukses --}} @if (session('success'))
             <div class="mb-4 p-3 bg-green-100 text-green-800 rounded"> {{ session('success') }} </div>
-            @endif {{-- ⚠️ Notifikasi error validasi --}} @if ($errors->any())
-                <div class="mb-4 p-3 bg-red-100 text-red-800 rounded"> <strong>Terjadi kesalahan:</strong>
-                    <ul class="mt-2 list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            @endif {{-- ⚠️ Notifikasi error validasi --}} 
+            
             <form id="formPengguna" class="flex flex-col gap-6" method="POST" action="{{ route('pengguna.store') }}"
                 enctype="multipart/form-data"> @csrf
 
@@ -68,7 +69,7 @@
                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg> </span> @error('password_confirmation')
+                            </svg> </span> @error('password')
                             <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
