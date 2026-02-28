@@ -14,18 +14,6 @@
 
         <div class="p-6">
 
-            {{-- ⚠️ Notifikasi error validasi --}}
-            @if ($errors->any())
-                <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
-                    <strong>Terjadi kesalahan:</strong>
-                    <ul class="mt-2 list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             {{-- ✅ Notifikasi sukses --}}
             @if (session('success'))
                 <div class="bg-green-50 border border-green-800 text-green-800 px-4 py-3 rounded-lg mb-4 shadow-sm">

@@ -60,12 +60,12 @@ class AdminController extends Controller
             'email.unique' => 'Email ini sudah terdaftar, gunakan email lain.',
             
             'password.required' => 'Password wajib diisi.',
-            'password.confirmed' => 'Konfirmasi password tidak sesuai.',
+            'password.confirmed' => 'Password tidak sesuai dengan konfirmasi password.',
             'password.min' => 'Password minimal harus 8 karakter.',
-            'password.letters'   => 'Kata sandi harus mengandung huruf.',
-            'password.mixed'     => 'Kata sandi harus gabungan huruf besar dan kecil.',
-            'password.numbers'   => 'Kata sandi harus mengandung angka.',
-            'password.symbols'   => 'Kata sandi harus mengandung simbol (misal: @, #, !).',
+            'password.letters'   => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
+            'password.mixed'     => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
+            'password.numbers'   => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
+            'password.symbols'   => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
             
             // Pesan untuk role
             'role.required' => 'Role (Peran) wajib dipilih.',
@@ -99,31 +99,62 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user,email,' . $user->id,
+            
+            // PERBAIKAN 1: Ignore email milik user yang sedang diedit
+            'email' => 'required|email|unique:user,email,'.$id, 
+            
+            // PERBAIKAN 2: Ubah 'required' jadi 'nullable'
             'password' => [
-                'nullable',
-                'confirmed',
+                'nullable', // Boleh kosong jika tidak ingin ganti password
+                'confirmed', 
                 Password::min(8)
+                    ->letters()
                     ->mixedCase()
                     ->numbers()
                     ->symbols(),
             ],
             'role' => 'required|in:superadmin,admin,pegawai',
-        ]);
+        ];
 
-        $user->update([
-            'name' => $request->name,
+        // 2. Definisikan Pesan Error (Bahasa Indonesia)
+        $messages = [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.string' => 'Nama harus berupa teks.',
+            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+            'email.unique' => 'Email ini sudah digunakan oleh pengguna lain.',
+            'email.required' => 'Alamat email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar, gunakan email lain.',
+            
+            'password.required' => 'Password wajib diisi.',
+            'password.confirmed' => 'Password tidak sesuai dengan konfirmasi password.',
+            'password.min' => 'Password minimal harus 8 karakter.',
+            'password.letters'   => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
+            'password.mixed'     => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
+            'password.numbers'   => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
+            'password.symbols'   => 'Kata sandi harus gabungan huruf besar dan kecil, mengandung angka, simbol (misal: @, #, !).',
+            
+            // Pesan untuk role
+            'role.required' => 'Role (Peran) wajib dipilih.',
+            'role.in' => 'Pilihan role tidak valid.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $data = [
+            'name'  => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
-        ]);
+            'role'  => $request->role,
+        ];
 
         if ($request->filled('password')) {
-            $user->update([
-                'password' => Hash::make($request->password),
-            ]);
+            // Jika diisi, hash password dan masukkan ke array data
+            $data['password'] = Hash::make($request->password);
         }
+
+        $user->update($data);
 
         return redirect()
             ->route('pengguna.index')
