@@ -146,4 +146,20 @@ class WilayahController extends Controller
             ->with('success', 'Wilayah berhasil dihapus.');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        
+        if ($ids) {
+            $idsArray = explode(',', $ids);
+            
+            // Hapus data
+            Wilayah::whereIn('id', $idsArray)->delete();
+            
+            return redirect()->back()->with('success', 'Data wilayah terpilih berhasil dihapus.');
+        }
+        
+        return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+    }
+
 }

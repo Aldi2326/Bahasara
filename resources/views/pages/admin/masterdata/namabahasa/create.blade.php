@@ -16,17 +16,6 @@
         <form id="namaBahasaForm" class="flex flex-col gap-4" method="POST" action="{{ route('nama-bahasa.store') }}" enctype="multipart/form-data">
             @csrf
 
-            @if ($errors->any())
-            <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
-                <strong class="font-semibold">Terjadi kesalahan:</strong>
-                <ul class="mt-2 list-disc list-inside text-sm">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
             <!-- Nama Bahasa -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="nama_bahasa" class="text-default-800 text-sm font-medium">Nama Bahasa</label>
@@ -34,6 +23,9 @@
                     <input type="text" name="nama_bahasa" id="nama_bahasa" class="form-input"
                         placeholder="Contoh: Bahasa Melayu" required>
                 </div>
+                @error('nama_bahasa')
+                    <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                @enderror
             </div>
 
             <!-- Warna Pinpoint -->
@@ -42,6 +34,9 @@
                 <div class="md:col-span-3 flex items-center gap-4">
                     <input type="color" name="warna_pin" id="warna_pin" class="w-16 h-10 cursor-pointer border rounded"
                         value="#2563eb">
+                    @error('warna_pin')
+                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                    @enderror
 
                     <!-- Preview ikon pinpoint -->
                     <div id="pin-preview" class="flex items-center gap-2">
@@ -50,6 +45,7 @@
                             c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
                         </svg>
                     </div>
+                    
                 </div>
             </div>
 

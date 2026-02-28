@@ -135,6 +135,11 @@
                                             <input type="text" class="form-control" id="form-contact-name" name="nama"
                                                 value="{{ old('nama') }}" placeholder="Nama" required>
                                         </div>
+                                        @error('nama')
+                                            <small class="text-danger d-block mt-2">
+                                                {{ $message }}
+                                            </small>
+                                        @enderror
                                     </div>
 
                                     <div class="col-md-6 col-sm-6">
@@ -143,6 +148,11 @@
                                             <input type="email" class="form-control" id="form-contact-email"
                                                 name="email" value="{{ old('email') }}" placeholder="Email" required>
                                         </div>
+                                        @error('email')
+                                            <small class="text-danger d-block mt-2">
+                                                {{ $message }}
+                                            </small>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -150,20 +160,37 @@
                                     <label for="form-contact-email">Subjek *</label>
                                     <input type="text" class="form-control" id="form-contact-subject" name="subjek"
                                         value="{{ old('subjek') }}" placeholder="Subjek" required>
+                                    @error('subjek')
+                                        <small class="text-danger d-block mt-2">
+                                            {{ $message }}
+                                        </small>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group">
                                     <label for="form-contact-message">Pesan *</label>
                                     <textarea class="form-control" id="form-contact-message" rows="5" name="pesan" placeholder="Pesan" required>{{ old('pesan') }}</textarea>
                                 </div>
-
-                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-
-                                @error('g-recaptcha-response')
+                                @error('pesan')
                                     <small class="text-danger d-block mt-2">
                                         {{ $message }}
                                     </small>
                                 @enderror
+
+                                <div class="form-group mt-4">
+                                    <label>Pertanyaan Keamanan *</label>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="mr-2">{!! captcha_img('math') !!}</span>
+                                    </div>
+                                    
+                                    <input type="text" class="form-control" name="captcha" placeholder="Masukkan hasil perhitungan" required>
+                                    
+                                    @error('captcha')
+                                        <small class="text-danger d-block mt-2">
+                                            {{ $message }}
+                                        </small>
+                                    @enderror
+                                </div>
 
 
                                 <div class="form-group clearfix">
@@ -211,4 +238,47 @@
             box-shadow: 0 0 5px rgba(27, 129, 174, 0.3);
         }
     </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. MATIKAN fitur browser yang mengingat posisi scroll terakhir.
+            // Ini PENTING agar browser tidak memaksa layar kembali ke tombol submit.
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+
+            // 2. Gunakan setTimeout agar script jalan SETELAH browser selesai me-render halaman
+            setTimeout(function() {
+                // Cari elemen error (prioritaskan pesan text merah dulu karena pasti terlihat)
+                let errorElement = document.querySelector('.text-danger');
+                
+                // Jika tidak ada text merah, cari input yang border merah
+                if (!errorElement) {
+                    errorElement = document.querySelector('.border-red-500');
+                }
+
+                if (errorElement) {
+                    // Debugging: Cek di console apakah elemen ketemu
+                    console.log("Scroll ke:", errorElement);
+
+                    // 3. Scroll dengan opsi 'center' agar elemen pas di tengah mata
+                    errorElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center', 
+                        inline: 'nearest'
+                    });
+
+                    // 4. Fokus kursor (hanya jika elemennya input biasa)
+                    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(errorElement.tagName)) {
+                        // preventScroll: true agar tidak bentrok dengan scrollIntoView di atas
+                        errorElement.focus({ preventScroll: true }); 
+                    }
+                } else {
+                    // Jika tidak ada error, kembalikan scroll ke paling atas
+                    window.scrollTo(0, 0);
+                }
+            }, 300); // Delay 300ms (0.3 detik) memberi waktu browser "bernapas" dulu
+            
+        });
+    </script>
 @endsection

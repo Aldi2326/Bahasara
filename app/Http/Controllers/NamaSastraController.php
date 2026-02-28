@@ -100,4 +100,20 @@ class NamaSastraController extends Controller
         return redirect()->route('nama-sastra.index')
             ->with('success', 'Nama sastra  berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        
+        if ($ids) {
+            $idsArray = explode(',', $ids);
+            
+            // Hapus data
+            NamaSastra::whereIn('id', $idsArray)->delete();
+            
+            return redirect()->back()->with('success', 'Data terpilih berhasil dihapus.');
+        }
+        
+        return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+    }
 }

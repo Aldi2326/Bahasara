@@ -23,6 +23,9 @@
                     <div class="md:col-span-3">
                         <input value="{{ $wilayah->nama_wilayah }}" type="text" name="nama_wilayah" id="nama_wilayah"
                             class="form-input" placeholder="Contoh: Kota Jambi" required>
+                        @error('nama_wilayah')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -36,6 +39,9 @@
                             File saat ini: <b>{{ basename($wilayah->file_geojson) }}</b>
                             <br>Biarkan kosong jika tidak ingin mengubah file.
                         </p>
+                        @error('file_geojson')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 

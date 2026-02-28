@@ -182,4 +182,27 @@ class AdminController extends Controller
             ->route('pengguna.index')
             ->with('success', 'Pengguna berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        
+        if ($ids) {
+            $idsArray = explode(',', $ids);
+            
+            // Hapus data DENGAN PENGECUALIAN role superadmin
+            // Ini penting untuk keamanan backend jika seseorang memanipulasi HTML
+            $deleted = User::whereIn('id', $idsArray)
+                ->where('role', '!=', 'superadmin') 
+                ->delete();
+            
+            if ($deleted) {
+                return redirect()->back()->with('success', 'Data pengguna terpilih berhasil dihapus.');
+            } else {
+                return redirect()->back()->with('error', 'Tidak ada data yang dihapus (Mungkin data yang dipilih adalah Superadmin).');
+            }
+        }
+        
+        return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+    }
 }

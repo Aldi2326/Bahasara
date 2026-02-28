@@ -20,15 +20,7 @@
     <div class="card w-[420px] !max-w-none" style="width: 450px;">
         <div class="p-6">
             <h4 class="card-title mb-4 text-center">Login Admin</h4>
-            @if ($errors->any())
-                <div style="color: red;">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-3">
@@ -37,6 +29,15 @@
                     <input type="text" name="name" value="{{ old('name') }}" class="form-input"
                         id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Username" required>
                 </div>
+                @if ($errors->any())
+                    <div style="color: red;">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <div class="mb-3" style="position: relative;">
                     <label for="exampleInputPassword1"

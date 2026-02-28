@@ -24,33 +24,16 @@ class KontakController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
-            'email' => 'required|email',
+            'nama'   => 'required',
+            'email'  => 'required|email',
             'subjek' => 'required',
-            'pesan' => 'required',
-            'g-recaptcha-response' => 'required'
+            'pesan'  => 'required',
+            // Cukup tambahkan baris ini:
+            'captcha' => 'required|captcha' 
+        ], [
+            // Custom error message (opsional)
+            'captcha.captcha' => 'Jawaban matematika salah, silakan coba lagi.',
         ]);
-
-        // Validasi ke Google reCAPTCHA
-        $response = Http::asForm()->post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            [
-                'secret' => env('RECAPTCHA_SECRET_KEY'),
-                'response' => $request->input('g-recaptcha-response'),
-                'remoteip' => $request->ip()
-            ]
-        );
-
-        $result = $response->json();
-
-        if (!isset($result['success']) || $result['success'] !== true) {
-            return back()
-                ->withErrors([
-                    'g-recaptcha-response' => 'Silakan verifikasi bahwa Anda bukan robot.'
-                ])
-                ->with('focus_captcha', true)
-                ->withInput();
-        }
 
         Kontak::create([
             'nama' => $request->nama,
@@ -108,5 +91,21 @@ class KontakController extends Controller
         $kontak->delete();
 
         return redirect()->route('kontak.index')->with('success', 'Pesan berhasil dihapus!');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        
+        if ($ids) {
+            $idsArray = explode(',', $ids);
+            
+            // Hapus data
+            Kontak::whereIn('id', $idsArray)->delete();
+            
+            return redirect()->back()->with('success', 'Pesan terpilih berhasil dihapus.');
+        }
+        
+        return redirect()->back()->with('error', 'Tidak ada pesan yang dipilih.');
     }
 }

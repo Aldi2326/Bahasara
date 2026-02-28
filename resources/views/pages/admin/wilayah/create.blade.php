@@ -16,23 +16,15 @@
         <form id="formWilayah" class="flex flex-col gap-4" method="POST" action="{{ route('wilayah.store') }}" enctype="multipart/form-data">
             @csrf
 
-            @if ($errors->any())
-            <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
-                <strong class="font-semibold">Terjadi kesalahan:</strong>
-                <ul class="mt-2 list-disc list-inside text-sm">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
             <!-- Nama Wilayah -->
             <div class="grid grid-cols-4 items-center gap-6">
                 <label for="nama_wilayah" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
                 <div class="md:col-span-3">
                     <input type="text" name="nama_wilayah" id="nama_wilayah" class="form-input"
                         placeholder="Contoh: Kota Jambi" required>
+                    @error('nama_wilayah')
+                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -45,6 +37,9 @@
                     <p class="mt-1 text-xs text-default-500">
                         Hanya file dengan format <b>.geojson</b> (maks 2MB)
                     </p>
+                    @error('file_geojson')
+                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 

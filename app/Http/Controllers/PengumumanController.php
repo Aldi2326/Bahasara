@@ -134,4 +134,26 @@ class PengumumanController extends Controller
         $pengumuman = Pengumuman::findOrFail($id);
         return view('pages.admin.pengumuman.show', compact('pengumuman'));
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        
+        if ($ids) {
+            $idsArray = explode(',', $ids);
+            
+            // Hapus data
+            Pengumuman::whereIn('id', $idsArray)->delete();
+            
+            // Hapus file dokumentasi jika diperlukan (opsional, contoh):
+            $items = Pengumuman::whereIn('id', $idsArray)->get();
+            foreach($items as $item) {
+                if($item->dokumentasi) Storage::delete('public/'.$item->dokumentasi);
+            }
+            
+            return redirect()->back()->with('success', 'Pengumuman terpilih berhasil dihapus.');
+        }
+        
+        return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+    }
 }

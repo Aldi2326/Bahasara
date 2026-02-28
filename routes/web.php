@@ -49,20 +49,30 @@ Route::get('/pengumuman/{id}', [PengumumanController::class, 'showPengumumanUser
 
 // ADMIN AREA (Perlu Login)
 Route::middleware('auth')->group(function () {
+
     Route::get('/admin/dashboard', [DashboardAdminController::class, 'index'])->name('dashboard');
 
     // Role admin & pegawai (umum)
     Route::resource('/admin/wilayah', WilayahController::class);
+    Route::delete('/wilayah/bulk-delete', [WilayahController::class, 'bulkDelete'])->name('wilayah.bulk_delete');
     Route::resource('/admin/nama-bahasa', NamaBahasaController::class);
+    Route::delete('/nama-bahasa/bulk-delete', [NamaBahasaController::class, 'bulkDelete'])->name('nama-bahasa.bulk_delete');
     Route::resource('/admin/nama-sastra', NamaSastraController::class);
+    Route::delete('/nama-sastra/bulk-delete', [NamaSastraController::class, 'bulkDelete'])->name('nama-sastra.bulk_delete');
     Route::resource('/admin/nama-aksara', NamaAksaraController::class);
+    Route::delete('/nama-aksara/bulk-delete', [NamaAksaraController::class, 'bulkDelete'])->name('nama-aksara.bulk_delete');
     Route::resource('/admin/pengumuman', PengumumanController::class);
+    Route::delete('/pengumuman/bulk-delete', [PengumumanController::class, 'bulkDelete'])->name('pengumuman.bulk_delete');
     Route::resource('/admin/peta/bahasa', BahasaController::class);
+    Route::delete('/bahasa/bulk-delete', [BahasaController::class, 'bulkDelete'])->name('bahasa.bulk_delete');
     Route::resource('/admin/peta/aksara', AksaraController::class);
+    Route::delete('/aksara/bulk-delete', [AksaraController::class, 'bulkDelete'])->name('aksara.bulk_delete');
     Route::resource('/admin/peta/sastra', SastraController::class);
+    Route::delete('/sastra/bulk-delete', [SastraController::class, 'bulkDelete'])->name('sastra.bulk_delete');
 
     // Pesan masuk dari kontak
     Route::get('/admin/pesan', [KontakController::class, 'index'])->name('kontak.index');
+    Route::delete('/kontak/bulk-delete', [KontakController::class, 'bulkDelete'])->name('kontak.bulk_delete');
     Route::delete('/kontak/{id}', [KontakController::class, 'destroy'])->name('kontak.destroy');
 
     // Balasan admin
@@ -74,4 +84,5 @@ Route::middleware('auth')->group(function () {
 // SUPERADMIN AREA
 Route::middleware(['auth', 'superadmin'])->group(function () {
     Route::resource('/admin/pengguna', AdminController::class);
+    Route::delete('/pengguna/bulk-delete', [AdminController::class, 'bulkDelete'])->name('pengguna.bulk_delete');
 });

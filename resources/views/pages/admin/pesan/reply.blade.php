@@ -41,7 +41,9 @@
             <label for="reply_message" class="font-semibold text-gray-700">Tulis Balasan:</label>
 
             <textarea id="froala-editor" id="reply_message" name="reply_message" class="prose"></textarea>
-
+            @error('reply_message')
+                <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+            @enderror
             <button type="submit"
                 class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition font-semibold">
                 Kirim Balasan

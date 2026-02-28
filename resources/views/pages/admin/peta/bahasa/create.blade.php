@@ -16,17 +16,6 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @if ($errors->any())
-                    <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
-                        <strong class="font-semibold">Terjadi kesalahan:</strong>
-                        <ul class="mt-2 list-disc list-inside text-sm">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <!-- Nama Wilayah -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
@@ -40,6 +29,9 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('wilayah_id')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -56,6 +48,9 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('nama_bahasa_id')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -64,6 +59,9 @@
                     <label for="alamat" class="text-default-800 text-sm font-medium">Alamat</label>
                     <div class="md:col-span-3">
                         <textarea id="froala-editor" name="alamat" class="prose" required></textarea>
+                        @error('alamat')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -79,6 +77,9 @@
                             <option value="Sangat Terancam Punah">Sangat Terancam Punah</option>
                             <option value="Kritis">Kritis</option>
                         </select>
+                        @error('status')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -89,6 +90,9 @@
                         <input type="number" name="jumlah_penutur" id="jumlah_penutur" class="form-input"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Masukkan jumlah penutur"
                             required>
+                            @error('jumlah_penutur')
+                                <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                            @enderror
                     </div>
                 </div>
 
@@ -97,6 +101,9 @@
                     <label for="deskripsi" class="text-default-800 text-sm font-medium">Deskripsi</label>
                     <div class="md:col-span-3">
                         <textarea id="froala-editor" name="deskripsi" class="prose" required></textarea>
+                        @error('deskripsi')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -106,6 +113,9 @@
                     <div class="md:col-span-3">
                         <input type="text" name="dokumentasi_yt" id="dokumentasi_yt" class="form-input"
                             placeholder="Masukkan Link Video Youtube">
+                        @error('dokumentasi_yt')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -117,6 +127,9 @@
                             placeholder="Klik peta atau isi manual, contoh: -1.234567, 103.123456" step="0.0000001"
                             required>
                         <input type="hidden" name="lokasi" id="lokasi">
+                        @error('koordinat')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -128,6 +141,9 @@
                         <p class="mt-2 text-xs text-default-500">
                             Klik pada peta untuk memilih lokasi. Koordinat dan lokasi akan otomatis terisi.
                         </p>
+                        @error('lokasi')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -144,6 +160,47 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // 1. MATIKAN fitur browser yang mengingat posisi scroll terakhir.
+            // Ini PENTING agar browser tidak memaksa layar kembali ke tombol submit.
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+
+            // 2. Gunakan setTimeout agar script jalan SETELAH browser selesai me-render halaman
+            setTimeout(function() {
+                // Cari elemen error (prioritaskan pesan text merah dulu karena pasti terlihat)
+                let errorElement = document.querySelector('.text-red-500');
+                
+                // Jika tidak ada text merah, cari input yang border merah
+                if (!errorElement) {
+                    errorElement = document.querySelector('.border-red-500');
+                }
+
+                if (errorElement) {
+                    // Debugging: Cek di console apakah elemen ketemu
+                    console.log("Scroll ke:", errorElement);
+
+                    // 3. Scroll dengan opsi 'center' agar elemen pas di tengah mata
+                    errorElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center', 
+                        inline: 'nearest'
+                    });
+
+                    // 4. Fokus kursor (hanya jika elemennya input biasa)
+                    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(errorElement.tagName)) {
+                        // preventScroll: true agar tidak bentrok dengan scrollIntoView di atas
+                        errorElement.focus({ preventScroll: true }); 
+                    }
+                } else {
+                    // Jika tidak ada error, kembalikan scroll ke paling atas
+                    window.scrollTo(0, 0);
+                }
+            }, 300); // Delay 300ms (0.3 detik) memberi waktu browser "bernapas" dulu
+
+            // ============================================================
+            // 2. LOGIKA PETA (LEAFLET)
+            // ============================================================
             var map = L.map('map').setView([-1.610122, 103.613120], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap'
@@ -160,64 +217,68 @@
                     .bindPopup(popupText)
                     .openPopup();
                 map.setView([lat, lng], 15);
+                
+                // Update input hidden & text
                 document.getElementById('koordinat').value = lat + ', ' + lng;
                 document.getElementById('lokasi').value = popupText;
             }
 
+            // Event saat hasil pencarian geocoder dipilih
             geocoder.on('markgeocode', function(e) {
                 var lat = e.geocode.center.lat.toFixed(6);
                 var lng = e.geocode.center.lng.toFixed(6);
                 setMarker(lat, lng, e.geocode.name);
             });
 
+            // Event saat peta diklik
             map.on('click', function(e) {
                 var lat = e.latlng.lat.toFixed(6);
                 var lng = e.latlng.lng.toFixed(6);
-                // Langsung gunakan koordinat sebagai "lokasi" sementara
                 setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
             });
 
+            // Event saat manual input di kolom koordinat
+            const koordinatInput = document.getElementById('koordinat');
+            if(koordinatInput){
+                koordinatInput.addEventListener('input', function() {
+                    let nilai = this.value.trim();
+                    let parts = nilai.split(',');
 
-            document.getElementById('koordinat').addEventListener('input', function() {
-                let nilai = this.value.trim();
+                    if (parts.length === 2) {
+                        let lat = parseFloat(parts[0]);
+                        let lng = parseFloat(parts[1]);
 
-                // Format yang diharapkan: "-1.234567, 103.123456"
-                let parts = nilai.split(',');
-
-                if (parts.length === 2) {
-                    let lat = parseFloat(parts[0]);
-                    let lng = parseFloat(parts[1]);
-
-                    // Validasi sederhana
-                    if (!isNaN(lat) && !isNaN(lng)) {
-                        setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
-                    }
-                }
-            });
-
-
-            // ================================
-            // SweetAlert konfirmasi sebelum submit
-            // ================================
-            const form = document.getElementById('bahasaForm');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                Swal.fire({
-                    title: 'Simpan Data?',
-                    text: "Pastikan data sudah benar sebelum disimpan.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#2563EB',
-                    cancelButtonColor: '#4B5563',
-                    confirmButtonText: 'Ya, simpan!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            setMarker(lat, lng, "Koordinat: " + lat + ", " + lng);
+                        }
                     }
                 });
-            });
+            }
+
+            // ============================================================
+            // 3. SWEETALERT KONFIRMASI
+            // ============================================================
+            const form = document.getElementById('bahasaForm');
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Stop submit asli
+
+                    Swal.fire({
+                        title: 'Simpan Data?',
+                        text: "Pastikan data sudah benar sebelum disimpan.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2563EB',
+                        cancelButtonColor: '#4B5563',
+                        confirmButtonText: 'Ya, simpan!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // Lanjutkan submit manual
+                        }
+                    });
+                });
+            }
         });
     </script>
 @endsection

@@ -17,17 +17,6 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @if ($errors->any())
-                    <div class="bg-red-50 border border-red-800 text-red-800 px-4 py-3 rounded-lg mb-4 shadow-sm">
-                        <strong class="font-semibold">Terjadi kesalahan:</strong>
-                        <ul class="mt-2 list-disc list-inside text-sm">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <!-- Nama Wilayah -->
                 <div class="grid grid-cols-4 items-center gap-6">
                     <label for="wilayah_id" class="text-default-800 text-sm font-medium">Nama Wilayah</label>
@@ -41,6 +30,9 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('wilayah_id')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -57,6 +49,9 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('nama_sastra_id')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -66,6 +61,9 @@
                     <div class="md:col-span-3">
                         <textarea id="froala-editor" name="alamat" class="prose"></textarea>
                     </div>
+                    @error('alamat')
+                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <!-- Jenis Sastra -->
@@ -78,6 +76,9 @@
                             <option value="tulisan">Tulisan</option>
                             <option value="lainnya">Lainnya</option>
                         </select>
+                        @error('jenis')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -87,6 +88,9 @@
                     <div class="md:col-span-3">
                         <textarea id="froala-editor" name="deskripsi" class="prose"></textarea>
                     </div>
+                    @error('deskripsi')
+                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <!-- Dokumentasi -->
@@ -98,6 +102,9 @@
                         <p class="mt-1 text-xs text-default-500">
                             Unggah file jpg, jpeg, png, webp, pdf. Maksimal 2MB.
                         </p>
+                        @error('dokumentasi')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -107,6 +114,10 @@
                     <div class="md:col-span-3">
                         <input type="text" name="dokumentasi_yt" id="dokumentasi_yt" class="form-input"
                             placeholder="Masukkan Link Video Youtube">
+                        @error('dokumentasi_yt')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
+                            
                     </div>
                 </div>
 
@@ -118,6 +129,9 @@
                             placeholder="Klik peta atau isi manual, contoh: -1.234567, 103.123456" step="0.0000001"
                             required>
                         <input type="hidden" name="lokasi" id="lokasi">
+                        @error('koordinat')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
 
                     </div>
                 </div>
@@ -130,6 +144,9 @@
                         <p class="mt-2 text-xs text-default-500">
                             Klik pada peta untuk memilih lokasi. Koordinat akan otomatis terisi.
                         </p>
+                        @error('lokasi')
+                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -146,6 +163,44 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // 1. MATIKAN fitur browser yang mengingat posisi scroll terakhir.
+            // Ini PENTING agar browser tidak memaksa layar kembali ke tombol submit.
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+
+            // 2. Gunakan setTimeout agar script jalan SETELAH browser selesai me-render halaman
+            setTimeout(function() {
+                // Cari elemen error (prioritaskan pesan text merah dulu karena pasti terlihat)
+                let errorElement = document.querySelector('.text-red-500');
+                
+                // Jika tidak ada text merah, cari input yang border merah
+                if (!errorElement) {
+                    errorElement = document.querySelector('.border-red-500');
+                }
+
+                if (errorElement) {
+                    // Debugging: Cek di console apakah elemen ketemu
+                    console.log("Scroll ke:", errorElement);
+
+                    // 3. Scroll dengan opsi 'center' agar elemen pas di tengah mata
+                    errorElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center', 
+                        inline: 'nearest'
+                    });
+
+                    // 4. Fokus kursor (hanya jika elemennya input biasa)
+                    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(errorElement.tagName)) {
+                        // preventScroll: true agar tidak bentrok dengan scrollIntoView di atas
+                        errorElement.focus({ preventScroll: true }); 
+                    }
+                } else {
+                    // Jika tidak ada error, kembalikan scroll ke paling atas
+                    window.scrollTo(0, 0);
+                }
+            }, 300); // Delay 300ms (0.3 detik) memberi waktu browser "bernapas" dulu
+
             var map = L.map('map').setView([-1.610122, 103.613120], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap'

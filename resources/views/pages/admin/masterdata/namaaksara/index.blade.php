@@ -2,22 +2,27 @@
 @section('title', 'Nama Aksara')
 
 @section('content')
-<div class="flex items-center gap-3 text-sm font-semibold mb-5">
-    <p class="text-sm font-bold text-default-900">Aksara</p>
-</div>
+    <div class="flex items-center gap-3 text-sm font-semibold mb-5">
+        <p class="text-sm font-bold text-default-900">Aksara</p>
+    </div>
+    
     <div class="card overflow-hidden shadow-sm rounded-2xl border border-gray-200">
-        <!-- Header -->
         <div class="card-header flex justify-between items-center bg-gray-100 px-6 py-4">
             <h4 class="card-title text-lg font-semibold text-gray-800">Daftar Nama Aksara</h4>
-            <a href="{{ route('nama-aksara.create') }}"
-                class="btn bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md flex items-center gap-2">
-                Tambah Data
-            </a>
+            <div class="flex gap-2">
+                <button type="button" id="btn-bulk-delete" style="display: none;"
+                    class="btn bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-md flex items-center gap-2 transition">
+                    <i class="bi bi-trash"></i> Hapus Terpilih (<span id="count-selected">0</span>)
+                </button>
+
+                <a href="{{ route('nama-aksara.create') }}"
+                    class="btn bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md flex items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Tambah Data
+                </a>
+            </div>
         </div>
 
-        <!-- Search Bar -->
-        <div
-            class="px-6 py-4 border-b border-gray-200 bg-white flex flex-col md:flex-row justify-between items-center gap-3">
+        <div class="px-6 py-4 border-b border-gray-200 bg-white flex flex-col md:flex-row justify-between items-center gap-3">
             <form action="{{ route('nama-aksara.index') }}" method="GET" class="flex items-center w-full md:w-1/3 gap-3">
                 <input type="text" name="search" value="{{ request('search') }}"
                     class="form-input flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
@@ -29,11 +34,14 @@
             </form>
         </div>
 
-        <!-- Table -->
         <div class="overflow-x-auto bg-white">
             <table class="min-w-full divide-y divide-gray-200 text-sm text-center">
                 <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-semibold">
                     <tr>
+                        <th class="px-4 py-3 whitespace-nowrap w-10">
+                            <input type="checkbox" id="select_all_ids" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        </th>
+
                         <th class="px-4 py-3 w-[40px]">No</th>
                         <th class="px-4 py-3 w-[200px]">
                             <div class="flex justify-center items-center gap-1">
@@ -60,15 +68,18 @@
 
                 <tbody class="divide-y divide-gray-100">
                     @forelse ($namaAksara as $index => $item)
-                        <tr class="hover:bg-gray-50 transition">
+                        <tr class="hover:bg-gray-50 transition" id="tr_{{ $item->id }}">
+                            <td class="px-4 py-3">
+                                <input type="checkbox" name="ids" class="checkbox_ids rounded border-gray-300 text-blue-600 focus:ring-blue-500" value="{{ $item->id }}">
+                            </td>
+
                             <td class="px-4 py-3 text-gray-700 font-medium">{{ $index + 1 }}</td>
                             <td class="px-4 py-3 text-gray-800">{{ $item->nama_aksara }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28"
                                         height="28" fill="{{ $item->warna_pin }}">
-                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5
-                                        c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
                                     </svg>
                                 </div>
                             </td>
@@ -93,7 +104,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-5 text-center text-gray-500 italic">
+                            <td colspan="5" class="px-6 py-5 text-center text-gray-500 italic">
                                 Belum ada data nama aksara yang tersedia.
                             </td>
                         </tr>
@@ -103,10 +114,16 @@
         </div>
     </div>
 
-    <!-- SweetAlert2 -->
+    <form id="form-bulk-delete" action="{{ route('nama-aksara.bulk_delete') }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="ids" id="bulk_delete_ids">
+    </form>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- 1. Script Single Delete (Yang Lama) ---
             document.querySelectorAll('.btn-delete').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const form = this.closest('form');
@@ -123,6 +140,73 @@
                     }).then((result) => {
                         if (result.isConfirmed) form.submit();
                     });
+                });
+            });
+
+            // --- 2. Script Bulk Delete (Baru) ---
+            const selectAllCheckbox = document.getElementById('select_all_ids');
+            const allCheckboxes = document.querySelectorAll('.checkbox_ids');
+            const bulkDeleteBtn = document.getElementById('btn-bulk-delete');
+            const countSelectedSpan = document.getElementById('count-selected');
+
+            // Fungsi Update Tombol
+            function updateBulkDeleteButton() {
+                const checkedCount = document.querySelectorAll('.checkbox_ids:checked').length;
+                countSelectedSpan.textContent = checkedCount;
+                
+                if (checkedCount > 0) {
+                    bulkDeleteBtn.style.display = 'inline-flex';
+                } else {
+                    bulkDeleteBtn.style.display = 'none';
+                }
+            }
+
+            // Logic Select All
+            selectAllCheckbox.addEventListener('change', function() {
+                allCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                updateBulkDeleteButton();
+            });
+
+            // Logic Checkbox Per Baris
+            allCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (!this.checked) {
+                        selectAllCheckbox.checked = false;
+                    }
+                    if(document.querySelectorAll('.checkbox_ids:checked').length === allCheckboxes.length){
+                         selectAllCheckbox.checked = true;
+                    }
+                    updateBulkDeleteButton();
+                });
+            });
+
+            // Logic Action Tombol Bulk Delete
+            bulkDeleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const allIds = [];
+                document.querySelectorAll('.checkbox_ids:checked').forEach(checkbox => {
+                    allIds.push(checkbox.value);
+                });
+
+                if (allIds.length === 0) return;
+
+                Swal.fire({
+                    title: 'Hapus data terpilih?',
+                    text: `Anda akan menghapus ${allIds.length} data nama aksara. Data tidak bisa dikembalikan!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DC2626',
+                    cancelButtonColor: '#4B5563',
+                    confirmButtonText: 'Ya, Hapus Semua!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('bulk_delete_ids').value = allIds.join(',');
+                        document.getElementById('form-bulk-delete').submit();
+                    }
                 });
             });
         });

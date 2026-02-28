@@ -57,15 +57,66 @@ class BahasaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'wilayah_id' => 'required|exists:wilayah,id',
-            'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
-            'alamat' => 'required|string',
-            'status' => 'required|string',
-            'jumlah_penutur' => 'required|integer',
-            'deskripsi' => 'required|string',
-            'dokumentasi_yt' => 'nullable|string',
-            'koordinat' => 'required|string',
-            'lokasi' => 'required|string',
+            // ID (Foreign Key): Pastikan integer dan positif
+            'wilayah_id' => 'required|integer|exists:wilayah,id',
+            'nama_bahasa_id' => 'required|integer|exists:nama_bahasa,id',
+
+            // String Pendek (VARCHAR 255)
+            'alamat' => 'required|string|max:255',
+            'status' => 'required|string|max:50', // Status biasanya pendek (misal: "Aktif", "Punah")
+            'koordinat' => [
+                'required',
+                'string',
+                'max:100',
+                function ($attribute, $value, $fail) {
+                    // 1. Cek apakah ada koma
+                    if (!str_contains($value, ',')) {
+                        $fail('Format koordinat salah. Harus dipisah dengan koma (contoh: -6.2088, 106.8456).');
+                        return;
+                    }
+
+                    // 2. Pecah string menjadi array
+                    $parts = explode(',', $value);
+                    
+                    // 3. Pastikan ada 2 bagian (Lat dan Long)
+                    if (count($parts) !== 2) {
+                        $fail('Koordinat harus terdiri dari Latitude dan Longitude.');
+                        return;
+                    }
+
+                    $lat = trim($parts[0]);
+                    $lng = trim($parts[1]);
+
+                    // 4. Cek apakah keduanya angka valid
+                    if (!is_numeric($lat) || !is_numeric($lng)) {
+                        $fail('Koordinat harus berupa angka.');
+                        return;
+                    }
+
+                    // 5. Validasi Range Latitude (-90 sampai 90)
+                    if ($lat < -90 || $lat > 90) {
+                        $fail('Latitude tidak valid (harus antara -90 sampai 90).');
+                    }
+
+                    // 6. Validasi Range Longitude (-180 sampai 180)
+                    if ($lng < -180 || $lng > 180) {
+                        $fail('Longitude tidak valid (harus antara -180 sampai 180).');
+                    }
+                },
+            ], 
+            'lokasi' => 'required|string|max:255',
+
+            // Integer (Jumlah)
+            // max:2147483647 adalah batas tipe data INT di MySQL, tapi min:0 lebih penting.
+            'jumlah_penutur' => 'required|numeric|min:0|max:2147483647', 
+
+            // Text Panjang (TEXT)
+            // Tipe data TEXT di MySQL max 65,535 karakter. 
+            // Saya set 5000 agar aman dan performa terjaga.
+            'deskripsi' => 'required|string|max:65535', 
+
+            // URL / Link
+            'dokumentasi_yt' => 'nullable|url|max:255',
         ]);
 
         Bahasa::create($data);
@@ -93,15 +144,66 @@ class BahasaController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'wilayah_id' => 'required|exists:wilayah,id',
-            'nama_bahasa_id' => 'required|exists:nama_bahasa,id',
-            'alamat' => 'required|string',
-            'status' => 'required|string',
-            'jumlah_penutur' => 'required|integer|min:1',
-            'deskripsi' => 'required|string',
-            'dokumentasi_yt' => 'nullable|string',
-            'koordinat' => 'required|string',
-            'lokasi' => 'required|string',
+            // ID (Foreign Key): Pastikan integer dan positif
+            'wilayah_id' => 'required|integer|exists:wilayah,id',
+            'nama_bahasa_id' => 'required|integer|exists:nama_bahasa,id',
+
+            // String Pendek (VARCHAR 255)
+            'alamat' => 'required|string|max:255',
+            'status' => 'required|string|max:50', // Status biasanya pendek (misal: "Aktif", "Punah")
+            'koordinat' => [
+                'required',
+                'string',
+                'max:100',
+                function ($attribute, $value, $fail) {
+                    // 1. Cek apakah ada koma
+                    if (!str_contains($value, ',')) {
+                        $fail('Format koordinat salah. Harus dipisah dengan koma (contoh: -6.2088, 106.8456).');
+                        return;
+                    }
+
+                    // 2. Pecah string menjadi array
+                    $parts = explode(',', $value);
+                    
+                    // 3. Pastikan ada 2 bagian (Lat dan Long)
+                    if (count($parts) !== 2) {
+                        $fail('Koordinat harus terdiri dari Latitude dan Longitude.');
+                        return;
+                    }
+
+                    $lat = trim($parts[0]);
+                    $lng = trim($parts[1]);
+
+                    // 4. Cek apakah keduanya angka valid
+                    if (!is_numeric($lat) || !is_numeric($lng)) {
+                        $fail('Koordinat harus berupa angka.');
+                        return;
+                    }
+
+                    // 5. Validasi Range Latitude (-90 sampai 90)
+                    if ($lat < -90 || $lat > 90) {
+                        $fail('Latitude tidak valid (harus antara -90 sampai 90).');
+                    }
+
+                    // 6. Validasi Range Longitude (-180 sampai 180)
+                    if ($lng < -180 || $lng > 180) {
+                        $fail('Longitude tidak valid (harus antara -180 sampai 180).');
+                    }
+                },
+            ],
+            'lokasi' => 'required|string|max:255',
+
+            // Integer (Jumlah)
+            // max:2147483647 adalah batas tipe data INT di MySQL, tapi min:0 lebih penting.
+            'jumlah_penutur' => 'required|numeric|min:0|max:2147483647', 
+
+            // Text Panjang (TEXT)
+            // Tipe data TEXT di MySQL max 65,535 karakter. 
+            // Saya set 5000 agar aman dan performa terjaga.
+            'deskripsi' => 'required|string|max:65535', 
+
+            // URL / Link
+            'dokumentasi_yt' => 'nullable|url|max:255',
         ]);
 
         Bahasa::findOrFail($id)->update($data);
@@ -131,5 +233,22 @@ class BahasaController extends Controller
         return view('pages.admin.peta.bahasa.show', [
             'bahasa' => Bahasa::with('namaBahasa')->findOrFail($id)
         ]);
+    }
+    
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        
+        if ($ids) {
+            // Convert string "1,2,3" menjadi array [1, 2, 3]
+            $idsArray = explode(',', $ids);
+            
+            // Hapus data berdasarkan array ID
+            Bahasa::whereIn('id', $idsArray)->delete();
+            
+            return redirect()->back()->with('success', 'Data terpilih berhasil dihapus.');
+        }
+        
+        return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
     }
 }
