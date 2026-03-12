@@ -97,49 +97,6 @@
     <!-- Spacer antar section -->
     <div class="my-5"></div>
 
-    <!-- Tim Pengembang -->
-    <section id="tim" class="py-5 bg-white" data-aos="fade-up">
-        <div class="container">
-            <h2 class="text-center fw-bold mb-5" style="font-weight: 400;">
-                Tim <span style="color: #1b81ae;">SIBARAJA</span>
-            </h2>
-            <div class="row justify-content-center g-4">
-                <!-- Card 1 -->
-                <div class="col-md-4 col-lg-3" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="card shadow border-0 text-center h-100 rounded-12"
-                        style="width: 100%; max-width: 260px; margin: 0 auto;">
-                        <div style="width: 100%; height: 300px; overflow: hidden; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-                            <img src="{{ asset('assets/img/aldi.jpeg') }}" class="card-img-top"
-                                alt="Aldi Sukma Putra" style="width: 100%; height: 100%; object-fit: cover;">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title mb-1">Aldi Sukma Putra</h5>
-                            <p class="text-muted small">Front-End Developer</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="col-md-4 col-lg-3" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="card shadow border-0 text-center h-100 rounded-12"
-                        style="width: 100%; max-width: 260px; margin: 0 auto;">
-                        <div style="width: 100%; height: 300px; overflow: hidden; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-                            <img src="{{ asset('assets/img/mito.jpeg') }}" class="card-img-top"
-                                alt="Cagivamito Tadashi Hutabarat" style="width: 100%; height: 100%; object-fit: cover;">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title mb-1">Cagivamito Tadashi Hutabarat</h5>
-                            <p class="text-muted small">Back-End Developer</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Spacer antar section -->
-    <div class="my-5"></div>
-
     <!-- Statistik Data -->
     <section id="statistik" class="py-5 bg-white" data-aos="fade-up">
         <div class="container">

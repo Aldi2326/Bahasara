@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/img/bahasara-logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/img/logo-icon.png') }}">
 
     <!-- Icons css -->
     <link href="{{ asset('assets/admin/css/icons.min.css') }}" rel="stylesheet" type="text/css">
