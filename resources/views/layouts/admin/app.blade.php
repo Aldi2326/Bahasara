@@ -135,7 +135,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             new FroalaEditor('#froala-editor', {
-                height: 400,
+                height: 100,
 
                 // 🔹 Semua toolbar Froala
                 toolbarButtons: {

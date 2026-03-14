@@ -59,7 +59,8 @@
                     </a>
                 </li>
             </ul>
-
+            @auth
+            @if (auth()->user()->role !== 'pegawai')
             <ul class="admin-menu hs-accordion-group flex w-full flex-col gap-1">
                 <li class="px-3 py-2 text-xs uppercase font-medium text-default-500">Master Data</li>
                 <li class="menu-item">
@@ -107,6 +108,8 @@
                     </a>
                 </li>
             </ul>
+            @endif
+            @endauth
 
             <ul class="admin-menu hs-accordion-group flex w-full flex-col gap-1">
                 <li class="px-3 py-2 text-xs uppercase font-medium text-default-500">Manajemen Sistem</li>
@@ -132,7 +135,7 @@
                     </a>
                 </li>
                 @auth
-                @if (auth()->user()->role === 'superadmin')
+                @if (auth()->user()->role !== 'pegawai')
                 <li class="menu-item">
                     <a class="group flex items-center gap-x-3.5 rounded-md px-3 py-2 text-sm font-medium text-default-400 transition-all hover:bg-default-100/5"
                         href="/admin/pengguna">
